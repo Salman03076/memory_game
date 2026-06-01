@@ -1,0 +1,23 @@
+{
+  "name": "filp-card-game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node build.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "esbuild": "^0.28.0",
+    "esbuild-plugin-copy": "^2.1.1"
+  
+  },
+  "dependencies": {
+    "pixi.js": "^8.18.1"
+  }
+}
