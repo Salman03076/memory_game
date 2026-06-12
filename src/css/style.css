@@ -1,36 +1,9 @@
-@import "tailwindcss";
-@tailwindcss base;
-@tailwindcss components;
-@tailwindcss utilities;
+* {
+    margin: 0px;
+    padding: 0px;
 
-@theme {
-
-    #Bg {
-        background-image: url("Assets/Background.jpg") background-size: cover;
-    }
-
-    ;
 }
 
-;
-
-@base {
-    #Bg {
-        background-image: url("Assets/Background.jpg") background-size: cover;
-    }
-
-    ;
+#gamebody {
+    position: fixed;
 }
-
-;
-
-@components {
-    #Bg {
-        background-image: url("Assets/Background.jpg"),
-         background-size: cover;
-    }
-
-    ;
-}
-
-;

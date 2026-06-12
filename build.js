@@ -18,6 +18,10 @@ esbuild
             from: ["./src/index.html"],
             to: ["./docs"],
           },
+          {
+            from: ["./src/css/style.css"],
+            to: ["./docs/css"],
+          },
         ],
       }),
     ],
