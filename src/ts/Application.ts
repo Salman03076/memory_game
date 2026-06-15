@@ -41,11 +41,12 @@ export const application = async () => {
             this.cardContainer.lineStyle(2, 0xff0000, 1);
             this.cardContainer.drawRect(0, 0, 500, 500);
             this.cardContainer.zIndex = 10;
-            this.cardContainer.scale.set(1.1);
-            this.cardContainer.x = 869;
-            this.cardContainer.y = 408;
+            this.cardContainer.scale.set(1.0);
+            this.cardContainer.x = 607.5;
+            this.cardContainer.y = (app.screen.height - 500) / 2;
 
             app.stage.addChild(this.cardContainer);
+
         }
 
     }
@@ -71,34 +72,37 @@ export const application = async () => {
 
             const fontAsset: any = [
                 "Assets/image (0).png",
+                "Assets/image (0).png",
+                "Assets/image (1).png",
                 "Assets/image (1).png",
                 "Assets/image (2).png",
-                "Assets/image (3).png",
-                "Assets/image (4).png",
-                "Assets/image (5).png",
-
-
+                "Assets/image (2).png",
+                // "Assets/image (3).png",
+                // "Assets/image (4).png",
+                // "Assets/image (5).png",
             ];
 
             this.backcard = await Assets.load("Assets/image (10).png");
             const cardF = new Sprite(this.backcard);
+
             // create the card
             const rows = 2;
             const cols = 3;
 
             for (let index = 0; index < 6; index++) {
-                this.fontcard = await Assets.load(fontAsset);
+                this.fontcard = await Assets.load(fontAsset[index]);
+                
+
 
                 const row = Math.floor(index / cols);
                 const col = index % cols;
 
                 this.cardB = new Sprite(this.backcard);
-                this.cardB.anchor = 0.5;
+                this.cardB.anchor.set(0.5);
+                this.cardB.scale.set(0.4);
 
-                this.cardB.scale.set(0.6);
-
-                this.cardB.x = 50 + col * 400; // Horizontal spacing
-                this.cardB.y = 50 + row * 450;  // Vertical spacing             
+                this.cardB.x = 100 + col * 250; // Horizontal spacing
+                this.cardB.y = 110 + row * 300;  // Vertical spacing
                 this.cardContainer.addChild(this.cardB);
             }
 
@@ -108,7 +112,6 @@ export const application = async () => {
 
         }
     };
-
 
 
     const initializingCard = new cardstructure();
@@ -150,12 +153,12 @@ export const application = async () => {
 
                 });
 
-                this.cardB = new Sprite(this.backcard);
-                this.cardB.x = 600;
-                this.cardB.y = 500;
-                this.cardB.scale.set(0.8, 0.8);
-                this.cardB.anchor.set(0.5);
-                app.stage.addChild(this.cardB);
+                // this.cardB = new Sprite(this.backcard);
+                // this.cardB.x = 600;
+                // this.cardB.y = 500;
+                // this.cardB.scale.set(0.8, 0.8);
+                // this.cardB.anchor.set(0.5);
+
             }
 
         }
