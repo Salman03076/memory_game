@@ -49454,58 +49454,88 @@ ${e2}`);
     }
     const gameBoard = new board();
     await gameBoard.init();
-    class Card {
-      cardcontainer;
+    class boxcard {
+      cardContainer;
+      constructor() {
+        this.cardContainer = new Graphics();
+        this.cardContainer.lineStyle(2, 16711680, 1);
+        this.cardContainer.drawRect(0, 0, 500, 500);
+        this.cardContainer.zIndex = 10;
+        this.cardContainer.scale.set(1.1);
+        this.cardContainer.x = 869;
+        this.cardContainer.y = 408;
+        app.stage.addChild(this.cardContainer);
+      }
+    }
+    const Card1 = new boxcard();
+    Card1;
+    class cardstructure extends boxcard {
       backcard;
       fontcard;
-      sprite;
+      cardB;
       constructor() {
-        this.cardcontainer = new Graphics();
-        this.cardcontainer.lineStyle(2, 16711680, 1);
-        this.cardcontainer.drawRect(0, 0, 200, 200);
-        this.cardcontainer.zIndex = 10;
-        app.stage.addChild(this.cardcontainer);
+        super();
       }
       async init() {
+        const fontAsset = [
+          "Assets/image (0).png",
+          "Assets/image (1).png",
+          "Assets/image (2).png",
+          "Assets/image (3).png",
+          "Assets/image (4).png",
+          "Assets/image (5).png"
+        ];
         this.backcard = await Assets.load("Assets/image (10).png");
-        this.fontcard = await Assets.load("Assets/image (0).png");
+        const cardF = new Sprite(this.backcard);
+        const rows = 2;
+        const cols = 3;
         for (let index = 0; index < 6; index++) {
-          const card = new Sprite(this.backcard);
-          card.label = `card${index}`;
-          card.scale.set(0.8);
-          card.x = 100 + index * 500;
-          card.y = 50;
-          this.cardcontainer.addChild(card);
+          this.fontcard = await Assets.load(fontAsset);
+          const row = Math.floor(index / cols);
+          const col = index % cols;
+          this.cardB = new Sprite(this.backcard);
+          this.cardB.anchor = 0.5;
+          this.cardB.scale.set(0.6);
+          this.cardB.x = 50 + col * 400;
+          this.cardB.y = 50 + row * 450;
+          this.cardContainer.addChild(this.cardB);
         }
-        this.sprite = new Sprite(this.backcard);
-        this.sprite.x = 600;
-        this.sprite.y = 500;
-        this.sprite.scale.set(0.8, 0.8);
-        this.sprite.anchor.set(0.5);
-        let activeEvent = true;
-        this.sprite.eventMode = `static`;
-        this.sprite.on("pointerdown", () => {
-          flipcall();
-        });
-        const flipCard = (sprite, scaleTo, callback = void 0) => {
-          gsapWithCSS.to(sprite.scale, {
+      }
+    }
+    ;
+    const initializingCard = new cardstructure();
+    await initializingCard.init();
+    class flipcardActive extends cardstructure {
+      flip;
+      // sprite;
+      constructor() {
+        super();
+        let cardsprite = this.cardB;
+        this.flip = (cardsprite2, scaleTo, callback = void 0) => {
+          gsapWithCSS.to(cardsprite2.scale, {
             x: scaleTo,
             onComplete() {
               callback?.();
             }
           });
-        };
-        function flipcall() {
-          flipCard(this.sprite, 0, () => {
-            this.sprite.texture = this.fontcard;
-            flipCard(this.sprite, 0.8);
+          this.cardB.eventMode = `static`;
+          this.cardB.on("pointerdown", () => {
+            this.flip(this.cardB, 0, () => {
+              this.cardB.texture = this.fontcard;
+              this.flip(this.cardB, 0.8);
+            });
           });
-        }
-        app.stage.addChild(this.sprite);
+          this.cardB = new Sprite(this.backcard);
+          this.cardB.x = 600;
+          this.cardB.y = 500;
+          this.cardB.scale.set(0.8, 0.8);
+          this.cardB.anchor.set(0.5);
+          app.stage.addChild(this.cardB);
+        };
       }
     }
-    const card1 = new Card();
-    await card1.init();
+    const fliptrue = new flipcardActive();
+    await fliptrue.init();
   };
 
   // src/ts/main.ts

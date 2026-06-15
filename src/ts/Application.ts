@@ -1,4 +1,4 @@
-import { Application, Assets, Container, Sprite, Graphics } from "pixi.js";
+import { Application, Assets, Container, Sprite, Graphics, Texture } from "pixi.js";
 import { gsap } from "gsap";
 
 
@@ -31,86 +31,136 @@ export const application = async () => {
     const gameBoard = new board();
     await gameBoard.init();
 
-    // create the game center body
 
-    class Card {
-        cardcontainer;
-        backcard;
-        fontcard;
-        sprite;
+    // create the card center body
+    class boxcard {
+        protected cardContainer: any;
 
         constructor() {
-            this.cardcontainer = new Graphics();
-            this.cardcontainer.lineStyle(2, 0xff0000, 1);
-            this.cardcontainer.drawRect(0, 0, 200, 200);
-            this.cardcontainer.zIndex = 10;
+            this.cardContainer = new Graphics();
+            this.cardContainer.lineStyle(2, 0xff0000, 1);
+            this.cardContainer.drawRect(0, 0, 500, 500);
+            this.cardContainer.zIndex = 10;
+            this.cardContainer.scale.set(1.1);
+            this.cardContainer.x = 869;
+            this.cardContainer.y = 408;
 
-            app.stage.addChild(this.cardcontainer);
+            app.stage.addChild(this.cardContainer);
+        }
+
+    }
+
+    const Card1 = new boxcard();
+    Card1
+
+
+
+    // creta the card structure
+    class cardstructure extends boxcard {
+
+        backcard: Texture;
+        fontcard: Texture;
+        cardB;
+
+        constructor() {
+            super();
+
         }
 
         async init() {
+
+            const fontAsset: any = [
+                "Assets/image (0).png",
+                "Assets/image (1).png",
+                "Assets/image (2).png",
+                "Assets/image (3).png",
+                "Assets/image (4).png",
+                "Assets/image (5).png",
+
+
+            ];
+
             this.backcard = await Assets.load("Assets/image (10).png");
-            this.fontcard = await Assets.load("Assets/image (0).png");
-            // create the card body
+            const cardF = new Sprite(this.backcard);
+            // create the card
+            const rows = 2;
+            const cols = 3;
+
             for (let index = 0; index < 6; index++) {
-                const card = new Sprite(this.backcard);
-                card.label = `card${index}`;
-                card.scale.set(0.8);
-                card.x = 100 + index * 500;
-                card.y = 50;
-                this.cardcontainer.addChild(card);
-                // app.stage.addChild(card0);
+                this.fontcard = await Assets.load(fontAsset);
+
+                const row = Math.floor(index / cols);
+                const col = index % cols;
+
+                this.cardB = new Sprite(this.backcard);
+                this.cardB.anchor = 0.5;
+
+                this.cardB.scale.set(0.6);
+
+                this.cardB.x = 50 + col * 400; // Horizontal spacing
+                this.cardB.y = 50 + row * 450;  // Vertical spacing             
+                this.cardContainer.addChild(this.cardB);
             }
-            // cardcontainer.addchild(card0);
-            this.sprite = new Sprite(this.backcard);
-            this.sprite.x = 600;
-            this.sprite.y = 500;
-            this.sprite.scale.set(0.8, 0.8);
-            this.sprite.anchor.set(0.5);
 
 
 
 
-            let activeEvent = true;
-            this.sprite.eventMode = `static`;
-            this.sprite.on('pointerdown', () => {
-                flipcall()
-            });
-            //     
-            // activeEvent = !activeEvent;
+
+        }
+    };
 
 
-            const flipCard = (sprite, scaleTo, callback = undefined) => {
-                gsap.to(sprite.scale, {
+
+    const initializingCard = new cardstructure();
+    await initializingCard.init();
+
+
+
+
+
+
+
+
+    // made the card function
+    class flipcardActive extends cardstructure {
+        flip;
+        // sprite;
+
+        constructor() {
+            super()
+
+            let cardsprite = this.cardB;
+
+            this.flip = (cardsprite, scaleTo, callback = undefined) => {
+                gsap.to(cardsprite.scale, {
                     x: scaleTo,
                     onComplete() {
                         callback?.();
                     },
                 });
+
+
+                this.cardB.eventMode = `static`;
+                this.cardB.on('pointerdown', () => {
+                    this.flip(this.cardB, 0, () => {
+                        this.cardB.texture = this.fontcard;
+                        this.flip(this.cardB, 0.8);
+                    })
+
+
+                });
+
+                this.cardB = new Sprite(this.backcard);
+                this.cardB.x = 600;
+                this.cardB.y = 500;
+                this.cardB.scale.set(0.8, 0.8);
+                this.cardB.anchor.set(0.5);
+                app.stage.addChild(this.cardB);
             }
-            function flipcall() {
-                flipCard(this.sprite, 0, () => {
-                    this.sprite.texture = this.fontcard;
-                    flipCard(this.sprite, 0.8);
-                })
 
-            }
-
-
-            app.stage.addChild(this.sprite);
         }
-
     }
+    const fliptrue = new flipcardActive();
+    await fliptrue.init();
 
-    const card1 = new Card();
-    await card1.init();
-
-
-
-
-
-
-
-
-
-};
+}
