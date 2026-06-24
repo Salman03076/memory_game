@@ -312,16 +312,16 @@
         Events.prototype = /* @__PURE__ */ Object.create(null);
         if (!new Events().__proto__) prefix = false;
       }
-      function EE(fn, context4, once) {
+      function EE(fn, context2, once) {
         this.fn = fn;
-        this.context = context4;
+        this.context = context2;
         this.once = once || false;
       }
-      function addListener(emitter, event, fn, context4, once) {
+      function addListener(emitter, event, fn, context2, once) {
         if (typeof fn !== "function") {
           throw new TypeError("The listener must be a function");
         }
-        var listener = new EE(fn, context4 || emitter, once), evt = prefix ? prefix + event : event;
+        var listener = new EE(fn, context2 || emitter, once), evt = prefix ? prefix + event : event;
         if (!emitter._events[evt]) emitter._events[evt] = listener, emitter._eventsCount++;
         else if (!emitter._events[evt].fn) emitter._events[evt].push(listener);
         else emitter._events[evt] = [emitter._events[evt], listener];
@@ -412,13 +412,13 @@
         }
         return true;
       };
-      EventEmitter2.prototype.on = function on(event, fn, context4) {
-        return addListener(this, event, fn, context4, false);
+      EventEmitter2.prototype.on = function on(event, fn, context2) {
+        return addListener(this, event, fn, context2, false);
       };
-      EventEmitter2.prototype.once = function once(event, fn, context4) {
-        return addListener(this, event, fn, context4, true);
+      EventEmitter2.prototype.once = function once(event, fn, context2) {
+        return addListener(this, event, fn, context2, true);
       };
-      EventEmitter2.prototype.removeListener = function removeListener(event, fn, context4, once) {
+      EventEmitter2.prototype.removeListener = function removeListener(event, fn, context2, once) {
         var evt = prefix ? prefix + event : event;
         if (!this._events[evt]) return this;
         if (!fn) {
@@ -427,12 +427,12 @@
         }
         var listeners = this._events[evt];
         if (listeners.fn) {
-          if (listeners.fn === fn && (!once || listeners.once) && (!context4 || listeners.context === context4)) {
+          if (listeners.fn === fn && (!once || listeners.once) && (!context2 || listeners.context === context2)) {
             clearEvent(this, evt);
           }
         } else {
           for (var i2 = 0, events = [], length = listeners.length; i2 < length; i2++) {
-            if (listeners[i2].fn !== fn || once && !listeners[i2].once || context4 && listeners[i2].context !== context4) {
+            if (listeners[i2].fn !== fn || once && !listeners[i2].once || context2 && listeners[i2].context !== context2) {
               events.push(listeners[i2]);
             }
           }
@@ -3205,14 +3205,14 @@ Deprecated since v${version}`;
           const { renderPipes: renderPipes4 } = renderer;
           for (let i2 = 0; i2 < this.effects.length; i2++) {
             const effect = this.effects[i2];
-            const pipe3 = renderPipes4[effect.pipe];
-            pipe3.push(effect, this, instructionSet);
+            const pipe = renderPipes4[effect.pipe];
+            pipe.push(effect, this, instructionSet);
           }
           this.collectRenderablesSimple(instructionSet, renderer, currentLayer);
           for (let i2 = this.effects.length - 1; i2 >= 0; i2--) {
             const effect = this.effects[i2];
-            const pipe3 = renderPipes4[effect.pipe];
-            pipe3.pop(effect, this, instructionSet);
+            const pipe = renderPipes4[effect.pipe];
+            pipe.pop(effect, this, instructionSet);
           }
         }
       };
@@ -7872,12 +7872,12 @@ Deprecated since v${version}`;
          * @param priority - The priority for emitting
          * @param once - If the handler should fire once
          */
-        constructor(fn, context4 = null, priority = 0, once = false) {
+        constructor(fn, context2 = null, priority = 0, once = false) {
           this.next = null;
           this.previous = null;
           this._destroyed = false;
           this._fn = fn;
-          this._context = context4;
+          this._context = context2;
           this.priority = priority;
           this._once = once;
         }
@@ -7887,8 +7887,8 @@ Deprecated since v${version}`;
          * @param context - The listener context
          * @returns `true` if the listener match the arguments
          */
-        match(fn, context4 = null) {
-          return this._fn === fn && this._context === context4;
+        match(fn, context2 = null) {
+          return this._fn === fn && this._context === context2;
         }
         /**
          * Emit by calling the current function.
@@ -8034,8 +8034,8 @@ Deprecated since v${version}`;
          * });
          * ```
          */
-        add(fn, context4, priority = UPDATE_PRIORITY.NORMAL) {
-          return this._addListener(new TickerListener(fn, context4, priority));
+        add(fn, context2, priority = UPDATE_PRIORITY.NORMAL) {
+          return this._addListener(new TickerListener(fn, context2, priority));
         }
         /**
          * Add a handler for the tick event which is only executed once on the next frame.
@@ -8072,8 +8072,8 @@ Deprecated since v${version}`;
          * @see {@link Ticker#add} For continuous updates
          * @see {@link Ticker#remove} For removing handlers
          */
-        addOnce(fn, context4, priority = UPDATE_PRIORITY.NORMAL) {
-          return this._addListener(new TickerListener(fn, context4, priority, true));
+        addOnce(fn, context2, priority = UPDATE_PRIORITY.NORMAL) {
+          return this._addListener(new TickerListener(fn, context2, priority, true));
         }
         /**
          * Internally adds the event handler so that it can be sorted by priority.
@@ -8137,10 +8137,10 @@ Deprecated since v${version}`;
          * @see {@link Ticker#add} For adding handlers
          * @see {@link Ticker#addOnce} For one-time handlers
          */
-        remove(fn, context4) {
+        remove(fn, context2) {
           let listener = this._head.next;
           while (listener) {
-            if (listener.match(fn, context4)) {
+            if (listener.match(fn, context2)) {
               listener = listener.destroy();
             } else {
               listener = listener.next;
@@ -9644,9 +9644,9 @@ Deprecated since v${version}`;
           const { renderPipes: renderPipes4 } = renderer;
           renderPipes4.blendMode.pushBlendMode(this, this.groupBlendMode, instructionSet);
           const rp = renderPipes4;
-          const pipe3 = rp[this.renderPipeId];
-          if (pipe3?.addRenderable) {
-            pipe3.addRenderable(this, instructionSet);
+          const pipe = rp[this.renderPipeId];
+          if (pipe?.addRenderable) {
+            pipe.addRenderable(this, instructionSet);
           }
           this.didViewUpdate = false;
           const children = this.children;
@@ -11500,27 +11500,27 @@ Deprecated since v${version}`;
           const capture = typeof options === "boolean" && options || typeof options === "object" && options.capture;
           const signal = typeof options === "object" ? options.signal : void 0;
           const once = typeof options === "object" ? options.once === true : false;
-          const context4 = typeof listener === "function" ? void 0 : listener;
+          const context2 = typeof listener === "function" ? void 0 : listener;
           type = capture ? `${type}capture` : type;
           const listenerFn = typeof listener === "function" ? listener : listener.handleEvent;
           const emitter = this;
           if (signal) {
             signal.addEventListener("abort", () => {
-              emitter.off(type, listenerFn, context4);
+              emitter.off(type, listenerFn, context2);
             });
           }
           if (once) {
-            emitter.once(type, listenerFn, context4);
+            emitter.once(type, listenerFn, context2);
           } else {
-            emitter.on(type, listenerFn, context4);
+            emitter.on(type, listenerFn, context2);
           }
         },
         removeEventListener(type, listener, options) {
           const capture = typeof options === "boolean" && options || typeof options === "object" && options.capture;
-          const context4 = typeof listener === "function" ? void 0 : listener;
+          const context2 = typeof listener === "function" ? void 0 : listener;
           type = capture ? `${type}capture` : type;
           listener = typeof listener === "function" ? listener : listener.handleEvent;
-          this.off(type, listener, context4);
+          this.off(type, listener, context2);
         },
         dispatchEvent(e2) {
           if (!(e2 instanceof FederatedEvent)) {
@@ -14346,9 +14346,9 @@ Deprecated since v${version}`;
   // node_modules/pixi.js/lib/rendering/renderers/canvas/utils/canUseNewCanvasBlendModes.mjs
   function createColoredCanvas(color) {
     const canvas = DOMAdapter.get().createCanvas(6, 1);
-    const context4 = canvas.getContext("2d");
-    context4.fillStyle = color;
-    context4.fillRect(0, 0, 6, 1);
+    const context2 = canvas.getContext("2d");
+    context2.fillStyle = color;
+    context2.fillRect(0, 0, 6, 1);
     return canvas;
   }
   function canUseNewCanvasBlendModes() {
@@ -14359,11 +14359,11 @@ Deprecated since v${version}`;
       const magenta = createColoredCanvas("#ff00ff");
       const yellow = createColoredCanvas("#ffff00");
       const canvas = DOMAdapter.get().createCanvas(6, 1);
-      const context4 = canvas.getContext("2d");
-      context4.globalCompositeOperation = "multiply";
-      context4.drawImage(magenta, 0, 0);
-      context4.drawImage(yellow, 2, 0);
-      const imageData = context4.getImageData(2, 0, 1, 1);
+      const context2 = canvas.getContext("2d");
+      context2.globalCompositeOperation = "multiply";
+      context2.drawImage(magenta, 0, 0);
+      context2.drawImage(yellow, 2, 0);
+      const imageData = context2.getImageData(2, 0, 1, 1);
       if (!imageData) {
         canUseNewCanvasBlendModesValue = false;
       } else {
@@ -14425,8 +14425,8 @@ Deprecated since v${version}`;
               return cached.canvas;
             }
             const canvas = DOMAdapter.get().createCanvas(source3.pixelWidth, source3.pixelHeight);
-            const context4 = canvas.getContext("2d");
-            const imageData = context4.createImageData(source3.pixelWidth, source3.pixelHeight);
+            const context2 = canvas.getContext("2d");
+            const imageData = context2.createImageData(source3.pixelWidth, source3.pixelHeight);
             const data = imageData.data;
             const bytes = resource instanceof ArrayBuffer ? new Uint8Array(resource) : new Uint8Array(resource.buffer, resource.byteOffset, resource.byteLength);
             if (source3.format === "bgra8unorm") {
@@ -14439,17 +14439,17 @@ Deprecated since v${version}`;
             } else {
               data.set(bytes.subarray(0, data.length));
             }
-            context4.putImageData(imageData, 0, 0);
+            context2.putImageData(imageData, 0, 0);
             canvasUtils._canvasSourceCache.set(source3, { canvas, resourceId: source3._resourceId });
             return canvas;
           }
           if (isPMA) {
             const canvas = DOMAdapter.get().createCanvas(source3.pixelWidth, source3.pixelHeight);
-            const context4 = canvas.getContext("2d", { willReadFrequently: true });
+            const context2 = canvas.getContext("2d", { willReadFrequently: true });
             canvas.width = source3.pixelWidth;
             canvas.height = source3.pixelHeight;
-            context4.drawImage(resource, 0, 0);
-            const imageData = context4.getImageData(0, 0, canvas.width, canvas.height);
+            context2.drawImage(resource, 0, 0);
+            const imageData = context2.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
             for (let i2 = 0; i2 < data.length; i2 += 4) {
               const a2 = data[i2 + 3];
@@ -14460,7 +14460,7 @@ Deprecated since v${version}`;
                 data[i2 + 2] = Math.min(255, data[i2 + 2] * alphaInv + 0.5);
               }
             }
-            context4.putImageData(imageData, 0, 0);
+            context2.putImageData(imageData, 0, 0);
             canvasUtils._unpremultipliedCache.set(source3, { canvas, resourceId: source3._resourceId });
             return canvas;
           }
@@ -14470,10 +14470,10 @@ Deprecated since v${version}`;
               return cached.canvas;
             }
             const canvas = DOMAdapter.get().createCanvas(source3.pixelWidth, source3.pixelHeight);
-            const context4 = canvas.getContext("2d");
+            const context2 = canvas.getContext("2d");
             canvas.width = source3.pixelWidth;
             canvas.height = source3.pixelHeight;
-            context4.drawImage(resource, 0, 0);
+            context2.drawImage(resource, 0, 0);
             canvasUtils._canvasSourceCache.set(source3, { canvas, resourceId: source3._resourceId });
             return canvas;
           }
@@ -14513,8 +14513,8 @@ Deprecated since v${version}`;
             canvasUtils.canvas = DOMAdapter.get().createCanvas();
           }
           canvasUtils.tintMethod(texture, color, canvasUtils.canvas);
-          const context4 = canvasUtils.canvas.getContext("2d");
-          pattern = context4.createPattern(canvasUtils.canvas, "repeat");
+          const context2 = canvasUtils.canvas.getContext("2d");
+          pattern = context2.createPattern(canvasUtils.canvas, "repeat");
           pattern.tintId = resourceId;
           cache[stringColor] = pattern;
           return pattern;
@@ -14541,7 +14541,7 @@ Deprecated since v${version}`;
           patternAny.setTransform(invert ? domMatrix.inverse() : domMatrix);
         },
         tintWithMultiply: (texture, color, canvas) => {
-          const context4 = canvas.getContext("2d");
+          const context2 = canvas.getContext("2d");
           const crop = texture.frame.clone();
           const resolution = texture.source._resolution ?? texture.source.resolution ?? 1;
           const rotate = texture.rotate;
@@ -14554,19 +14554,19 @@ Deprecated since v${version}`;
           const outHeight = isVertical ? crop.width : crop.height;
           canvas.width = Math.ceil(outWidth);
           canvas.height = Math.ceil(outHeight);
-          context4.save();
-          context4.fillStyle = Color.shared.setValue(color).toHex();
-          context4.fillRect(0, 0, outWidth, outHeight);
-          context4.globalCompositeOperation = "multiply";
+          context2.save();
+          context2.fillStyle = Color.shared.setValue(color).toHex();
+          context2.fillRect(0, 0, outWidth, outHeight);
+          context2.globalCompositeOperation = "multiply";
           const source3 = canvasUtils.getCanvasSource(texture);
           if (!source3) {
-            context4.restore();
+            context2.restore();
             return;
           }
           if (rotate) {
-            canvasUtils._applyInverseRotation(context4, rotate, crop.width, crop.height);
+            canvasUtils._applyInverseRotation(context2, rotate, crop.width, crop.height);
           }
-          context4.drawImage(
+          context2.drawImage(
             source3,
             crop.x,
             crop.y,
@@ -14577,8 +14577,8 @@ Deprecated since v${version}`;
             crop.width,
             crop.height
           );
-          context4.globalCompositeOperation = "destination-atop";
-          context4.drawImage(
+          context2.globalCompositeOperation = "destination-atop";
+          context2.drawImage(
             source3,
             crop.x,
             crop.y,
@@ -14589,10 +14589,10 @@ Deprecated since v${version}`;
             crop.width,
             crop.height
           );
-          context4.restore();
+          context2.restore();
         },
         tintWithOverlay: (texture, color, canvas) => {
-          const context4 = canvas.getContext("2d");
+          const context2 = canvas.getContext("2d");
           const crop = texture.frame.clone();
           const resolution = texture.source._resolution ?? texture.source.resolution ?? 1;
           const rotate = texture.rotate;
@@ -14605,20 +14605,20 @@ Deprecated since v${version}`;
           const outHeight = isVertical ? crop.width : crop.height;
           canvas.width = Math.ceil(outWidth);
           canvas.height = Math.ceil(outHeight);
-          context4.save();
-          context4.globalCompositeOperation = "copy";
-          context4.fillStyle = Color.shared.setValue(color).toHex();
-          context4.fillRect(0, 0, outWidth, outHeight);
-          context4.globalCompositeOperation = "destination-atop";
+          context2.save();
+          context2.globalCompositeOperation = "copy";
+          context2.fillStyle = Color.shared.setValue(color).toHex();
+          context2.fillRect(0, 0, outWidth, outHeight);
+          context2.globalCompositeOperation = "destination-atop";
           const source3 = canvasUtils.getCanvasSource(texture);
           if (!source3) {
-            context4.restore();
+            context2.restore();
             return;
           }
           if (rotate) {
-            canvasUtils._applyInverseRotation(context4, rotate, crop.width, crop.height);
+            canvasUtils._applyInverseRotation(context2, rotate, crop.width, crop.height);
           }
-          context4.drawImage(
+          context2.drawImage(
             source3,
             crop.x,
             crop.y,
@@ -14629,10 +14629,10 @@ Deprecated since v${version}`;
             crop.width,
             crop.height
           );
-          context4.restore();
+          context2.restore();
         },
         tintWithPerPixel: (texture, color, canvas) => {
-          const context4 = canvas.getContext("2d");
+          const context2 = canvas.getContext("2d");
           const crop = texture.frame.clone();
           const resolution = texture.source._resolution ?? texture.source.resolution ?? 1;
           const rotate = texture.rotate;
@@ -14645,17 +14645,17 @@ Deprecated since v${version}`;
           const outHeight = isVertical ? crop.width : crop.height;
           canvas.width = Math.ceil(outWidth);
           canvas.height = Math.ceil(outHeight);
-          context4.save();
-          context4.globalCompositeOperation = "copy";
+          context2.save();
+          context2.globalCompositeOperation = "copy";
           const source3 = canvasUtils.getCanvasSource(texture);
           if (!source3) {
-            context4.restore();
+            context2.restore();
             return;
           }
           if (rotate) {
-            canvasUtils._applyInverseRotation(context4, rotate, crop.width, crop.height);
+            canvasUtils._applyInverseRotation(context2, rotate, crop.width, crop.height);
           }
-          context4.drawImage(
+          context2.drawImage(
             source3,
             crop.x,
             crop.y,
@@ -14666,18 +14666,18 @@ Deprecated since v${version}`;
             crop.width,
             crop.height
           );
-          context4.restore();
+          context2.restore();
           const r2 = color >> 16 & 255;
           const g2 = color >> 8 & 255;
           const b2 = color & 255;
-          const imageData = context4.getImageData(0, 0, outWidth, outHeight);
+          const imageData = context2.getImageData(0, 0, outWidth, outHeight);
           const data = imageData.data;
           for (let i2 = 0; i2 < data.length; i2 += 4) {
             data[i2] = data[i2] * r2 / 255;
             data[i2 + 1] = data[i2 + 1] * g2 / 255;
             data[i2 + 2] = data[i2 + 2] * b2 / 255;
           }
-          context4.putImageData(imageData, 0, 0);
+          context2.putImageData(imageData, 0, 0);
         },
         /**
          * Applies inverse rotation transform to context for texture packer rotation compensation.
@@ -14687,7 +14687,7 @@ Deprecated since v${version}`;
          * @param srcWidth - Source crop width (before rotation)
          * @param srcHeight - Source crop height (before rotation)
          */
-        _applyInverseRotation: (context4, rotate, srcWidth, srcHeight) => {
+        _applyInverseRotation: (context2, rotate, srcWidth, srcHeight) => {
           const inv = groupD8.inv(rotate);
           const a2 = groupD8.uX(inv);
           const b2 = groupD8.uY(inv);
@@ -14695,7 +14695,7 @@ Deprecated since v${version}`;
           const d2 = groupD8.vY(inv);
           const tx = -Math.min(0, a2 * srcWidth, c2 * srcHeight, a2 * srcWidth + c2 * srcHeight);
           const ty = -Math.min(0, b2 * srcWidth, d2 * srcHeight, b2 * srcWidth + d2 * srcHeight);
-          context4.transform(a2, b2, c2, d2, tx, ty);
+          context2.transform(a2, b2, c2, d2, tx, ty);
         }
       };
       canvasUtils.tintMethod = canvasUtils.canUseMultiply ? canvasUtils.tintWithMultiply : canvasUtils.tintWithPerPixel;
@@ -14724,8 +14724,8 @@ Deprecated since v${version}`;
           const canvas = DOMAdapter.get().createCanvas();
           canvas.width = pixelWidth;
           canvas.height = pixelHeight;
-          const context4 = canvas.getContext("2d");
-          return { canvas, context: context4 };
+          const context2 = canvas.getContext("2d");
+          return { canvas, context: context2 };
         }
         /**
          * Gets a Power-of-Two render texture or fullScreen texture
@@ -15929,21 +15929,21 @@ Deprecated since v${version}`;
           filterFrame.cssFilterString = cssFilters.join(" ");
           this._calculateFilterArea(instruction, filterFrame.bounds);
           filterFrame.useClip = !!instruction.filterEffect.filterArea;
-          const context4 = this.renderer.canvasContext.activeContext;
-          const previousFilter = context4.filter || "none";
+          const context2 = this.renderer.canvasContext.activeContext;
+          const previousFilter = context2.filter || "none";
           this._savedStates.push({ filter: previousFilter, alphaMultiplier: this._alphaMultiplier });
           if (filterFrame.useClip && Number.isFinite(filterFrame.bounds.width) && Number.isFinite(filterFrame.bounds.height) && filterFrame.bounds.width > 0 && filterFrame.bounds.height > 0) {
             const resolution = this.renderer.canvasContext.activeResolution || 1;
-            context4.save();
-            context4.setTransform(1, 0, 0, 1, 0, 0);
-            context4.beginPath();
-            context4.rect(
+            context2.save();
+            context2.setTransform(1, 0, 0, 1, 0, 0);
+            context2.beginPath();
+            context2.rect(
               filterFrame.bounds.x * resolution,
               filterFrame.bounds.y * resolution,
               filterFrame.bounds.width * resolution,
               filterFrame.bounds.height * resolution
             );
-            context4.clip();
+            context2.clip();
           } else {
             filterFrame.useClip = false;
           }
@@ -15951,7 +15951,7 @@ Deprecated since v${version}`;
             this._alphaMultiplier *= alphaMultiplier;
           }
           if (filterFrame.cssFilterString) {
-            context4.filter = previousFilter !== "none" ? `${previousFilter} ${filterFrame.cssFilterString}` : filterFrame.cssFilterString;
+            context2.filter = previousFilter !== "none" ? `${previousFilter} ${filterFrame.cssFilterString}` : filterFrame.cssFilterString;
           }
         }
         /** Pop a filter from the stack. Called when exiting a filtered container. */
@@ -15964,11 +15964,11 @@ Deprecated since v${version}`;
           if (!savedState) {
             return;
           }
-          const context4 = this.renderer.canvasContext.activeContext;
+          const context2 = this.renderer.canvasContext.activeContext;
           if (filterFrame.useClip) {
-            context4.restore();
+            context2.restore();
           } else {
-            context4.filter = savedState.filter;
+            context2.filter = savedState.filter;
           }
           this._alphaMultiplier = savedState.alphaMultiplier;
         }
@@ -16013,20 +16013,20 @@ Deprecated since v${version}`;
           const width = frame.width;
           const height = frame.height;
           const canvasAndContext = CanvasPool.getOptimalCanvasAndContext(width, height, resolution);
-          const { canvas, context: context4 } = canvasAndContext;
-          context4.setTransform(1, 0, 0, 1, 0, 0);
-          context4.clearRect(0, 0, canvas.width, canvas.height);
+          const { canvas, context: context2 } = canvasAndContext;
+          context2.setTransform(1, 0, 0, 1, 0, 0);
+          context2.clearRect(0, 0, canvas.width, canvas.height);
           if (cssFilters.length) {
-            context4.filter = cssFilters.join(" ");
+            context2.filter = cssFilters.join(" ");
           }
           if (alphaMultiplier !== 1) {
-            context4.globalAlpha = alphaMultiplier;
+            context2.globalAlpha = alphaMultiplier;
           }
           const sx = frame.x * resolution;
           const sy = frame.y * resolution;
           const sw = width * resolution;
           const sh = height * resolution;
-          context4.drawImage(
+          context2.drawImage(
             source3,
             sx,
             sy,
@@ -16037,8 +16037,8 @@ Deprecated since v${version}`;
             sw,
             sh
           );
-          context4.filter = "none";
-          context4.globalAlpha = 1;
+          context2.filter = "none";
+          context2.globalAlpha = 1;
           return getPo2TextureFromSource(canvas, width, height, resolution);
         }
         /**
@@ -19141,7 +19141,7 @@ ${src}`;
          * Systems are attached dynamically to this class when added.
          * @param config - the config for the system manager
          */
-        constructor(config3) {
+        constructor(config) {
           super();
           this.tick = 0;
           this.uid = uid("renderer");
@@ -19149,9 +19149,9 @@ ${src}`;
           this.renderPipes = /* @__PURE__ */ Object.create(null);
           this._initOptions = {};
           this._systemsHash = /* @__PURE__ */ Object.create(null);
-          this.type = config3.type;
-          this.name = config3.name;
-          this.config = config3;
+          this.type = config.type;
+          this.name = config.name;
+          this.config = config;
           const combinedRunners = [...defaultRunners, ...this.config.runners ?? []];
           this._addRunners(...combinedRunners);
           this._unsafeEvalCheck();
@@ -19340,9 +19340,9 @@ ${src}`;
             acc[adaptor.name] = adaptor.value;
             return acc;
           }, {});
-          pipes.forEach((pipe3) => {
-            const PipeClass = pipe3.value;
-            const name = pipe3.name;
+          pipes.forEach((pipe) => {
+            const PipeClass = pipe.value;
+            const name = pipe.name;
             const Adaptor = adaptors[name];
             this.renderPipes[name] = new PipeClass(
               this,
@@ -20263,14 +20263,14 @@ ${parts.join("\n")}
           });
         }
         execute(graphicsPipe, renderable) {
-          const context4 = renderable.context;
-          const shader = context4.customShader || this.shader;
+          const context2 = renderable.context;
+          const shader = context2.customShader || this.shader;
           const renderer = graphicsPipe.renderer;
           const contextSystem = renderer.graphicsContext;
           const {
             batcher,
             instructions
-          } = contextSystem.getContextRenderData(context4);
+          } = contextSystem.getContextRenderData(context2);
           const encoder = renderer.encoder;
           encoder.setGeometry(batcher.geometry, shader.gpuProgram);
           const globalUniformsBindGroup = renderer.globalUniforms.bindGroup;
@@ -20859,8 +20859,8 @@ ${parts.join("\n")}
     for (let i2 = 0; i2 < renderGroup.childrenRenderablesToUpdate.index; i2++) {
       const container = list[i2];
       const renderable = container;
-      const pipe3 = renderPipes4[renderable.renderPipeId];
-      rebuildRequired = pipe3.validateRenderable(container);
+      const pipe = renderPipes4[renderable.renderPipeId];
+      rebuildRequired = pipe.validateRenderable(container);
       if (rebuildRequired) {
         break;
       }
@@ -22832,15 +22832,15 @@ ${parts.join("\n")}
         constructor(renderer) {
           this._renderer = renderer;
         }
-        _normalizeOptions(options, defaults2 = {}) {
+        _normalizeOptions(options, defaults = {}) {
           if (options instanceof Container || options instanceof Texture) {
             return {
               target: options,
-              ...defaults2
+              ...defaults
             };
           }
           return {
-            ...defaults2,
+            ...defaults,
             ...options
           };
         }
@@ -23436,11 +23436,11 @@ ${parts.join("\n")}
             this._collectionsHandler = this._renderer.scheduler.repeat(
               () => {
                 for (const hash of this._managedCollections) {
-                  const { context: context4, collection, type } = hash;
+                  const { context: context2, collection, type } = hash;
                   if (type === "hash") {
-                    context4[collection] = cleanHash(context4[collection]);
+                    context2[collection] = cleanHash(context2[collection]);
                   } else {
-                    context4[collection] = cleanArray(context4[collection]);
+                    context2[collection] = cleanArray(context2[collection]);
                   }
                 }
               },
@@ -23487,9 +23487,9 @@ ${parts.join("\n")}
          * @param collection - The property name on context that holds the collection
          * @param type - The type of collection to track ('hash' or 'array')
          */
-        addCollection(context4, collection, type) {
+        addCollection(context2, collection, type) {
           this._managedCollections.push({
-            context: context4,
+            context: context2,
             collection,
             type
           });
@@ -23542,9 +23542,9 @@ ${parts.join("\n")}
          * @param type - The type of resources in the hash ('resource' or 'renderable')
          * @param priority - Processing priority (lower values are processed first)
          */
-        addResourceHash(context4, hash, type, priority = 0) {
+        addResourceHash(context2, hash, type, priority = 0) {
           this._managedResourceHashes.push({
-            context: context4,
+            context: context2,
             hash,
             type,
             priority
@@ -23609,8 +23609,8 @@ ${parts.join("\n")}
           return hashClone;
         }
         runOnHash(hashEntry, now) {
-          const { context: context4, hash, type } = hashEntry;
-          const hashValue = context4[hash];
+          const { context: context2, hash, type } = hashEntry;
+          const hashValue = context2[hash];
           let hashClone = null;
           let nullCount = 0;
           for (const key in hashValue) {
@@ -23654,7 +23654,7 @@ ${parts.join("\n")}
             }
           }
           if (hashClone) {
-            context4[hash] = hashClone;
+            context2[hash] = hashClone;
           }
         }
         /** Cleans up the garbage collection system. Disables GC and removes all tracked resources. */
@@ -24045,18 +24045,18 @@ ${parts.join("\n")}
          * @param context - The object containing the hash table
          * @param hash - The property name of the hash table
          */
-        addManagedHash(context4, hash) {
+        addManagedHash(context2, hash) {
           deprecation("8.15.0", "RenderableGCSystem.addManagedHash is deprecated, please use the GCSystem.addCollection instead.");
-          this._renderer.gc.addCollection(context4, hash, "hash");
+          this._renderer.gc.addCollection(context2, hash, "hash");
         }
         /**
          * Adds an array to be managed by the garbage collector.
          * @param context - The object containing the array
          * @param hash - The property name of the array
          */
-        addManagedArray(context4, hash) {
+        addManagedArray(context2, hash) {
           deprecation("8.15.0", "RenderableGCSystem.addManagedArray is deprecated, please use the GCSystem.addCollection instead.");
-          this._renderer.gc.addCollection(context4, hash, "array");
+          this._renderer.gc.addCollection(context2, hash, "array");
         }
         /**
          * Starts tracking a renderable for garbage collection.
@@ -26656,14 +26656,14 @@ ${parts.join("\n")}
           const gpuRenderTarget = renderTargetSystem.getGpuRenderTarget(renderTarget);
           const colorAttachments = renderTarget.colorTextures.map(
             (texture, i2) => {
-              const context4 = gpuRenderTarget.contexts[i2];
+              const context2 = gpuRenderTarget.contexts[i2];
               let view;
               let resolveTarget;
-              if (context4) {
+              if (context2) {
                 if (layer !== 0) {
                   throw new Error("[RenderTargetSystem] Rendering to array layers is not supported for canvas targets.");
                 }
-                const currentTexture = context4.getCurrentTexture();
+                const currentTexture = context2.getCurrentTexture();
                 const canvasTextureView = currentTexture.createView();
                 view = canvasTextureView;
               } else {
@@ -26745,12 +26745,12 @@ ${parts.join("\n")}
           gpuRenderTarget.colorTargetCount = renderTarget.colorTextures.length;
           renderTarget.colorTextures.forEach((colorTexture, i2) => {
             if (colorTexture instanceof CanvasSource) {
-              const context4 = colorTexture.resource.getContext(
+              const context2 = colorTexture.resource.getContext(
                 "webgpu"
               );
               const alphaMode = colorTexture.transparent ? "premultiplied" : "opaque";
               try {
-                context4.configure({
+                context2.configure({
                   device: this._renderer.gpu.device,
                   usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
                   format: "bgra8unorm",
@@ -26759,7 +26759,7 @@ ${parts.join("\n")}
               } catch (e2) {
                 console.error(e2);
               }
-              gpuRenderTarget.contexts[i2] = context4;
+              gpuRenderTarget.contexts[i2] = context2;
             }
             gpuRenderTarget.msaa = colorTexture.source.antialias;
             if (colorTexture.source.antialias) {
@@ -26781,8 +26781,8 @@ ${parts.join("\n")}
           return gpuRenderTarget;
         }
         destroyGpuRenderTarget(gpuRenderTarget) {
-          gpuRenderTarget.contexts.forEach((context4) => {
-            context4.unconfigure();
+          gpuRenderTarget.contexts.forEach((context2) => {
+            context2.unconfigure();
           });
           gpuRenderTarget.msaaTextures.forEach((texture) => {
             texture.destroy();
@@ -27189,8 +27189,8 @@ ${parts.join("\n")}
           if (!resource) return;
           if (globalThis.HTMLImageElement && resource instanceof HTMLImageElement) {
             const canvas = DOMAdapter.get().createCanvas(resource.width, resource.height);
-            const context4 = canvas.getContext("2d");
-            context4.drawImage(resource, 0, 0, resource.width, resource.height);
+            const context2 = canvas.getContext("2d");
+            context2.drawImage(resource, 0, 0, resource.width, resource.height);
             source3.resource = canvas;
             warn("ImageSource: Image element passed, converting to canvas and replacing resource.");
           }
@@ -27571,8 +27571,8 @@ ${parts.join("\n")}
           const canvas = DOMAdapter.get().createCanvas();
           canvas.width = texture.source.pixelWidth;
           canvas.height = texture.source.pixelHeight;
-          const context4 = canvas.getContext("webgpu");
-          context4.configure({
+          const context2 = canvas.getContext("webgpu");
+          context2.configure({
             device: renderer.gpu.device,
             usage: GPUTextureUsage.COPY_DST | GPUTextureUsage.COPY_SRC,
             format: DOMAdapter.get().getNavigator().gpu.getPreferredCanvasFormat(),
@@ -27585,7 +27585,7 @@ ${parts.join("\n")}
               y: 0
             }
           }, {
-            texture: context4.getCurrentTexture()
+            texture: context2.getCurrentTexture()
           }, {
             width: canvas.width,
             height: canvas.height
@@ -27596,10 +27596,10 @@ ${parts.join("\n")}
         getPixels(texture) {
           const webGPUCanvas = this.generateCanvas(texture);
           const canvasAndContext = CanvasPool.getOptimalCanvasAndContext(webGPUCanvas.width, webGPUCanvas.height);
-          const context4 = canvasAndContext.context;
-          context4.drawImage(webGPUCanvas, 0, 0);
+          const context2 = canvasAndContext.context;
+          context2.drawImage(webGPUCanvas, 0, 0);
           const { width, height } = webGPUCanvas;
-          const imageData = context4.getImageData(0, 0, width, height);
+          const imageData = context2.getImageData(0, 0, width, height);
           const pixels = new Uint8ClampedArray(imageData.data.buffer);
           CanvasPool.returnCanvasAndContext(canvasAndContext);
           return { pixels, width, height };
@@ -27736,14 +27736,14 @@ ${parts.join("\n")}
           });
         }
         execute(graphicsPipe, renderable) {
-          const context4 = renderable.context;
-          const shader = context4.customShader || this.shader;
+          const context2 = renderable.context;
+          const shader = context2.customShader || this.shader;
           const renderer = graphicsPipe.renderer;
           const contextSystem = renderer.graphicsContext;
           const {
             batcher,
             instructions
-          } = contextSystem.getContextRenderData(context4);
+          } = contextSystem.getContextRenderData(context2);
           shader.groups[0] = renderer.globalUniforms.bindGroup;
           renderer.state.set(graphicsPipe.state);
           renderer.shader.bind(shader);
@@ -32491,8 +32491,8 @@ ${parts.join("\n")}
   }
   function getCanvas(width, height) {
     const canvas = DOMAdapter.get().createCanvas(width, height);
-    const context4 = canvas.getContext("2d");
-    return { canvas, context: context4 };
+    const context2 = canvas.getContext("2d");
+    return { canvas, context: context2 };
   }
   function ensureGradientOptions(args) {
     let options = args[0] ?? {};
@@ -32527,8 +32527,8 @@ ${parts.join("\n")}
           this.type = "linear";
           this.colorStops = [];
           let options = ensureGradientOptions(args);
-          const defaults2 = options.type === "radial" ? _FillGradient2.defaultRadialOptions : _FillGradient2.defaultLinearOptions;
-          options = { ...defaults2, ...definedProps(options) };
+          const defaults = options.type === "radial" ? _FillGradient2.defaultRadialOptions : _FillGradient2.defaultLinearOptions;
+          options = { ...defaults, ...definedProps(options) };
           this._textureSize = options.textureSize;
           this._wrapMode = options.wrapMode;
           if (options.type === "radial") {
@@ -32586,11 +32586,11 @@ ${parts.join("\n")}
           }
           const colorStops = this.colorStops.length ? this.colorStops : emptyColorStops;
           const defaultSize = this._textureSize;
-          const { canvas, context: context4 } = getCanvas(defaultSize, 1);
-          const gradient = !flip ? context4.createLinearGradient(0, 0, this._textureSize, 0) : context4.createLinearGradient(this._textureSize, 0, 0, 0);
+          const { canvas, context: context2 } = getCanvas(defaultSize, 1);
+          const gradient = !flip ? context2.createLinearGradient(0, 0, this._textureSize, 0) : context2.createLinearGradient(this._textureSize, 0, 0, 0);
           addColorStops(gradient, colorStops);
-          context4.fillStyle = gradient;
-          context4.fillRect(0, 0, defaultSize, 1);
+          context2.fillStyle = gradient;
+          context2.fillRect(0, 0, defaultSize, 1);
           this.texture = new Texture({
             source: new ImageSource({
               resource: canvas,
@@ -32630,7 +32630,7 @@ ${parts.join("\n")}
           if (this.texture) return;
           const colorStops = this.colorStops.length ? this.colorStops : emptyColorStops;
           const defaultSize = this._textureSize;
-          const { canvas, context: context4 } = getCanvas(defaultSize, defaultSize);
+          const { canvas, context: context2 } = getCanvas(defaultSize, defaultSize);
           const { x: x0, y: y0 } = this.center;
           const { x: x1, y: y1 } = this.outerCenter;
           const r0 = this.innerRadius;
@@ -32640,7 +32640,7 @@ ${parts.join("\n")}
           const scale = defaultSize / (r1 * 2);
           const cx = (x0 - ox) * scale;
           const cy = (y0 - oy) * scale;
-          const gradient = context4.createRadialGradient(
+          const gradient = context2.createRadialGradient(
             cx,
             cy,
             r0 * scale,
@@ -32649,14 +32649,14 @@ ${parts.join("\n")}
             r1 * scale
           );
           addColorStops(gradient, colorStops);
-          context4.fillStyle = colorStops[colorStops.length - 1].color;
-          context4.fillRect(0, 0, defaultSize, defaultSize);
-          context4.fillStyle = gradient;
-          context4.translate(cx, cy);
-          context4.rotate(this.rotation);
-          context4.scale(1, this.scale);
-          context4.translate(-cx, -cy);
-          context4.fillRect(0, 0, defaultSize, defaultSize);
+          context2.fillStyle = colorStops[colorStops.length - 1].color;
+          context2.fillRect(0, 0, defaultSize, defaultSize);
+          context2.fillStyle = gradient;
+          context2.translate(cx, cy);
+          context2.rotate(this.rotation);
+          context2.scale(1, this.scale);
+          context2.translate(-cx, -cy);
+          context2.fillRect(0, 0, defaultSize, defaultSize);
           this.texture = new Texture({
             source: new ImageSource({
               resource: canvas,
@@ -33305,14 +33305,14 @@ ${parts.join("\n")}
   });
 
   // node_modules/pixi.js/lib/scene/graphics/shared/utils/buildContextBatches.mjs
-  function buildContextBatches(context4, gpuContext) {
+  function buildContextBatches(context2, gpuContext) {
     const { geometryData, batches } = gpuContext;
     batches.length = 0;
     geometryData.indices.length = 0;
     geometryData.vertices.length = 0;
     geometryData.uvs.length = 0;
-    for (let i2 = 0; i2 < context4.instructions.length; i2++) {
-      const instruction = context4.instructions[i2];
+    for (let i2 = 0; i2 < context2.instructions.length; i2++) {
+      const instruction = context2.instructions[i2];
       if (instruction.action === "texture") {
         addTextureToGeometryData(instruction.data, batches, geometryData);
       } else if (instruction.action === "fill" || instruction.action === "stroke") {
@@ -33470,71 +33470,71 @@ ${parts.join("\n")}
   });
 
   // node_modules/pixi.js/lib/scene/graphics/canvas/CanvasGraphicsAdaptor.mjs
-  function fillTriangles(context4, vertices, indices) {
-    context4.beginPath();
+  function fillTriangles(context2, vertices, indices) {
+    context2.beginPath();
     for (let i2 = 0; i2 < indices.length; i2 += 3) {
       const i0 = indices[i2] * 2;
       const i1 = indices[i2 + 1] * 2;
       const i22 = indices[i2 + 2] * 2;
-      context4.moveTo(vertices[i0], vertices[i0 + 1]);
-      context4.lineTo(vertices[i1], vertices[i1 + 1]);
-      context4.lineTo(vertices[i22], vertices[i22 + 1]);
-      context4.closePath();
+      context2.moveTo(vertices[i0], vertices[i0 + 1]);
+      context2.lineTo(vertices[i1], vertices[i1 + 1]);
+      context2.lineTo(vertices[i22], vertices[i22 + 1]);
+      context2.closePath();
     }
-    context4.fill();
+    context2.fill();
   }
   function colorToHex(color) {
     const clamped = color & 16777215;
     return `#${clamped.toString(16).padStart(6, "0")}`;
   }
-  function buildRoundedRectPath(context4, x2, y2, width, height, radius) {
+  function buildRoundedRectPath(context2, x2, y2, width, height, radius) {
     radius = Math.max(0, Math.min(radius, Math.min(width, height) / 2));
-    context4.moveTo(x2 + radius, y2);
-    context4.lineTo(x2 + width - radius, y2);
-    context4.quadraticCurveTo(x2 + width, y2, x2 + width, y2 + radius);
-    context4.lineTo(x2 + width, y2 + height - radius);
-    context4.quadraticCurveTo(x2 + width, y2 + height, x2 + width - radius, y2 + height);
-    context4.lineTo(x2 + radius, y2 + height);
-    context4.quadraticCurveTo(x2, y2 + height, x2, y2 + height - radius);
-    context4.lineTo(x2, y2 + radius);
-    context4.quadraticCurveTo(x2, y2, x2 + radius, y2);
+    context2.moveTo(x2 + radius, y2);
+    context2.lineTo(x2 + width - radius, y2);
+    context2.quadraticCurveTo(x2 + width, y2, x2 + width, y2 + radius);
+    context2.lineTo(x2 + width, y2 + height - radius);
+    context2.quadraticCurveTo(x2 + width, y2 + height, x2 + width - radius, y2 + height);
+    context2.lineTo(x2 + radius, y2 + height);
+    context2.quadraticCurveTo(x2, y2 + height, x2, y2 + height - radius);
+    context2.lineTo(x2, y2 + radius);
+    context2.quadraticCurveTo(x2, y2, x2 + radius, y2);
   }
-  function buildShapePath(context4, shape) {
+  function buildShapePath(context2, shape) {
     switch (shape.type) {
       case "rectangle": {
         const rect = shape;
-        context4.rect(rect.x, rect.y, rect.width, rect.height);
+        context2.rect(rect.x, rect.y, rect.width, rect.height);
         break;
       }
       case "roundedRectangle": {
         const rect = shape;
-        buildRoundedRectPath(context4, rect.x, rect.y, rect.width, rect.height, rect.radius);
+        buildRoundedRectPath(context2, rect.x, rect.y, rect.width, rect.height, rect.radius);
         break;
       }
       case "circle": {
         const circle = shape;
-        context4.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2);
+        context2.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2);
         break;
       }
       case "ellipse": {
         const ellipse = shape;
-        if (context4.ellipse) {
-          context4.ellipse(ellipse.x, ellipse.y, ellipse.halfWidth, ellipse.halfHeight, 0, 0, Math.PI * 2);
+        if (context2.ellipse) {
+          context2.ellipse(ellipse.x, ellipse.y, ellipse.halfWidth, ellipse.halfHeight, 0, 0, Math.PI * 2);
         } else {
-          context4.save();
-          context4.translate(ellipse.x, ellipse.y);
-          context4.scale(ellipse.halfWidth, ellipse.halfHeight);
-          context4.arc(0, 0, 1, 0, Math.PI * 2);
-          context4.restore();
+          context2.save();
+          context2.translate(ellipse.x, ellipse.y);
+          context2.scale(ellipse.halfWidth, ellipse.halfHeight);
+          context2.arc(0, 0, 1, 0, Math.PI * 2);
+          context2.restore();
         }
         break;
       }
       case "triangle": {
         const tri = shape;
-        context4.moveTo(tri.x, tri.y);
-        context4.lineTo(tri.x2, tri.y2);
-        context4.lineTo(tri.x3, tri.y3);
-        context4.closePath();
+        context2.moveTo(tri.x, tri.y);
+        context2.lineTo(tri.x2, tri.y2);
+        context2.lineTo(tri.x3, tri.y3);
+        context2.closePath();
         break;
       }
       case "polygon":
@@ -33542,18 +33542,18 @@ ${parts.join("\n")}
         const poly = shape;
         const points = poly.points;
         if (!points?.length) break;
-        context4.moveTo(points[0], points[1]);
+        context2.moveTo(points[0], points[1]);
         for (let i2 = 2; i2 < points.length; i2 += 2) {
-          context4.lineTo(points[i2], points[i2 + 1]);
+          context2.lineTo(points[i2], points[i2 + 1]);
         }
         if (poly.closePath) {
-          context4.closePath();
+          context2.closePath();
         }
         break;
       }
     }
   }
-  function addHolePaths(context4, holes) {
+  function addHolePaths(context2, holes) {
     if (!holes?.length) return false;
     for (let i2 = 0; i2 < holes.length; i2++) {
       const hole = holes[i2];
@@ -33561,12 +33561,12 @@ ${parts.join("\n")}
       const transform = hole.transform;
       const hasTransform = transform && !transform.isIdentity();
       if (hasTransform) {
-        context4.save();
-        context4.transform(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty);
+        context2.save();
+        context2.transform(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty);
       }
-      buildShapePath(context4, hole.shape);
+      buildShapePath(context2, hole.shape);
       if (hasTransform) {
-        context4.restore();
+        context2.restore();
       }
     }
     return true;
@@ -33633,7 +33633,7 @@ ${parts.join("\n")}
         execute(graphicsPipe, renderable) {
           const renderer = graphicsPipe.renderer;
           const contextSystem = renderer.canvasContext;
-          const context4 = contextSystem.activeContext;
+          const context2 = contextSystem.activeContext;
           const baseTransform = renderable.groupTransform;
           const globalColor = renderer.globalUniforms.globalUniformData?.worldColor ?? 4294967295;
           const groupColorAlpha = renderable.groupColorAlpha;
@@ -33646,7 +33646,7 @@ ${parts.join("\n")}
           const groupTintBGR = groupColorAlpha & 16777215;
           const groupTint = bgr2rgb(multiplyHexColors(groupTintBGR, globalTint));
           const roundPixels = renderer._roundPixels | renderable._roundPixels;
-          context4.save();
+          context2.save();
           contextSystem.setContextTransform(baseTransform, roundPixels === 1);
           contextSystem.setBlendMode(renderable.groupBlendMode);
           const instructions = renderable.context.instructions;
@@ -33660,7 +33660,7 @@ ${parts.join("\n")}
               const alpha2 = data2.alpha * groupAlpha;
               if (alpha2 <= 0) continue;
               const tint2 = multiplyHexColors(data2.style, groupTint);
-              context4.globalAlpha = alpha2;
+              context2.globalAlpha = alpha2;
               let drawSource = source3;
               if (tint2 !== 16777215) {
                 drawSource = canvasUtils.getTintedCanvas({ texture }, tint2);
@@ -33690,7 +33690,7 @@ ${parts.join("\n")}
               } else {
                 contextSystem.setContextTransform(baseTransform, roundPixels === 1);
               }
-              context4.drawImage(
+              context2.drawImage(
                 drawSource,
                 sx,
                 sy,
@@ -33714,13 +33714,13 @@ ${parts.join("\n")}
             const alpha = style.alpha * groupAlpha;
             if (alpha <= 0) continue;
             const isStroke = instruction.action === "stroke";
-            context4.globalAlpha = alpha;
+            context2.globalAlpha = alpha;
             if (isStroke) {
               const strokeStyle = style;
-              context4.lineWidth = strokeStyle.width;
-              context4.lineCap = strokeStyle.cap;
-              context4.lineJoin = strokeStyle.join;
-              context4.miterLimit = strokeStyle.miterLimit;
+              context2.lineWidth = strokeStyle.width;
+              context2.lineCap = strokeStyle.cap;
+              context2.lineJoin = strokeStyle.join;
+              context2.miterLimit = strokeStyle.miterLimit;
             }
             const shapePrimitives = shapePath.shapePrimitives;
             if (!isStroke && data.hole?.shapePath?.shapePrimitives?.length) {
@@ -33743,8 +33743,8 @@ ${parts.join("\n")}
                 currentTransform
               );
               if (hasTransform) {
-                context4.save();
-                context4.transform(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty);
+                context2.save();
+                context2.transform(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty);
               }
               if (isStroke) {
                 const strokeStyle = style;
@@ -33757,37 +33757,37 @@ ${parts.join("\n")}
                   if (shapeBuilder?.build(primitive.shape, points)) {
                     const close = primitive.shape.closePath ?? true;
                     buildLine(points, strokeStyle, false, close, vertices, indices);
-                    context4.fillStyle = canvasStyle;
-                    fillTriangles(context4, vertices, indices);
+                    context2.fillStyle = canvasStyle;
+                    fillTriangles(context2, vertices, indices);
                   } else {
-                    context4.strokeStyle = canvasStyle;
-                    context4.beginPath();
-                    buildShapePath(context4, primitive.shape);
-                    context4.stroke();
+                    context2.strokeStyle = canvasStyle;
+                    context2.beginPath();
+                    buildShapePath(context2, primitive.shape);
+                    context2.stroke();
                   }
                 } else {
-                  context4.strokeStyle = canvasStyle;
-                  context4.beginPath();
-                  buildShapePath(context4, primitive.shape);
-                  context4.stroke();
+                  context2.strokeStyle = canvasStyle;
+                  context2.beginPath();
+                  buildShapePath(context2, primitive.shape);
+                  context2.stroke();
                 }
               } else {
-                context4.fillStyle = canvasStyle;
-                context4.beginPath();
-                buildShapePath(context4, primitive.shape);
-                const hasHoles = addHolePaths(context4, primitive.holes);
+                context2.fillStyle = canvasStyle;
+                context2.beginPath();
+                buildShapePath(context2, primitive.shape);
+                const hasHoles = addHolePaths(context2, primitive.holes);
                 if (hasHoles) {
-                  context4.fill("evenodd");
+                  context2.fill("evenodd");
                 } else {
-                  context4.fill();
+                  context2.fill();
                 }
               }
               if (hasTransform) {
-                context4.restore();
+                context2.restore();
               }
             }
           }
-          context4.restore();
+          context2.restore();
         }
         destroy() {
           this.shader = null;
@@ -33831,7 +33831,7 @@ ${parts.join("\n")}
           if (!elements || !elements.length) return;
           const renderer = batchPipe.renderer;
           const contextSystem = renderer.canvasContext;
-          const context4 = contextSystem.activeContext;
+          const context2 = contextSystem.activeContext;
           for (let i2 = 0; i2 < elements.length; i2++) {
             const element = elements[i2];
             if (!element.packAsQuad) continue;
@@ -33842,8 +33842,8 @@ ${parts.join("\n")}
             const textureStyle = texture.source.style;
             const smoothProperty = contextSystem.smoothProperty;
             const shouldSmooth = textureStyle.scaleMode !== "nearest";
-            if (context4[smoothProperty] !== shouldSmooth) {
-              context4[smoothProperty] = shouldSmooth;
+            if (context2[smoothProperty] !== shouldSmooth) {
+              context2[smoothProperty] = shouldSmooth;
             }
             contextSystem.setBlendMode(batch.blendMode);
             const globalColor = renderer.globalUniforms.globalUniformData?.worldColor ?? 4294967295;
@@ -33853,7 +33853,7 @@ ${parts.join("\n")}
             const filterAlpha = renderer.filter?.alphaMultiplier ?? 1;
             const alpha = globalAlpha * quadAlpha * filterAlpha;
             if (alpha <= 0) continue;
-            context4.globalAlpha = alpha;
+            context2.globalAlpha = alpha;
             const globalTint = globalColor & 16777215;
             const quadTint = argb & 16777215;
             const tint = bgr2rgb(multiplyHexColors(quadTint, globalTint));
@@ -33915,7 +33915,7 @@ ${parts.join("\n")}
               if (canTint && fitsFrame) {
                 patternSource = canvasUtils.getTintedCanvas({ texture }, tint);
               }
-              const pattern = context4.createPattern(patternSource, repeat);
+              const pattern = context2.createPattern(patternSource, repeat);
               if (!pattern) continue;
               const denomX = drawW;
               const denomY = drawH;
@@ -33939,13 +33939,13 @@ ${parts.join("\n")}
                 ty * pixelHeight
               );
               canvasUtils.applyPatternTransform(pattern, _CanvasBatchAdaptor2._tempPatternMatrix);
-              context4.fillStyle = pattern;
-              context4.fillRect(drawX, drawY, drawW, drawH);
+              context2.fillStyle = pattern;
+              context2.fillRect(drawX, drawY, drawW, drawH);
             } else {
               const needsProcessing = tint !== 16777215 || rotate;
               const processedSource = needsProcessing ? canvasUtils.getTintedCanvas({ texture }, tint) : source3;
               const isProcessed = processedSource !== source3;
-              context4.drawImage(
+              context2.drawImage(
                 processedSource,
                 isProcessed ? 0 : sx,
                 isProcessed ? 0 : sy,
@@ -34372,8 +34372,8 @@ ${parts.join("\n")}
          * @param context - The GraphicsContext to get the render data for.
          * @internal
          */
-        getContextRenderData(context4) {
-          return context4._gpuData[this._renderer.uid].graphicsData || this._initContextRenderData(context4);
+        getContextRenderData(context2) {
+          return context2._gpuData[this._renderer.uid].graphicsData || this._initContextRenderData(context2);
         }
         /**
          * Updates the GPU context for a given GraphicsContext.
@@ -34382,23 +34382,23 @@ ${parts.join("\n")}
          * @returns The updated GpuGraphicsContext.
          * @internal
          */
-        updateGpuContext(context4) {
-          const hasContext = !!context4._gpuData[this._renderer.uid];
-          const gpuContext = context4._gpuData[this._renderer.uid] || this._initContext(context4);
-          if (context4.dirty || !hasContext) {
+        updateGpuContext(context2) {
+          const hasContext = !!context2._gpuData[this._renderer.uid];
+          const gpuContext = context2._gpuData[this._renderer.uid] || this._initContext(context2);
+          if (context2.dirty || !hasContext) {
             if (hasContext) {
               gpuContext.reset();
             }
-            buildContextBatches(context4, gpuContext);
-            const batchMode = context4.batchMode;
-            if (context4.customShader || batchMode === "no-batch") {
+            buildContextBatches(context2, gpuContext);
+            const batchMode = context2.batchMode;
+            if (context2.customShader || batchMode === "no-batch") {
               gpuContext.isBatchable = false;
             } else if (batchMode === "auto") {
               gpuContext.isBatchable = gpuContext.geometryData.vertices.length < 400;
             } else {
               gpuContext.isBatchable = true;
             }
-            context4.dirty = false;
+            context2.dirty = false;
           }
           return gpuContext;
         }
@@ -34409,14 +34409,14 @@ ${parts.join("\n")}
          * @returns The GpuGraphicsContext for the given GraphicsContext.
          * @internal
          */
-        getGpuContext(context4) {
-          return context4._gpuData[this._renderer.uid] || this._initContext(context4);
+        getGpuContext(context2) {
+          return context2._gpuData[this._renderer.uid] || this._initContext(context2);
         }
-        _initContextRenderData(context4) {
+        _initContextRenderData(context2) {
           const graphicsData = BigPool.get(GraphicsContextRenderData, {
             maxTextures: this._renderer.limits.maxBatchableTextures
           });
-          const gpuContext = context4._gpuData[this._renderer.uid];
+          const gpuContext = context2._gpuData[this._renderer.uid];
           const { batches, geometryData } = gpuContext;
           gpuContext.graphicsData = graphicsData;
           const vertexSize = geometryData.vertices.length;
@@ -34447,11 +34447,11 @@ ${parts.join("\n")}
           }
           return graphicsData;
         }
-        _initContext(context4) {
+        _initContext(context2) {
           const gpuContext = new GpuGraphicsContext();
-          gpuContext.context = context4;
-          context4._gpuData[this._renderer.uid] = gpuContext;
-          this._managedContexts.add(context4);
+          gpuContext.context = context2;
+          context2._gpuData[this._renderer.uid] = gpuContext;
+          this._managedContexts.add(context2);
           return gpuContext;
         }
         destroy() {
@@ -37515,9 +37515,9 @@ ${parts.join("\n")}
          * @param context - The GraphicsContext to get the render data for.
          * @internal
          */
-        getContextRenderData(context4) {
-          const gpuContext = this.getGpuContext(context4);
-          return gpuContext.graphicsData || this._initContextRenderData(context4);
+        getContextRenderData(context2) {
+          const gpuContext = this.getGpuContext(context2);
+          return gpuContext.graphicsData || this._initContextRenderData(context2);
         }
         /**
          * Updates the GPU context for a given GraphicsContext.
@@ -37525,16 +37525,16 @@ ${parts.join("\n")}
          * @returns The updated CanvasGraphicsContext.
          * @internal
          */
-        updateGpuContext(context4) {
-          const gpuData = context4._gpuData;
+        updateGpuContext(context2) {
+          const gpuData = context2._gpuData;
           const hasContext = !!gpuData[this._renderer.uid];
-          const gpuContext = gpuData[this._renderer.uid] || this._initContext(context4);
-          if (context4.dirty || !hasContext) {
+          const gpuContext = gpuData[this._renderer.uid] || this._initContext(context2);
+          if (context2.dirty || !hasContext) {
             if (hasContext) {
               gpuContext.reset();
             }
             gpuContext.isBatchable = false;
-            context4.dirty = false;
+            context2.dirty = false;
           }
           return gpuContext;
         }
@@ -37545,22 +37545,22 @@ ${parts.join("\n")}
          * @returns The CanvasGraphicsContext for the given GraphicsContext.
          * @internal
          */
-        getGpuContext(context4) {
-          const gpuData = context4._gpuData;
-          return gpuData[this._renderer.uid] || this._initContext(context4);
+        getGpuContext(context2) {
+          const gpuData = context2._gpuData;
+          return gpuData[this._renderer.uid] || this._initContext(context2);
         }
-        _initContextRenderData(context4) {
+        _initContextRenderData(context2) {
           const renderData = new CanvasGraphicsContextRenderData();
-          const gpuContext = this.getGpuContext(context4);
+          const gpuContext = this.getGpuContext(context2);
           gpuContext.graphicsData = renderData;
           renderData.init();
           return renderData;
         }
-        _initContext(context4) {
+        _initContext(context2) {
           const gpuContext = new CanvasGraphicsContext();
-          gpuContext.context = context4;
-          context4._gpuData[this._renderer.uid] = gpuContext;
-          this._managedContexts.add(context4);
+          gpuContext.context = context2;
+          context2._gpuData[this._renderer.uid] = gpuContext;
+          this._managedContexts.add(context2);
           return gpuContext;
         }
         destroy() {
@@ -37667,10 +37667,10 @@ ${parts.join("\n")}
           this._adaptor.contextChange(this.renderer);
         }
         validateRenderable(graphics) {
-          const context4 = graphics.context;
+          const context2 = graphics.context;
           const wasBatched = !!graphics._gpuData;
           const contextSystem = this.renderer.graphicsContext;
-          const gpuContext = contextSystem.updateGpuContext(context4);
+          const gpuContext = contextSystem.updateGpuContext(context2);
           if (gpuContext.isBatchable || wasBatched !== gpuContext.isBatchable) {
             return true;
           }
@@ -37700,12 +37700,12 @@ ${parts.join("\n")}
         execute(graphics) {
           if (!graphics.isRenderable) return;
           const renderer = this.renderer;
-          const context4 = graphics.context;
+          const context2 = graphics.context;
           const contextSystem = renderer.graphicsContext;
-          if (!contextSystem.getGpuContext(context4).batches.length) {
+          if (!contextSystem.getGpuContext(context2).batches.length) {
             return;
           }
-          const shader = context4.customShader || this._adaptor.shader;
+          const shader = context2.customShader || this._adaptor.shader;
           this.state.blendMode = graphics.groupBlendMode;
           const localUniforms = shader.resources.localUniforms.uniforms;
           localUniforms.uTransformMatrix = graphics.groupTransform;
@@ -37744,9 +37744,9 @@ ${parts.join("\n")}
           return gpuData;
         }
         _updateBatchesForRenderable(graphics, gpuData) {
-          const context4 = graphics.context;
+          const context2 = graphics.context;
           const contextSystem = this.renderer.graphicsContext;
-          const gpuContext = contextSystem.getGpuContext(context4);
+          const gpuContext = contextSystem.getGpuContext(context2);
           const roundPixels = this.renderer._roundPixels | graphics._roundPixels;
           gpuData.batches = gpuContext.batches.map((batch) => {
             const batchClone = BigPool.get(BatchableGraphics);
@@ -37806,29 +37806,29 @@ ${parts.join("\n")}
           if (options instanceof GraphicsContext) {
             options = { context: options };
           }
-          const { context: context4, roundPixels, ...rest } = options || {};
+          const { context: context2, roundPixels, ...rest } = options || {};
           super({
             label: "Graphics",
             ...rest
           });
           this.renderPipeId = "graphics";
-          if (!context4) {
+          if (!context2) {
             this.context = this._ownedContext = new GraphicsContext();
             this.context.autoGarbageCollect = this.autoGarbageCollect;
           } else {
-            this.context = context4;
+            this.context = context2;
           }
           this.didViewUpdate = true;
           this.allowChildren = false;
           this.roundPixels = roundPixels ?? false;
         }
-        set context(context4) {
-          if (context4 === this._context) return;
+        set context(context2) {
+          if (context2 === this._context) return;
           if (this._context) {
             this._context.off("update", this.onViewUpdate, this);
             this._context.off("unload", this.unload, this);
           }
-          this._context = context4;
+          this._context = context2;
           this._context.on("update", this.onViewUpdate, this);
           this._context.on("unload", this.unload, this);
           this.onViewUpdate();
@@ -38622,57 +38622,57 @@ ${parts.join("\n")}
   });
 
   // node_modules/pixi.js/lib/rendering/mask/stencil/CanvasStencilMaskPipe.mjs
-  function buildRoundedRectPath2(context4, x2, y2, width, height, radius) {
+  function buildRoundedRectPath2(context2, x2, y2, width, height, radius) {
     radius = Math.max(0, Math.min(radius, Math.min(width, height) / 2));
-    context4.moveTo(x2 + radius, y2);
-    context4.lineTo(x2 + width - radius, y2);
-    context4.quadraticCurveTo(x2 + width, y2, x2 + width, y2 + radius);
-    context4.lineTo(x2 + width, y2 + height - radius);
-    context4.quadraticCurveTo(x2 + width, y2 + height, x2 + width - radius, y2 + height);
-    context4.lineTo(x2 + radius, y2 + height);
-    context4.quadraticCurveTo(x2, y2 + height, x2, y2 + height - radius);
-    context4.lineTo(x2, y2 + radius);
-    context4.quadraticCurveTo(x2, y2, x2 + radius, y2);
+    context2.moveTo(x2 + radius, y2);
+    context2.lineTo(x2 + width - radius, y2);
+    context2.quadraticCurveTo(x2 + width, y2, x2 + width, y2 + radius);
+    context2.lineTo(x2 + width, y2 + height - radius);
+    context2.quadraticCurveTo(x2 + width, y2 + height, x2 + width - radius, y2 + height);
+    context2.lineTo(x2 + radius, y2 + height);
+    context2.quadraticCurveTo(x2, y2 + height, x2, y2 + height - radius);
+    context2.lineTo(x2, y2 + radius);
+    context2.quadraticCurveTo(x2, y2, x2 + radius, y2);
   }
-  function buildShapePath2(context4, shape) {
+  function buildShapePath2(context2, shape) {
     switch (shape.type) {
       case "rectangle": {
         const rect = shape;
-        context4.rect(rect.x, rect.y, rect.width, rect.height);
+        context2.rect(rect.x, rect.y, rect.width, rect.height);
         break;
       }
       case "roundedRectangle": {
         const rect = shape;
-        buildRoundedRectPath2(context4, rect.x, rect.y, rect.width, rect.height, rect.radius);
+        buildRoundedRectPath2(context2, rect.x, rect.y, rect.width, rect.height, rect.radius);
         break;
       }
       case "circle": {
         const circle = shape;
-        context4.moveTo(circle.x + circle.radius, circle.y);
-        context4.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2);
+        context2.moveTo(circle.x + circle.radius, circle.y);
+        context2.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2);
         break;
       }
       case "ellipse": {
         const ellipse = shape;
-        if (context4.ellipse) {
-          context4.moveTo(ellipse.x + ellipse.halfWidth, ellipse.y);
-          context4.ellipse(ellipse.x, ellipse.y, ellipse.halfWidth, ellipse.halfHeight, 0, 0, Math.PI * 2);
+        if (context2.ellipse) {
+          context2.moveTo(ellipse.x + ellipse.halfWidth, ellipse.y);
+          context2.ellipse(ellipse.x, ellipse.y, ellipse.halfWidth, ellipse.halfHeight, 0, 0, Math.PI * 2);
         } else {
-          context4.save();
-          context4.translate(ellipse.x, ellipse.y);
-          context4.scale(ellipse.halfWidth, ellipse.halfHeight);
-          context4.moveTo(1, 0);
-          context4.arc(0, 0, 1, 0, Math.PI * 2);
-          context4.restore();
+          context2.save();
+          context2.translate(ellipse.x, ellipse.y);
+          context2.scale(ellipse.halfWidth, ellipse.halfHeight);
+          context2.moveTo(1, 0);
+          context2.arc(0, 0, 1, 0, Math.PI * 2);
+          context2.restore();
         }
         break;
       }
       case "triangle": {
         const tri = shape;
-        context4.moveTo(tri.x, tri.y);
-        context4.lineTo(tri.x2, tri.y2);
-        context4.lineTo(tri.x3, tri.y3);
-        context4.closePath();
+        context2.moveTo(tri.x, tri.y);
+        context2.lineTo(tri.x2, tri.y2);
+        context2.lineTo(tri.x3, tri.y3);
+        context2.closePath();
         break;
       }
       case "polygon":
@@ -38680,18 +38680,18 @@ ${parts.join("\n")}
         const poly = shape;
         const points = poly.points;
         if (!points?.length) break;
-        context4.moveTo(points[0], points[1]);
+        context2.moveTo(points[0], points[1]);
         for (let i2 = 2; i2 < points.length; i2 += 2) {
-          context4.lineTo(points[i2], points[i2 + 1]);
+          context2.lineTo(points[i2], points[i2 + 1]);
         }
         if (poly.closePath) {
-          context4.closePath();
+          context2.closePath();
         }
         break;
       }
     }
   }
-  function buildStrokeMaskPath(context4, shape, strokeStyle) {
+  function buildStrokeMaskPath(context2, shape, strokeStyle) {
     const points = [];
     const vertices = [];
     const indices = [];
@@ -38703,14 +38703,14 @@ ${parts.join("\n")}
       const i0 = indices[i2] * 2;
       const i1 = indices[i2 + 1] * 2;
       const i22 = indices[i2 + 2] * 2;
-      context4.moveTo(vertices[i0], vertices[i0 + 1]);
-      context4.lineTo(vertices[i1], vertices[i1 + 1]);
-      context4.lineTo(vertices[i22], vertices[i22 + 1]);
-      context4.closePath();
+      context2.moveTo(vertices[i0], vertices[i0 + 1]);
+      context2.lineTo(vertices[i1], vertices[i1 + 1]);
+      context2.lineTo(vertices[i22], vertices[i22 + 1]);
+      context2.closePath();
     }
     return true;
   }
-  function addHolePaths2(context4, holes) {
+  function addHolePaths2(context2, holes) {
     if (!holes?.length) return false;
     for (let i2 = 0; i2 < holes.length; i2++) {
       const hole = holes[i2];
@@ -38718,12 +38718,12 @@ ${parts.join("\n")}
       const transform = hole.transform;
       const hasTransform = transform && !transform.isIdentity();
       if (hasTransform) {
-        context4.save();
-        context4.transform(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty);
+        context2.save();
+        context2.transform(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty);
       }
-      buildShapePath2(context4, hole.shape);
+      buildShapePath2(context2, hole.shape);
       if (hasTransform) {
-        context4.restore();
+        context2.restore();
       }
     }
     return true;
@@ -38768,12 +38768,12 @@ ${parts.join("\n")}
           }
           const canvasRenderer = this._renderer;
           const contextSystem = canvasRenderer.canvasContext;
-          const context4 = contextSystem?.activeContext;
-          if (!context4) return;
+          const context2 = contextSystem?.activeContext;
+          if (!context2) return;
           if (instruction.action === "popMaskEnd") {
             const didClip = this._canvasMaskStack.pop();
             if (didClip) {
-              context4.restore();
+              context2.restore();
             }
             return;
           }
@@ -38798,12 +38798,12 @@ ${parts.join("\n")}
             this._canvasMaskStack.push(false);
             return;
           }
-          context4.save();
+          context2.save();
           contextSystem.setContextTransform(
             graphics.groupTransform,
             (canvasRenderer._roundPixels | graphics._roundPixels) === 1
           );
-          context4.beginPath();
+          context2.beginPath();
           let drewPath = false;
           let hasHoles = false;
           for (let i2 = 0; i2 < instructions.length; i2++) {
@@ -38821,34 +38821,34 @@ ${parts.join("\n")}
               const transform = primitive.transform;
               const hasTransform = transform && !transform.isIdentity();
               if (hasTransform) {
-                context4.save();
-                context4.transform(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty);
+                context2.save();
+                context2.transform(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty);
               }
               if (isStroke && data.style) {
                 drewPath = buildStrokeMaskPath(
-                  context4,
+                  context2,
                   primitive.shape,
                   data.style
                 ) || drewPath;
               } else {
-                buildShapePath2(context4, primitive.shape);
-                hasHoles = addHolePaths2(context4, primitive.holes) || hasHoles;
+                buildShapePath2(context2, primitive.shape);
+                hasHoles = addHolePaths2(context2, primitive.holes) || hasHoles;
                 drewPath = true;
               }
               if (hasTransform) {
-                context4.restore();
+                context2.restore();
               }
             }
           }
           if (!drewPath) {
-            context4.restore();
+            context2.restore();
             this._canvasMaskStack.push(false);
             return;
           }
           if (hasHoles) {
-            context4.clip("evenodd");
+            context2.clip("evenodd");
           } else {
-            context4.clip();
+            context2.clip();
           }
           this._canvasMaskStack.push(true);
         }
@@ -39014,15 +39014,15 @@ ${parts.join("\n")}
          * @param alpha - Alpha override for the clear color.
          */
         clear(clearColor, alpha) {
-          const context4 = this.activeContext;
+          const context2 = this.activeContext;
           const renderer = this._renderer;
-          context4.clearRect(0, 0, renderer.width, renderer.height);
+          context2.clearRect(0, 0, renderer.width, renderer.height);
           if (clearColor) {
             const color = Color.shared.setValue(clearColor);
-            context4.globalAlpha = alpha ?? color.alpha;
-            context4.fillStyle = color.toHex();
-            context4.fillRect(0, 0, renderer.width, renderer.height);
-            context4.globalAlpha = 1;
+            context2.globalAlpha = alpha ?? color.alpha;
+            context2.fillStyle = color.toHex();
+            context2.fillRect(0, 0, renderer.width, renderer.height);
+            context2.globalAlpha = 1;
           }
         }
         /**
@@ -39110,10 +39110,10 @@ ${parts.join("\n")}
          */
         initGpuRenderTarget(renderTarget) {
           const colorTexture = renderTarget.colorTexture;
-          const { canvas, context: context4 } = this._ensureCanvas(colorTexture);
+          const { canvas, context: context2 } = this._ensureCanvas(colorTexture);
           return {
             canvas,
-            context: context4,
+            context: context2,
             width: canvas.width,
             height: canvas.height
           };
@@ -39155,17 +39155,17 @@ ${parts.join("\n")}
          */
         clear(renderTarget, _clear, clearColor, viewport) {
           const gpuRenderTarget = this._renderTargetSystem.getGpuRenderTarget(renderTarget);
-          const context4 = gpuRenderTarget.context;
+          const context2 = gpuRenderTarget.context;
           const bounds = viewport || { x: 0, y: 0, width: renderTarget.pixelWidth, height: renderTarget.pixelHeight };
-          context4.setTransform(1, 0, 0, 1, 0, 0);
-          context4.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
+          context2.setTransform(1, 0, 0, 1, 0, 0);
+          context2.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
           if (clearColor) {
             const color = Color.shared.setValue(clearColor);
             if (color.alpha > 0) {
-              context4.globalAlpha = color.alpha;
-              context4.fillStyle = color.toHex();
-              context4.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-              context4.globalAlpha = 1;
+              context2.globalAlpha = color.alpha;
+              context2.fillStyle = color.toHex();
+              context2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+              context2.globalAlpha = 1;
             }
           }
         }
@@ -39194,10 +39194,10 @@ ${parts.join("\n")}
           const sourceGpuTarget = this._renderTargetSystem.getGpuRenderTarget(sourceRenderSurfaceTexture);
           const sourceCanvas = sourceGpuTarget.canvas;
           const destSource = destinationTexture.source;
-          const { context: context4 } = this._ensureCanvas(destSource);
+          const { context: context2 } = this._ensureCanvas(destSource);
           const dx = originDest?.x ?? 0;
           const dy = originDest?.y ?? 0;
-          context4.drawImage(
+          context2.drawImage(
             sourceCanvas,
             originSrc.x,
             originSrc.y,
@@ -39228,8 +39228,8 @@ ${parts.join("\n")}
             canvas.width = source3.pixelWidth;
             canvas.height = source3.pixelHeight;
           }
-          const context4 = canvas.getContext("2d");
-          return { canvas, context: context4 };
+          const context2 = canvas.getContext("2d");
+          return { canvas, context: context2 };
         }
       };
     }
@@ -39285,7 +39285,7 @@ ${parts.join("\n")}
          */
         generateCanvas(texture) {
           const canvas = DOMAdapter.get().createCanvas();
-          const context4 = canvas.getContext("2d");
+          const context2 = canvas.getContext("2d");
           const source3 = canvasUtils.getCanvasSource(texture);
           if (!source3) {
             return canvas;
@@ -39298,7 +39298,7 @@ ${parts.join("\n")}
           const sh = frame.height * resolution;
           canvas.width = Math.ceil(sw);
           canvas.height = Math.ceil(sh);
-          context4.drawImage(
+          context2.drawImage(
             source3,
             sx,
             sy,
@@ -39317,8 +39317,8 @@ ${parts.join("\n")}
          */
         getPixels(texture) {
           const canvas = this.generateCanvas(texture);
-          const context4 = canvas.getContext("2d", { willReadFrequently: true });
-          const imageData = context4.getImageData(0, 0, canvas.width, canvas.height);
+          const context2 = canvas.getContext("2d", { willReadFrequently: true });
+          const imageData = context2.getImageData(0, 0, canvas.width, canvas.height);
           return {
             pixels: imageData.data,
             width: canvas.width,
@@ -40129,7 +40129,7 @@ ${parts.join("\n")}
   });
 
   // node_modules/pixi.js/lib/scene/text/canvas/utils/measureTaggedText.mjs
-  function measureTaggedText(text, style, wordWrap2, context4, measureTextFn, wrapMeasureTextFn, measureFontFn, canBreakCharsFn, wordWrapSplitFn) {
+  function measureTaggedText(text, style, wordWrap2, context2, measureTextFn, wrapMeasureTextFn, measureFontFn, canBreakCharsFn, wordWrapSplitFn) {
     const runs = parseTaggedText(text, style);
     const shouldCollapseNewlines = collapseNewlines(style.whiteSpace);
     if (shouldCollapseNewlines) {
@@ -40158,7 +40158,7 @@ ${parts.join("\n")}
     const wrappedRunsByLine = wordWrap2 ? wordWrapTaggedLines(
       runsByLine,
       style,
-      context4,
+      context2,
       wrapMeasureTextFn,
       canBreakCharsFn,
       wordWrapSplitFn
@@ -40187,10 +40187,10 @@ ${parts.join("\n")}
         const runFont = run.style._fontString;
         const runFontProps = measureFontFn(runFont);
         if (runFont !== lastFont) {
-          context4.font = runFont;
+          context2.font = runFont;
           lastFont = runFont;
         }
-        const runWidth = measureTextFn(run.text, run.style.letterSpacing, context4);
+        const runWidth = measureTextFn(run.text, run.style.letterSpacing, context2);
         lineWidth += runWidth;
         lineAscent = Math.max(lineAscent, runFontProps.ascent);
         lineDescent = Math.max(lineDescent, runFontProps.descent);
@@ -40237,7 +40237,7 @@ ${parts.join("\n")}
       hasDropShadow
     };
   }
-  function wordWrapTaggedLines(runsByLine, style, context4, measureTextFn, canBreakCharsFn, wordWrapSplitFn) {
+  function wordWrapTaggedLines(runsByLine, style, context2, measureTextFn, canBreakCharsFn, wordWrapSplitFn) {
     const { letterSpacing, whiteSpace, wordWrapWidth, breakWords } = style;
     const shouldCollapseSpaces = collapseSpaces(whiteSpace);
     const adjustedWrapWidth = wordWrapWidth + letterSpacing;
@@ -40249,10 +40249,10 @@ ${parts.join("\n")}
       if (width === void 0) {
         const font = tokenStyle._fontString;
         if (font !== lastFont) {
-          context4.font = font;
+          context2.font = font;
           lastFont = font;
         }
-        width = measureTextFn(token, tokenStyle.letterSpacing, context4) + tokenStyle.letterSpacing;
+        width = measureTextFn(token, tokenStyle.letterSpacing, context2) + tokenStyle.letterSpacing;
         tokenWidthCache[cacheKey] = width;
       }
       return width;
@@ -40424,17 +40424,17 @@ ${parts.join("\n")}
   });
 
   // node_modules/pixi.js/lib/scene/text/canvas/utils/wordWrap.mjs
-  function getFromCache(key, letterSpacing, cache, context4, measureTextFn) {
+  function getFromCache(key, letterSpacing, cache, context2, measureTextFn) {
     let width = cache[key];
     if (typeof width !== "number") {
-      width = measureTextFn(key, letterSpacing, context4) + letterSpacing;
+      width = measureTextFn(key, letterSpacing, context2) + letterSpacing;
       cache[key] = width;
     }
     return width;
   }
   function wordWrap(text, style, canvas, measureTextFn, canBreakWordsFn, canBreakCharsFn, wordWrapSplitFn) {
-    const context4 = canvas.getContext("2d", contextSettings);
-    context4.font = style._fontString;
+    const context2 = canvas.getContext("2d", contextSettings);
+    context2.font = style._fontString;
     let width = 0;
     let line = "";
     const linesArray = [];
@@ -40464,7 +40464,7 @@ ${parts.join("\n")}
           continue;
         }
       }
-      const tokenWidth = getFromCache(token, letterSpacing, cache, context4, measureTextFn);
+      const tokenWidth = getFromCache(token, letterSpacing, cache, context2, measureTextFn);
       if (tokenWidth > wordWrapWidth) {
         if (line !== "") {
           linesArray.push(trimRight(line));
@@ -40474,7 +40474,7 @@ ${parts.join("\n")}
         if (canBreakWordsFn(token, style.breakWords)) {
           const charGroups = getCharacterGroups(token, style.breakWords, wordWrapSplitFn, canBreakCharsFn);
           for (const char of charGroups) {
-            const characterWidth = getFromCache(char, letterSpacing, cache, context4, measureTextFn);
+            const characterWidth = getFromCache(char, letterSpacing, cache, context2, measureTextFn);
             if (characterWidth + width > wordWrapWidth) {
               linesArray.push(trimRight(line));
               canPrependSpaces = false;
@@ -40645,14 +40645,14 @@ ${parts.join("\n")}
             fontProperties.ascent = style.fontSize;
             fontProperties.descent = 0;
           }
-          const context4 = _CanvasTextMetrics2._context;
-          context4.font = font;
+          const context2 = _CanvasTextMetrics2._context;
+          context2.font = font;
           const outputText = wordWrap2 ? _CanvasTextMetrics2._wordWrap(text, style, canvas) : text;
           const lines = outputText.split(NEWLINE_MATCH_REGEX);
           const lineWidths = new Array(lines.length);
           let maxLineWidth = 0;
           for (let i2 = 0; i2 < lines.length; i2++) {
-            const lineWidth = _CanvasTextMetrics2._measureText(lines[i2], style.letterSpacing, context4);
+            const lineWidth = _CanvasTextMetrics2._measureText(lines[i2], style.letterSpacing, context2);
             lineWidths[i2] = lineWidth;
             maxLineWidth = Math.max(maxLineWidth, lineWidth);
           }
@@ -40711,8 +40711,8 @@ ${parts.join("\n")}
          * @returns The measured width of the text with spacing
          * @internal
          */
-        static _measureText(text, letterSpacing, context4) {
-          const { metricWidth, metrics, letterSpacingVal } = _CanvasTextMetrics2._measureTextCore(text, letterSpacing, context4);
+        static _measureText(text, letterSpacing, context2) {
+          const { metricWidth, metrics, letterSpacingVal } = _CanvasTextMetrics2._measureTextCore(text, letterSpacing, context2);
           const actualBoundingBoxLeft = -(metrics.actualBoundingBoxLeft ?? 0);
           const actualBoundingBoxRight = metrics.actualBoundingBoxRight ?? 0;
           let boundsWidth = actualBoundingBoxRight - actualBoundingBoxLeft;
@@ -40730,8 +40730,8 @@ ${parts.join("\n")}
          * @returns The advance width of the text
          * @internal
          */
-        static _measureTextAdvance(text, letterSpacing, context4) {
-          return _CanvasTextMetrics2._measureTextCore(text, letterSpacing, context4).metricWidth;
+        static _measureTextAdvance(text, letterSpacing, context2) {
+          return _CanvasTextMetrics2._measureTextCore(text, letterSpacing, context2).metricWidth;
         }
         /**
          * Shared measurement core: sets up letter spacing on the context, calls
@@ -40741,19 +40741,19 @@ ${parts.join("\n")}
          * @param context
          * @internal
          */
-        static _measureTextCore(text, letterSpacing, context4) {
+        static _measureTextCore(text, letterSpacing, context2) {
           let useExperimentalLetterSpacing = false;
           if (_CanvasTextMetrics2.experimentalLetterSpacingSupported) {
             if (_CanvasTextMetrics2.experimentalLetterSpacing) {
-              context4.letterSpacing = `${letterSpacing}px`;
-              context4.textLetterSpacing = `${letterSpacing}px`;
+              context2.letterSpacing = `${letterSpacing}px`;
+              context2.textLetterSpacing = `${letterSpacing}px`;
               useExperimentalLetterSpacing = true;
             } else {
-              context4.letterSpacing = "0px";
-              context4.textLetterSpacing = "0px";
+              context2.letterSpacing = "0px";
+              context2.textLetterSpacing = "0px";
             }
           }
-          const metrics = context4.measureText(text);
+          const metrics = context2.measureText(text);
           let metricWidth = metrics.width;
           let letterSpacingVal = 0;
           if (metricWidth > 0) {
@@ -40850,9 +40850,9 @@ ${parts.join("\n")}
           if (_CanvasTextMetrics2._fonts[font]) {
             return _CanvasTextMetrics2._fonts[font];
           }
-          const context4 = _CanvasTextMetrics2._context;
-          context4.font = font;
-          const metrics = context4.measureText(_CanvasTextMetrics2.METRICS_STRING + _CanvasTextMetrics2.BASELINE_SYMBOL);
+          const context2 = _CanvasTextMetrics2._context;
+          context2.font = font;
+          const metrics = context2.measureText(_CanvasTextMetrics2.METRICS_STRING + _CanvasTextMetrics2.BASELINE_SYMBOL);
           const ascent = metrics.actualBoundingBoxAscent ?? 0;
           const descent = metrics.actualBoundingBoxDescent ?? 0;
           const properties = {
@@ -40884,8 +40884,8 @@ ${parts.join("\n")}
             let canvas;
             try {
               const c2 = new OffscreenCanvas(0, 0);
-              const context4 = c2.getContext("2d", contextSettings2);
-              if (context4?.measureText) {
+              const context2 = c2.getContext("2d", contextSettings2);
+              if (context2?.measureText) {
                 _CanvasTextMetrics2.__canvas = c2;
                 return c2;
               }
@@ -40970,13 +40970,13 @@ ${parts.join("\n")}
   function convertV7Tov8Style(style) {
     const oldStyle = style;
     if (typeof oldStyle.dropShadow === "boolean" && oldStyle.dropShadow) {
-      const defaults2 = TextStyle.defaultDropShadow;
+      const defaults = TextStyle.defaultDropShadow;
       style.dropShadow = {
-        alpha: oldStyle.dropShadowAlpha ?? defaults2.alpha,
-        angle: oldStyle.dropShadowAngle ?? defaults2.angle,
-        blur: oldStyle.dropShadowBlur ?? defaults2.blur,
-        color: oldStyle.dropShadowColor ?? defaults2.color,
-        distance: oldStyle.dropShadowDistance ?? defaults2.distance
+        alpha: oldStyle.dropShadowAlpha ?? defaults.alpha,
+        angle: oldStyle.dropShadowAngle ?? defaults.angle,
+        blur: oldStyle.dropShadowBlur ?? defaults.blur,
+        color: oldStyle.dropShadowColor ?? defaults.color,
+        distance: oldStyle.dropShadowDistance ?? defaults.distance
       };
     }
     if (oldStyle.strokeThickness !== void 0) {
@@ -41541,18 +41541,18 @@ ${parts.join("\n")}
   });
 
   // node_modules/pixi.js/lib/scene/text/canvas/utils/getCanvasFillStyle.mjs
-  function getCanvasFillStyle(fillStyle, context4, textMetrics, padding = 0, offsetX = 0, offsetY = 0) {
+  function getCanvasFillStyle(fillStyle, context2, textMetrics, padding = 0, offsetX = 0, offsetY = 0) {
     if (fillStyle.texture === Texture.WHITE && !fillStyle.fill) {
       return Color.shared.setValue(fillStyle.color).setAlpha(fillStyle.alpha ?? 1).toHexa();
     } else if (!fillStyle.fill) {
-      const pattern = context4.createPattern(fillStyle.texture.source.resource, "repeat");
+      const pattern = context2.createPattern(fillStyle.texture.source.resource, "repeat");
       const tempMatrix8 = fillStyle.matrix.copyTo(Matrix.shared);
       tempMatrix8.scale(fillStyle.texture.source.pixelWidth, fillStyle.texture.source.pixelHeight);
       pattern.setTransform(tempMatrix8);
       return pattern;
     } else if (fillStyle.fill instanceof FillPattern) {
       const fillPattern = fillStyle.fill;
-      const pattern = context4.createPattern(fillPattern.texture.source.resource, "repeat");
+      const pattern = context2.createPattern(fillPattern.texture.source.resource, "repeat");
       const tempMatrix8 = fillPattern.transform.copyTo(Matrix.shared);
       tempMatrix8.scale(
         fillPattern.texture.source.pixelWidth,
@@ -41574,7 +41574,7 @@ ${parts.join("\n")}
       let isNearlyVertical = false;
       if (isLinear) {
         const { start, end } = fillGradient;
-        gradient = context4.createLinearGradient(
+        gradient = context2.createLinearGradient(
           start.x * width + offsetX,
           start.y * height + offsetY,
           end.x * width + offsetX,
@@ -41583,7 +41583,7 @@ ${parts.join("\n")}
         isNearlyVertical = Math.abs(end.x - start.x) < Math.abs((end.y - start.y) * 0.1);
       } else {
         const { center, innerRadius, outerCenter, outerRadius } = fillGradient;
-        gradient = context4.createRadialGradient(
+        gradient = context2.createRadialGradient(
           center.x * width + offsetX,
           center.y * height + offsetY,
           innerRadius * width,
@@ -41706,7 +41706,7 @@ ${parts.join("\n")}
           } else {
             pageData = this.pages[this._currentPageIndex];
           }
-          let { canvas, context: context4 } = pageData.canvasAndContext;
+          let { canvas, context: context2 } = pageData.canvasAndContext;
           let textureSource = pageData.texture.source;
           const style = this._style;
           let currentX = this._currentX;
@@ -41740,14 +41740,14 @@ ${parts.join("\n")}
                 textureSource.update();
                 const pageData2 = this._nextPage();
                 canvas = pageData2.canvasAndContext.canvas;
-                context4 = pageData2.canvasAndContext.context;
+                context2 = pageData2.canvasAndContext.context;
                 textureSource = pageData2.texture.source;
                 currentX = 0;
                 currentY = 0;
                 currentMaxCharHeight = 0;
               }
             }
-            const xAdvance = context4.measureText(char).width / fontScale;
+            const xAdvance = context2.measureText(char).width / fontScale;
             this.chars[char] = {
               id: char.codePointAt(0),
               xOffset: -(padding / fontScale),
@@ -41757,7 +41757,7 @@ ${parts.join("\n")}
             };
             if (skipTexture) {
               this._drawGlyph(
-                context4,
+                context2,
                 metrics,
                 currentX + padding,
                 currentY + padding,
@@ -41783,7 +41783,7 @@ ${parts.join("\n")}
           this._currentX = currentX;
           this._currentY = currentY;
           this._currentMaxCharHeight = currentMaxCharHeight;
-          if (!this._skipKerning) this._applyKerning(charList, context4, fontScale);
+          if (!this._skipKerning) this._applyKerning(charList, context2, fontScale);
         }
         /**
          * @deprecated since 8.0.0
@@ -41793,22 +41793,22 @@ ${parts.join("\n")}
           deprecation(v8_0_0, "BitmapFont.pageTextures is deprecated, please use BitmapFont.pages instead.");
           return this.pages;
         }
-        _applyKerning(newChars, context4, fontScale) {
+        _applyKerning(newChars, context2, fontScale) {
           const measureCache = this._measureCache;
           for (let i2 = 0; i2 < newChars.length; i2++) {
             const first = newChars[i2];
             for (let j2 = 0; j2 < this._currentChars.length; j2++) {
               const second = this._currentChars[j2];
               let c1 = measureCache[first];
-              if (!c1) c1 = measureCache[first] = context4.measureText(first).width;
+              if (!c1) c1 = measureCache[first] = context2.measureText(first).width;
               let c2 = measureCache[second];
-              if (!c2) c2 = measureCache[second] = context4.measureText(second).width;
-              let total = context4.measureText(first + second).width;
+              if (!c2) c2 = measureCache[second] = context2.measureText(second).width;
+              let total = context2.measureText(first + second).width;
               let amount = total - (c1 + c2);
               if (amount && this.chars[first]) {
                 this.chars[first].kerning[second] = amount / fontScale;
               }
-              total = context4.measureText(first + second).width;
+              total = context2.measureText(first + second).width;
               amount = total - (c1 + c2);
               if (amount && this.chars[second]) {
                 this.chars[second].kerning[first] = amount / fontScale;
@@ -41845,40 +41845,40 @@ ${parts.join("\n")}
           return pageData;
         }
         // canvas style!
-        _setupContext(context4, style, resolution) {
+        _setupContext(context2, style, resolution) {
           style.fontSize = this.baseRenderedFontSize;
-          context4.scale(resolution, resolution);
-          context4.font = fontStringFromTextStyle(style);
+          context2.scale(resolution, resolution);
+          context2.font = fontStringFromTextStyle(style);
           style.fontSize = this.baseMeasurementFontSize;
-          context4.textBaseline = style.textBaseline;
+          context2.textBaseline = style.textBaseline;
           const stroke = style._stroke;
           const strokeThickness = stroke?.width ?? 0;
           if (stroke) {
-            context4.lineWidth = strokeThickness;
-            context4.lineJoin = stroke.join;
-            context4.miterLimit = stroke.miterLimit;
-            context4.strokeStyle = getCanvasFillStyle(stroke, context4);
+            context2.lineWidth = strokeThickness;
+            context2.lineJoin = stroke.join;
+            context2.miterLimit = stroke.miterLimit;
+            context2.strokeStyle = getCanvasFillStyle(stroke, context2);
           }
           if (style._fill) {
-            context4.fillStyle = getCanvasFillStyle(style._fill, context4);
+            context2.fillStyle = getCanvasFillStyle(style._fill, context2);
           }
           if (style.dropShadow) {
             const shadowOptions = style.dropShadow;
             const rgb = Color.shared.setValue(shadowOptions.color).toArray();
             const dropShadowBlur = shadowOptions.blur * resolution;
             const dropShadowDistance = shadowOptions.distance * resolution;
-            context4.shadowColor = `rgba(${rgb[0] * 255},${rgb[1] * 255},${rgb[2] * 255},${shadowOptions.alpha})`;
-            context4.shadowBlur = dropShadowBlur;
-            context4.shadowOffsetX = Math.cos(shadowOptions.angle) * dropShadowDistance;
-            context4.shadowOffsetY = Math.sin(shadowOptions.angle) * dropShadowDistance;
+            context2.shadowColor = `rgba(${rgb[0] * 255},${rgb[1] * 255},${rgb[2] * 255},${shadowOptions.alpha})`;
+            context2.shadowBlur = dropShadowBlur;
+            context2.shadowOffsetX = Math.cos(shadowOptions.angle) * dropShadowDistance;
+            context2.shadowOffsetY = Math.sin(shadowOptions.angle) * dropShadowDistance;
           } else {
-            context4.shadowColor = "black";
-            context4.shadowBlur = 0;
-            context4.shadowOffsetX = 0;
-            context4.shadowOffsetY = 0;
+            context2.shadowColor = "black";
+            context2.shadowBlur = 0;
+            context2.shadowOffsetX = 0;
+            context2.shadowOffsetY = 0;
           }
         }
-        _drawGlyph(context4, metrics, x2, y2, fontScale, style) {
+        _drawGlyph(context2, metrics, x2, y2, fontScale, style) {
           const char = metrics.text;
           const fontProperties = metrics.fontProperties;
           const stroke = style._stroke;
@@ -41890,21 +41890,21 @@ ${parts.join("\n")}
           let removeShadow = false;
           if (style.stroke && strokeThickness) {
             removeShadow = true;
-            context4.strokeText(char, tx, ty + lineHeight - descent);
+            context2.strokeText(char, tx, ty + lineHeight - descent);
           }
-          const { shadowBlur, shadowOffsetX, shadowOffsetY } = context4;
+          const { shadowBlur, shadowOffsetX, shadowOffsetY } = context2;
           if (style._fill) {
             if (removeShadow) {
-              context4.shadowBlur = 0;
-              context4.shadowOffsetX = 0;
-              context4.shadowOffsetY = 0;
+              context2.shadowBlur = 0;
+              context2.shadowOffsetX = 0;
+              context2.shadowOffsetY = 0;
             }
-            context4.fillText(char, tx, ty + lineHeight - descent);
+            context2.fillText(char, tx, ty + lineHeight - descent);
           }
           if (removeShadow) {
-            context4.shadowBlur = shadowBlur;
-            context4.shadowOffsetX = shadowOffsetX;
-            context4.shadowOffsetY = shadowOffsetY;
+            context2.shadowBlur = shadowBlur;
+            context2.shadowOffsetX = shadowOffsetX;
+            context2.shadowOffsetY = shadowOffsetY;
           }
         }
         destroy() {
@@ -43939,10 +43939,10 @@ ${e2}`);
     const canvasWidth = Math.ceil(width * resolution);
     const canvasHeight = Math.ceil(height * resolution);
     const canvas = DOMAdapter.get().createCanvas(canvasWidth, canvasHeight);
-    const context4 = canvas.getContext("2d");
-    context4.imageSmoothingEnabled = true;
-    context4.imageSmoothingQuality = "high";
-    context4.drawImage(image, 0, 0, width * resolution, height * resolution);
+    const context2 = canvas.getContext("2d");
+    context2.imageSmoothingEnabled = true;
+    context2.imageSmoothingQuality = "high";
+    context2.drawImage(image, 0, 0, width * resolution, height * resolution);
     const { parseAsGraphicsContext: _p, ...rest } = asset.data ?? {};
     const base = new ImageSource({
       resource: canvas,
@@ -43955,9 +43955,9 @@ ${e2}`);
   async function loadAsGraphics(url) {
     const response = await DOMAdapter.get().fetch(url);
     const svgSource = await response.text();
-    const context4 = new GraphicsContext();
-    context4.svg(svgSource);
-    return context4;
+    const context2 = new GraphicsContext();
+    context2.svg(svgSource);
+    return context2;
   }
 
   // node_modules/pixi.js/lib/assets/loader/parsers/textures/loadTextures.mjs
@@ -45156,16 +45156,16 @@ ${e2}`);
   init_eventemitter3();
   extensions.add(browserExt, webworkerExt);
 
-  // src/ts/App.ts
+  // src/ts/view/app.ts
   var app = new Application();
   var application = async () => {
-    await app.init({ background: "black", resizeTo: window });
+    await app.init({ background: "white", resizeTo: window });
     globalThis.__PIXI_APP__ = app;
     const gamebody = document.getElementById("gamebody");
     gamebody?.appendChild(app.canvas);
   };
 
-  // src/ts/createUI.ts
+  // src/ts/view/createUI.ts
   var boxcard = class {
     cardContainer;
     constructor() {
@@ -45179,22 +45179,8 @@ ${e2}`);
       app.stage.addChild(this.cardContainer);
     }
   };
-  var background = class {
-    texture;
-    background;
-    constructor() {
-    }
-    async init() {
-      this.texture = await Assets.load("Assets/background/background.avif");
-      this.background = new Sprite(this.texture);
-      this.background.width = app.screen.width;
-      this.background.height = app.screen.height;
-      app.stage.addChild(this.background);
-    }
-  };
-  var gameBoard = new background();
 
-  // src/ts/utily.ts
+  // src/ts/view/utily.ts
   var fontAsset = [
     "Assets/image (0).png",
     "Assets/image (0).png",
@@ -45203,9 +45189,15 @@ ${e2}`);
     "Assets/image (2).png",
     "Assets/image (2).png"
   ];
+  var backgroundAsset = async () => {
+    return await Assets.load(`Assets/background/background.avif`);
+  };
+  var backCardTexture = async () => {
+    return await Assets.load(`Assets/Back Card/BACK.png`);
+  };
 
-  // src/ts/card.ts
-  var cardstructure = class extends boxcard {
+  // src/ts/view/card.ts
+  var cardStructure = class extends boxcard {
     backcard;
     fontcard;
     cardB;
@@ -45215,3213 +45207,39 @@ ${e2}`);
       let cols = 3;
       let cardnum = 6;
       for (let index = 0; index < cardnum; index++) {
-        {
-          async () => {
-            this.fontcard = await Assets.load(fontAsset[index]);
-          };
-        }
-        const row = Math.floor(index / cols);
-        const col = index % cols;
-        this.cardB = new Sprite(this.backcard);
-        this.cardB.anchor.set(0.5);
-        this.cardB.scale.set(0.3);
-        this.cardB.x = 100 + col * 300;
-        this.cardB.y = 110 + row * 350;
-        this.cardContainer.addChild(this.cardB);
-      }
-    }
-  };
-  var initializingCard = new cardstructure();
-
-  // node_modules/gsap/gsap-core.js
-  function _assertThisInitialized(self2) {
-    if (self2 === void 0) {
-      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-    }
-    return self2;
-  }
-  function _inheritsLoose(subClass, superClass) {
-    subClass.prototype = Object.create(superClass.prototype);
-    subClass.prototype.constructor = subClass;
-    subClass.__proto__ = superClass;
-  }
-  var _config = {
-    autoSleep: 120,
-    force3D: "auto",
-    nullTargetWarn: 1,
-    units: {
-      lineHeight: ""
-    }
-  };
-  var _defaults = {
-    duration: 0.5,
-    overwrite: false,
-    delay: 0
-  };
-  var _suppressOverwrites;
-  var _reverting;
-  var _context;
-  var _bigNum = 1e8;
-  var _tinyNum = 1 / _bigNum;
-  var _2PI = Math.PI * 2;
-  var _HALF_PI = _2PI / 4;
-  var _gsID = 0;
-  var _sqrt = Math.sqrt;
-  var _cos = Math.cos;
-  var _sin = Math.sin;
-  var _isString = function _isString2(value) {
-    return typeof value === "string";
-  };
-  var _isFunction = function _isFunction2(value) {
-    return typeof value === "function";
-  };
-  var _isNumber = function _isNumber2(value) {
-    return typeof value === "number";
-  };
-  var _isUndefined = function _isUndefined2(value) {
-    return typeof value === "undefined";
-  };
-  var _isObject = function _isObject2(value) {
-    return typeof value === "object";
-  };
-  var _isNotFalse = function _isNotFalse2(value) {
-    return value !== false;
-  };
-  var _windowExists = function _windowExists2() {
-    return typeof window !== "undefined";
-  };
-  var _isFuncOrString = function _isFuncOrString2(value) {
-    return _isFunction(value) || _isString(value);
-  };
-  var _isTypedArray = typeof ArrayBuffer === "function" && ArrayBuffer.isView || function() {
-  };
-  var _isArray = Array.isArray;
-  var _randomExp = /random\([^)]+\)/g;
-  var _commaDelimExp = /,\s*/g;
-  var _strictNumExp = /(?:-?\.?\d|\.)+/gi;
-  var _numExp = /[-+=.]*\d+[.e\-+]*\d*[e\-+]*\d*/g;
-  var _numWithUnitExp = /[-+=.]*\d+[.e-]*\d*[a-z%]*/g;
-  var _complexStringNumExp = /[-+=.]*\d+\.?\d*(?:e-|e\+)?\d*/gi;
-  var _relExp = /[+-]=-?[.\d]+/;
-  var _delimitedValueExp = /[^,'"\[\]\s]+/gi;
-  var _unitExp = /^[+\-=e\s\d]*\d+[.\d]*([a-z]*|%)\s*$/i;
-  var _globalTimeline;
-  var _win;
-  var _coreInitted;
-  var _doc;
-  var _globals = {};
-  var _installScope = {};
-  var _coreReady;
-  var _install = function _install2(scope) {
-    return (_installScope = _merge(scope, _globals)) && gsap;
-  };
-  var _missingPlugin = function _missingPlugin2(property, value) {
-    return console.warn("Invalid property", property, "set to", value, "Missing plugin? gsap.registerPlugin()");
-  };
-  var _warn = function _warn2(message, suppress) {
-    return !suppress && console.warn(message);
-  };
-  var _addGlobal = function _addGlobal2(name, obj) {
-    return name && (_globals[name] = obj) && _installScope && (_installScope[name] = obj) || _globals;
-  };
-  var _emptyFunc = function _emptyFunc2() {
-    return 0;
-  };
-  var _startAtRevertConfig = {
-    suppressEvents: true,
-    isStart: true,
-    kill: false
-  };
-  var _revertConfigNoKill = {
-    suppressEvents: true,
-    kill: false
-  };
-  var _revertConfig = {
-    suppressEvents: true
-  };
-  var _reservedProps = {};
-  var _lazyTweens = [];
-  var _lazyLookup = {};
-  var _lastRenderedFrame;
-  var _plugins = {};
-  var _effects = {};
-  var _nextGCFrame = 30;
-  var _harnessPlugins = [];
-  var _callbackNames = "";
-  var _harness = function _harness2(targets) {
-    var target = targets[0], harnessPlugin, i2;
-    _isObject(target) || _isFunction(target) || (targets = [targets]);
-    if (!(harnessPlugin = (target._gsap || {}).harness)) {
-      i2 = _harnessPlugins.length;
-      while (i2-- && !_harnessPlugins[i2].targetTest(target)) {
-      }
-      harnessPlugin = _harnessPlugins[i2];
-    }
-    i2 = targets.length;
-    while (i2--) {
-      targets[i2] && (targets[i2]._gsap || (targets[i2]._gsap = new GSCache(targets[i2], harnessPlugin))) || targets.splice(i2, 1);
-    }
-    return targets;
-  };
-  var _getCache = function _getCache2(target) {
-    return target._gsap || _harness(toArray(target))[0]._gsap;
-  };
-  var _getProperty = function _getProperty2(target, property, v2) {
-    return (v2 = target[property]) && _isFunction(v2) ? target[property]() : _isUndefined(v2) && target.getAttribute && target.getAttribute(property) || v2;
-  };
-  var _forEachName = function _forEachName2(names, func) {
-    return (names = names.split(",")).forEach(func) || names;
-  };
-  var _round = function _round2(value) {
-    return Math.round(value * 1e5) / 1e5 || 0;
-  };
-  var _roundPrecise = function _roundPrecise2(value) {
-    return Math.round(value * 1e7) / 1e7 || 0;
-  };
-  var _parseRelative = function _parseRelative2(start, value) {
-    var operator = value.charAt(0), end = parseFloat(value.substr(2));
-    start = parseFloat(start);
-    return operator === "+" ? start + end : operator === "-" ? start - end : operator === "*" ? start * end : start / end;
-  };
-  var _arrayContainsAny = function _arrayContainsAny2(toSearch, toFind) {
-    var l2 = toFind.length, i2 = 0;
-    for (; toSearch.indexOf(toFind[i2]) < 0 && ++i2 < l2; ) {
-    }
-    return i2 < l2;
-  };
-  var _lazyRender = function _lazyRender2() {
-    var l2 = _lazyTweens.length, a2 = _lazyTweens.slice(0), i2, tween;
-    _lazyLookup = {};
-    _lazyTweens.length = 0;
-    for (i2 = 0; i2 < l2; i2++) {
-      tween = a2[i2];
-      tween && tween._lazy && (tween.render(tween._lazy[0], tween._lazy[1], true)._lazy = 0);
-    }
-  };
-  var _isRevertWorthy = function _isRevertWorthy2(animation) {
-    return !!(animation._initted || animation._startAt || animation.add);
-  };
-  var _lazySafeRender = function _lazySafeRender2(animation, time, suppressEvents, force) {
-    _lazyTweens.length && !_reverting && _lazyRender();
-    animation.render(time, suppressEvents, force || !!(_reverting && time < 0 && _isRevertWorthy(animation)));
-    _lazyTweens.length && !_reverting && _lazyRender();
-  };
-  var _numericIfPossible = function _numericIfPossible2(value) {
-    var n2 = parseFloat(value);
-    return (n2 || n2 === 0) && (value + "").match(_delimitedValueExp).length < 2 ? n2 : _isString(value) ? value.trim() : value;
-  };
-  var _passThrough = function _passThrough2(p2) {
-    return p2;
-  };
-  var _setDefaults = function _setDefaults2(obj, defaults2) {
-    for (var p2 in defaults2) {
-      p2 in obj || (obj[p2] = defaults2[p2]);
-    }
-    return obj;
-  };
-  var _setKeyframeDefaults = function _setKeyframeDefaults2(excludeDuration) {
-    return function(obj, defaults2) {
-      for (var p2 in defaults2) {
-        p2 in obj || p2 === "duration" && excludeDuration || p2 === "ease" || (obj[p2] = defaults2[p2]);
-      }
-    };
-  };
-  var _merge = function _merge2(base, toMerge) {
-    for (var p2 in toMerge) {
-      base[p2] = toMerge[p2];
-    }
-    return base;
-  };
-  var _mergeDeep = function _mergeDeep2(base, toMerge) {
-    for (var p2 in toMerge) {
-      p2 !== "__proto__" && p2 !== "constructor" && p2 !== "prototype" && (base[p2] = _isObject(toMerge[p2]) ? _mergeDeep2(base[p2] || (base[p2] = {}), toMerge[p2]) : toMerge[p2]);
-    }
-    return base;
-  };
-  var _copyExcluding = function _copyExcluding2(obj, excluding) {
-    var copy = {}, p2;
-    for (p2 in obj) {
-      p2 in excluding || (copy[p2] = obj[p2]);
-    }
-    return copy;
-  };
-  var _inheritDefaults = function _inheritDefaults2(vars) {
-    var parent = vars.parent || _globalTimeline, func = vars.keyframes ? _setKeyframeDefaults(_isArray(vars.keyframes)) : _setDefaults;
-    if (_isNotFalse(vars.inherit)) {
-      while (parent) {
-        func(vars, parent.vars.defaults);
-        parent = parent.parent || parent._dp;
-      }
-    }
-    return vars;
-  };
-  var _arraysMatch = function _arraysMatch2(a1, a2) {
-    var i2 = a1.length, match = i2 === a2.length;
-    while (match && i2-- && a1[i2] === a2[i2]) {
-    }
-    return i2 < 0;
-  };
-  var _addLinkedListItem = function _addLinkedListItem2(parent, child, firstProp, lastProp, sortBy) {
-    if (firstProp === void 0) {
-      firstProp = "_first";
-    }
-    if (lastProp === void 0) {
-      lastProp = "_last";
-    }
-    var prev = parent[lastProp], t2;
-    if (sortBy) {
-      t2 = child[sortBy];
-      while (prev && prev[sortBy] > t2) {
-        prev = prev._prev;
-      }
-    }
-    if (prev) {
-      child._next = prev._next;
-      prev._next = child;
-    } else {
-      child._next = parent[firstProp];
-      parent[firstProp] = child;
-    }
-    if (child._next) {
-      child._next._prev = child;
-    } else {
-      parent[lastProp] = child;
-    }
-    child._prev = prev;
-    child.parent = child._dp = parent;
-    return child;
-  };
-  var _removeLinkedListItem = function _removeLinkedListItem2(parent, child, firstProp, lastProp) {
-    if (firstProp === void 0) {
-      firstProp = "_first";
-    }
-    if (lastProp === void 0) {
-      lastProp = "_last";
-    }
-    var prev = child._prev, next = child._next;
-    if (prev) {
-      prev._next = next;
-    } else if (parent[firstProp] === child) {
-      parent[firstProp] = next;
-    }
-    if (next) {
-      next._prev = prev;
-    } else if (parent[lastProp] === child) {
-      parent[lastProp] = prev;
-    }
-    child._next = child._prev = child.parent = null;
-  };
-  var _removeFromParent = function _removeFromParent2(child, onlyIfParentHasAutoRemove) {
-    child.parent && (!onlyIfParentHasAutoRemove || child.parent.autoRemoveChildren) && child.parent.remove && child.parent.remove(child);
-    child._act = 0;
-  };
-  var _uncache = function _uncache2(animation, child) {
-    if (animation && (!child || child._end > animation._dur || child._start < 0)) {
-      var a2 = animation;
-      while (a2) {
-        a2._dirty = 1;
-        a2 = a2.parent;
-      }
-    }
-    return animation;
-  };
-  var _recacheAncestors = function _recacheAncestors2(animation) {
-    var parent = animation.parent;
-    while (parent && parent.parent) {
-      parent._dirty = 1;
-      parent.totalDuration();
-      parent = parent.parent;
-    }
-    return animation;
-  };
-  var _rewindStartAt = function _rewindStartAt2(tween, totalTime, suppressEvents, force) {
-    return tween._startAt && (_reverting ? tween._startAt.revert(_revertConfigNoKill) : tween.vars.immediateRender && !tween.vars.autoRevert || tween._startAt.render(totalTime, true, force));
-  };
-  var _hasNoPausedAncestors = function _hasNoPausedAncestors2(animation) {
-    return !animation || animation._ts && _hasNoPausedAncestors2(animation.parent);
-  };
-  var _elapsedCycleDuration = function _elapsedCycleDuration2(animation) {
-    return animation._repeat ? _animationCycle(animation._tTime, animation = animation.duration() + animation._rDelay) * animation : 0;
-  };
-  var _animationCycle = function _animationCycle2(tTime, cycleDuration) {
-    var whole = Math.floor(tTime = _roundPrecise(tTime / cycleDuration));
-    return tTime && whole === tTime ? whole - 1 : whole;
-  };
-  var _parentToChildTotalTime = function _parentToChildTotalTime2(parentTime, child) {
-    return (parentTime - child._start) * child._ts + (child._ts >= 0 ? 0 : child._dirty ? child.totalDuration() : child._tDur);
-  };
-  var _setEnd = function _setEnd2(animation) {
-    return animation._end = _roundPrecise(animation._start + (animation._tDur / Math.abs(animation._ts || animation._rts || _tinyNum) || 0));
-  };
-  var _alignPlayhead = function _alignPlayhead2(animation, totalTime) {
-    var parent = animation._dp;
-    if (parent && parent.smoothChildTiming && animation._ts) {
-      animation._start = _roundPrecise(parent._time - (animation._ts > 0 ? totalTime / animation._ts : ((animation._dirty ? animation.totalDuration() : animation._tDur) - totalTime) / -animation._ts));
-      _setEnd(animation);
-      parent._dirty || _uncache(parent, animation);
-    }
-    return animation;
-  };
-  var _postAddChecks = function _postAddChecks2(timeline2, child) {
-    var t2;
-    if (child._time || !child._dur && child._initted || child._start < timeline2._time && (child._dur || !child.add)) {
-      t2 = _parentToChildTotalTime(timeline2.rawTime(), child);
-      if (!child._dur || _clamp(0, child.totalDuration(), t2) - child._tTime > _tinyNum) {
-        child.render(t2, true);
-      }
-    }
-    if (_uncache(timeline2, child)._dp && timeline2._initted && timeline2._time >= timeline2._dur && timeline2._ts) {
-      if (timeline2._dur < timeline2.duration()) {
-        t2 = timeline2;
-        while (t2._dp) {
-          t2.rawTime() >= 0 && t2.totalTime(t2._tTime);
-          t2 = t2._dp;
-        }
-      }
-      timeline2._zTime = -_tinyNum;
-    }
-  };
-  var _addToTimeline = function _addToTimeline2(timeline2, child, position, skipChecks) {
-    child.parent && _removeFromParent(child);
-    child._start = _roundPrecise((_isNumber(position) ? position : position || timeline2 !== _globalTimeline ? _parsePosition(timeline2, position, child) : timeline2._time) + child._delay);
-    child._end = _roundPrecise(child._start + (child.totalDuration() / Math.abs(child.timeScale()) || 0));
-    _addLinkedListItem(timeline2, child, "_first", "_last", timeline2._sort ? "_start" : 0);
-    _isFromOrFromStart(child) || (timeline2._recent = child);
-    skipChecks || _postAddChecks(timeline2, child);
-    timeline2._ts < 0 && _alignPlayhead(timeline2, timeline2._tTime);
-    return timeline2;
-  };
-  var _scrollTrigger = function _scrollTrigger2(animation, trigger) {
-    return (_globals.ScrollTrigger || _missingPlugin("scrollTrigger", trigger)) && _globals.ScrollTrigger.create(trigger, animation);
-  };
-  var _attemptInitTween = function _attemptInitTween2(tween, time, force, suppressEvents, tTime) {
-    _initTween(tween, time, tTime);
-    if (!tween._initted) {
-      return 1;
-    }
-    if (!force && tween._pt && !_reverting && (tween._dur && tween.vars.lazy !== false || !tween._dur && tween.vars.lazy) && _lastRenderedFrame !== _ticker.frame) {
-      _lazyTweens.push(tween);
-      tween._lazy = [tTime, suppressEvents];
-      return 1;
-    }
-  };
-  var _parentPlayheadIsBeforeStart = function _parentPlayheadIsBeforeStart2(_ref) {
-    var parent = _ref.parent;
-    return parent && parent._ts && parent._initted && !parent._lock && (parent.rawTime() < 0 || _parentPlayheadIsBeforeStart2(parent));
-  };
-  var _isFromOrFromStart = function _isFromOrFromStart2(_ref2) {
-    var data = _ref2.data;
-    return data === "isFromStart" || data === "isStart";
-  };
-  var _renderZeroDurationTween = function _renderZeroDurationTween2(tween, totalTime, suppressEvents, force) {
-    var prevRatio = tween.ratio, ratio = totalTime < 0 || !totalTime && (!tween._start && _parentPlayheadIsBeforeStart(tween) && !(!tween._initted && _isFromOrFromStart(tween)) || (tween._ts < 0 || tween._dp._ts < 0) && !_isFromOrFromStart(tween)) ? 0 : 1, repeatDelay = tween._rDelay, tTime = 0, pt, iteration, prevIteration;
-    if (repeatDelay && tween._repeat) {
-      tTime = _clamp(0, tween._tDur, totalTime);
-      iteration = _animationCycle(tTime, repeatDelay);
-      tween._yoyo && iteration & 1 && (ratio = 1 - ratio);
-      if (iteration !== _animationCycle(tween._tTime, repeatDelay)) {
-        prevRatio = 1 - ratio;
-        tween.vars.repeatRefresh && tween._initted && tween.invalidate();
-      }
-    }
-    if (ratio !== prevRatio || _reverting || force || tween._zTime === _tinyNum || !totalTime && tween._zTime) {
-      if (!tween._initted && _attemptInitTween(tween, totalTime, force, suppressEvents, tTime)) {
-        return;
-      }
-      prevIteration = tween._zTime;
-      tween._zTime = totalTime || (suppressEvents ? _tinyNum : 0);
-      suppressEvents || (suppressEvents = totalTime && !prevIteration);
-      tween.ratio = ratio;
-      tween._from && (ratio = 1 - ratio);
-      tween._time = 0;
-      tween._tTime = tTime;
-      pt = tween._pt;
-      while (pt) {
-        pt.r(ratio, pt.d);
-        pt = pt._next;
-      }
-      totalTime < 0 && _rewindStartAt(tween, totalTime, suppressEvents, true);
-      tween._onUpdate && !suppressEvents && _callback(tween, "onUpdate");
-      tTime && tween._repeat && !suppressEvents && tween.parent && _callback(tween, "onRepeat");
-      if ((totalTime >= tween._tDur || totalTime < 0) && tween.ratio === ratio) {
-        ratio && _removeFromParent(tween, 1);
-        if (!suppressEvents && !_reverting) {
-          _callback(tween, ratio ? "onComplete" : "onReverseComplete", true);
-          tween._prom && tween._prom();
-        }
-      }
-    } else if (!tween._zTime) {
-      tween._zTime = totalTime;
-    }
-  };
-  var _findNextPauseTween = function _findNextPauseTween2(animation, prevTime, time) {
-    var child;
-    if (time > prevTime) {
-      child = animation._first;
-      while (child && child._start <= time) {
-        if (child.data === "isPause" && child._start > prevTime) {
-          return child;
-        }
-        child = child._next;
-      }
-    } else {
-      child = animation._last;
-      while (child && child._start >= time) {
-        if (child.data === "isPause" && child._start < prevTime) {
-          return child;
-        }
-        child = child._prev;
-      }
-    }
-  };
-  var _setDuration = function _setDuration2(animation, duration, skipUncache, leavePlayhead) {
-    var repeat = animation._repeat, dur = _roundPrecise(duration) || 0, totalProgress = animation._tTime / animation._tDur;
-    totalProgress && !leavePlayhead && (animation._time *= dur / animation._dur);
-    animation._dur = dur;
-    animation._tDur = !repeat ? dur : repeat < 0 ? 1e10 : _roundPrecise(dur * (repeat + 1) + animation._rDelay * repeat);
-    totalProgress > 0 && !leavePlayhead && _alignPlayhead(animation, animation._tTime = animation._tDur * totalProgress);
-    animation.parent && _setEnd(animation);
-    skipUncache || _uncache(animation.parent, animation);
-    return animation;
-  };
-  var _onUpdateTotalDuration = function _onUpdateTotalDuration2(animation) {
-    return animation instanceof Timeline ? _uncache(animation) : _setDuration(animation, animation._dur);
-  };
-  var _zeroPosition = {
-    _start: 0,
-    endTime: _emptyFunc,
-    totalDuration: _emptyFunc
-  };
-  var _parsePosition = function _parsePosition2(animation, position, percentAnimation) {
-    var labels = animation.labels, recent = animation._recent || _zeroPosition, clippedDuration = animation.duration() >= _bigNum ? recent.endTime(false) : animation._dur, i2, offset, isPercent;
-    if (_isString(position) && (isNaN(position) || position in labels)) {
-      offset = position.charAt(0);
-      isPercent = position.substr(-1) === "%";
-      i2 = position.indexOf("=");
-      if (offset === "<" || offset === ">") {
-        i2 >= 0 && (position = position.replace(/=/, ""));
-        return (offset === "<" ? recent._start : recent.endTime(recent._repeat >= 0)) + (parseFloat(position.substr(1)) || 0) * (isPercent ? (i2 < 0 ? recent : percentAnimation).totalDuration() / 100 : 1);
-      }
-      if (i2 < 0) {
-        position in labels || (labels[position] = clippedDuration);
-        return labels[position];
-      }
-      offset = parseFloat(position.charAt(i2 - 1) + position.substr(i2 + 1));
-      if (isPercent && percentAnimation) {
-        offset = offset / 100 * (_isArray(percentAnimation) ? percentAnimation[0] : percentAnimation).totalDuration();
-      }
-      return i2 > 1 ? _parsePosition2(animation, position.substr(0, i2 - 1), percentAnimation) + offset : clippedDuration + offset;
-    }
-    return position == null ? clippedDuration : +position;
-  };
-  var _createTweenType = function _createTweenType2(type, params, timeline2) {
-    var isLegacy = _isNumber(params[1]), varsIndex = (isLegacy ? 2 : 1) + (type < 2 ? 0 : 1), vars = params[varsIndex], irVars, parent;
-    isLegacy && (vars.duration = params[1]);
-    vars.parent = timeline2;
-    if (type) {
-      irVars = vars;
-      parent = timeline2;
-      while (parent && !("immediateRender" in irVars)) {
-        irVars = parent.vars.defaults || {};
-        parent = _isNotFalse(parent.vars.inherit) && parent.parent;
-      }
-      vars.immediateRender = _isNotFalse(irVars.immediateRender);
-      type < 2 ? vars.runBackwards = 1 : vars.startAt = params[varsIndex - 1];
-    }
-    return new Tween(params[0], vars, params[varsIndex + 1]);
-  };
-  var _conditionalReturn = function _conditionalReturn2(value, func) {
-    return value || value === 0 ? func(value) : func;
-  };
-  var _clamp = function _clamp2(min, max, value) {
-    return value < min ? min : value > max ? max : value;
-  };
-  var getUnit = function getUnit2(value, v2) {
-    return !_isString(value) || !(v2 = _unitExp.exec(value)) ? "" : v2[1];
-  };
-  var clamp = function clamp2(min, max, value) {
-    return _conditionalReturn(value, function(v2) {
-      return _clamp(min, max, v2);
-    });
-  };
-  var _slice = [].slice;
-  var _isArrayLike = function _isArrayLike2(value, nonEmpty) {
-    return value && _isObject(value) && "length" in value && (!nonEmpty && !value.length || value.length - 1 in value && _isObject(value[0])) && !value.nodeType && value !== _win;
-  };
-  var _flatten = function _flatten2(ar, leaveStrings, accumulator) {
-    if (accumulator === void 0) {
-      accumulator = [];
-    }
-    return ar.forEach(function(value) {
-      var _accumulator;
-      return _isString(value) && !leaveStrings || _isArrayLike(value, 1) ? (_accumulator = accumulator).push.apply(_accumulator, toArray(value)) : accumulator.push(value);
-    }) || accumulator;
-  };
-  var toArray = function toArray2(value, scope, leaveStrings) {
-    return _context && !scope && _context.selector ? _context.selector(value) : _isString(value) && !leaveStrings && (_coreInitted || !_wake()) ? _slice.call((scope || _doc).querySelectorAll(value), 0) : _isArray(value) ? _flatten(value, leaveStrings) : _isArrayLike(value) ? _slice.call(value, 0) : value ? [value] : [];
-  };
-  var selector = function selector2(value) {
-    value = toArray(value)[0] || _warn("Invalid scope") || {};
-    return function(v2) {
-      var el = value.current || value.nativeElement || value;
-      return toArray(v2, el.querySelectorAll ? el : el === value ? _warn("Invalid scope") || _doc.createElement("div") : value);
-    };
-  };
-  var shuffle = function shuffle2(a2) {
-    return a2.sort(function() {
-      return 0.5 - Math.random();
-    });
-  };
-  var distribute = function distribute2(v2) {
-    if (_isFunction(v2)) {
-      return v2;
-    }
-    var vars = _isObject(v2) ? v2 : {
-      each: v2
-    }, ease = _parseEase(vars.ease), from = vars.from || 0, base = parseFloat(vars.base) || 0, cache = {}, isDecimal = from > 0 && from < 1, ratios = isNaN(from) || isDecimal, axis = vars.axis, ratioX = from, ratioY = from;
-    if (_isString(from)) {
-      ratioX = ratioY = {
-        center: 0.5,
-        edges: 0.5,
-        end: 1
-      }[from] || 0;
-    } else if (!isDecimal && ratios) {
-      ratioX = from[0];
-      ratioY = from[1];
-    }
-    return function(i2, target, a2) {
-      var l2 = (a2 || vars).length, distances = cache[l2], originX, originY, x2, y2, d2, j2, max, min, wrapAt;
-      if (!distances) {
-        wrapAt = vars.grid === "auto" ? 0 : (vars.grid || [1, _bigNum])[1];
-        if (!wrapAt) {
-          max = -_bigNum;
-          while (max < (max = a2[wrapAt++].getBoundingClientRect().left) && wrapAt < l2) {
-          }
-          wrapAt < l2 && wrapAt--;
-        }
-        distances = cache[l2] = [];
-        originX = ratios ? Math.min(wrapAt, l2) * ratioX - 0.5 : from % wrapAt;
-        originY = wrapAt === _bigNum ? 0 : ratios ? l2 * ratioY / wrapAt - 0.5 : from / wrapAt | 0;
-        max = 0;
-        min = _bigNum;
-        for (j2 = 0; j2 < l2; j2++) {
-          x2 = j2 % wrapAt - originX;
-          y2 = originY - (j2 / wrapAt | 0);
-          distances[j2] = d2 = !axis ? _sqrt(x2 * x2 + y2 * y2) : Math.abs(axis === "y" ? y2 : x2);
-          d2 > max && (max = d2);
-          d2 < min && (min = d2);
-        }
-        from === "random" && shuffle(distances);
-        distances.max = max - min;
-        distances.min = min;
-        distances.v = l2 = (parseFloat(vars.amount) || parseFloat(vars.each) * (wrapAt > l2 ? l2 - 1 : !axis ? Math.max(wrapAt, l2 / wrapAt) : axis === "y" ? l2 / wrapAt : wrapAt) || 0) * (from === "edges" ? -1 : 1);
-        distances.b = l2 < 0 ? base - l2 : base;
-        distances.u = getUnit(vars.amount || vars.each) || 0;
-        ease = ease && l2 < 0 ? _invertEase(ease) : ease;
-      }
-      l2 = (distances[i2] - distances.min) / distances.max || 0;
-      return _roundPrecise(distances.b + (ease ? ease(l2) : l2) * distances.v) + distances.u;
-    };
-  };
-  var _roundModifier = function _roundModifier2(v2) {
-    var p2 = Math.pow(10, ((v2 + "").split(".")[1] || "").length);
-    return function(raw) {
-      var n2 = _roundPrecise(Math.round(parseFloat(raw) / v2) * v2 * p2);
-      return (n2 - n2 % 1) / p2 + (_isNumber(raw) ? 0 : getUnit(raw));
-    };
-  };
-  var snap = function snap2(snapTo, value) {
-    var isArray = _isArray(snapTo), radius, is2D;
-    if (!isArray && _isObject(snapTo)) {
-      radius = isArray = snapTo.radius || _bigNum;
-      if (snapTo.values) {
-        snapTo = toArray(snapTo.values);
-        if (is2D = !_isNumber(snapTo[0])) {
-          radius *= radius;
-        }
-      } else {
-        snapTo = _roundModifier(snapTo.increment);
-      }
-    }
-    return _conditionalReturn(value, !isArray ? _roundModifier(snapTo) : _isFunction(snapTo) ? function(raw) {
-      is2D = snapTo(raw);
-      return Math.abs(is2D - raw) <= radius ? is2D : raw;
-    } : function(raw) {
-      var x2 = parseFloat(is2D ? raw.x : raw), y2 = parseFloat(is2D ? raw.y : 0), min = _bigNum, closest = 0, i2 = snapTo.length, dx, dy;
-      while (i2--) {
-        if (is2D) {
-          dx = snapTo[i2].x - x2;
-          dy = snapTo[i2].y - y2;
-          dx = dx * dx + dy * dy;
-        } else {
-          dx = Math.abs(snapTo[i2] - x2);
-        }
-        if (dx < min) {
-          min = dx;
-          closest = i2;
-        }
-      }
-      closest = !radius || min <= radius ? snapTo[closest] : raw;
-      return is2D || closest === raw || _isNumber(raw) ? closest : closest + getUnit(raw);
-    });
-  };
-  var random = function random2(min, max, roundingIncrement, returnFunction) {
-    return _conditionalReturn(_isArray(min) ? !max : roundingIncrement === true ? !!(roundingIncrement = 0) : !returnFunction, function() {
-      return _isArray(min) ? min[~~(Math.random() * min.length)] : (roundingIncrement = roundingIncrement || 1e-5) && (returnFunction = roundingIncrement < 1 ? Math.pow(10, (roundingIncrement + "").length - 2) : 1) && Math.floor(Math.round((min - roundingIncrement / 2 + Math.random() * (max - min + roundingIncrement * 0.99)) / roundingIncrement) * roundingIncrement * returnFunction) / returnFunction;
-    });
-  };
-  var pipe = function pipe2() {
-    for (var _len = arguments.length, functions = new Array(_len), _key = 0; _key < _len; _key++) {
-      functions[_key] = arguments[_key];
-    }
-    return function(value) {
-      return functions.reduce(function(v2, f2) {
-        return f2(v2);
-      }, value);
-    };
-  };
-  var unitize = function unitize2(func, unit) {
-    return function(value) {
-      return func(parseFloat(value)) + (unit || getUnit(value));
-    };
-  };
-  var normalize = function normalize2(min, max, value) {
-    return mapRange(min, max, 0, 1, value);
-  };
-  var _wrapArray = function _wrapArray2(a2, wrapper, value) {
-    return _conditionalReturn(value, function(index) {
-      return a2[~~wrapper(index)];
-    });
-  };
-  var wrap = function wrap2(min, max, value) {
-    var range = max - min;
-    return _isArray(min) ? _wrapArray(min, wrap2(0, min.length), max) : _conditionalReturn(value, function(value2) {
-      return (range + (value2 - min) % range) % range + min;
-    });
-  };
-  var wrapYoyo = function wrapYoyo2(min, max, value) {
-    var range = max - min, total = range * 2;
-    return _isArray(min) ? _wrapArray(min, wrapYoyo2(0, min.length - 1), max) : _conditionalReturn(value, function(value2) {
-      value2 = (total + (value2 - min) % total) % total || 0;
-      return min + (value2 > range ? total - value2 : value2);
-    });
-  };
-  var _replaceRandom = function _replaceRandom2(s2) {
-    return s2.replace(_randomExp, function(match) {
-      var arIndex = match.indexOf("[") + 1, values = match.substring(arIndex || 7, arIndex ? match.indexOf("]") : match.length - 1).split(_commaDelimExp);
-      return random(arIndex ? values : +values[0], arIndex ? 0 : +values[1], +values[2] || 1e-5);
-    });
-  };
-  var mapRange = function mapRange2(inMin, inMax, outMin, outMax, value) {
-    var inRange = inMax - inMin, outRange = outMax - outMin;
-    return _conditionalReturn(value, function(value2) {
-      return outMin + ((value2 - inMin) / inRange * outRange || 0);
-    });
-  };
-  var interpolate = function interpolate2(start, end, progress, mutate) {
-    var func = isNaN(start + end) ? 0 : function(p3) {
-      return (1 - p3) * start + p3 * end;
-    };
-    if (!func) {
-      var isString = _isString(start), master = {}, p2, i2, interpolators, l2, il;
-      progress === true && (mutate = 1) && (progress = null);
-      if (isString) {
-        start = {
-          p: start
-        };
-        end = {
-          p: end
-        };
-      } else if (_isArray(start) && !_isArray(end)) {
-        interpolators = [];
-        l2 = start.length;
-        il = l2 - 2;
-        for (i2 = 1; i2 < l2; i2++) {
-          interpolators.push(interpolate2(start[i2 - 1], start[i2]));
-        }
-        l2--;
-        func = function func2(p3) {
-          p3 *= l2;
-          var i3 = Math.min(il, ~~p3);
-          return interpolators[i3](p3 - i3);
-        };
-        progress = end;
-      } else if (!mutate) {
-        start = _merge(_isArray(start) ? [] : {}, start);
-      }
-      if (!interpolators) {
-        for (p2 in end) {
-          _addPropTween.call(master, start, p2, "get", end[p2]);
-        }
-        func = function func2(p3) {
-          return _renderPropTweens(p3, master) || (isString ? start.p : start);
-        };
-      }
-    }
-    return _conditionalReturn(progress, func);
-  };
-  var _getLabelInDirection = function _getLabelInDirection2(timeline2, fromTime, backward) {
-    var labels = timeline2.labels, min = _bigNum, p2, distance, label;
-    for (p2 in labels) {
-      distance = labels[p2] - fromTime;
-      if (distance < 0 === !!backward && distance && min > (distance = Math.abs(distance))) {
-        label = p2;
-        min = distance;
-      }
-    }
-    return label;
-  };
-  var _callback = function _callback2(animation, type, executeLazyFirst) {
-    var v2 = animation.vars, callback = v2[type], prevContext = _context, context4 = animation._ctx, params, scope, result;
-    if (!callback) {
-      return;
-    }
-    params = v2[type + "Params"];
-    scope = v2.callbackScope || animation;
-    executeLazyFirst && _lazyTweens.length && _lazyRender();
-    context4 && (_context = context4);
-    result = params ? callback.apply(scope, params) : callback.call(scope);
-    _context = prevContext;
-    return result;
-  };
-  var _interrupt = function _interrupt2(animation) {
-    _removeFromParent(animation);
-    animation.scrollTrigger && animation.scrollTrigger.kill(!!_reverting);
-    animation.progress() < 1 && _callback(animation, "onInterrupt");
-    return animation;
-  };
-  var _quickTween;
-  var _registerPluginQueue = [];
-  var _createPlugin = function _createPlugin2(config3) {
-    if (!config3) return;
-    config3 = !config3.name && config3["default"] || config3;
-    if (_windowExists() || config3.headless) {
-      var name = config3.name, isFunc = _isFunction(config3), Plugin = name && !isFunc && config3.init ? function() {
-        this._props = [];
-      } : config3, instanceDefaults = {
-        init: _emptyFunc,
-        render: _renderPropTweens,
-        add: _addPropTween,
-        kill: _killPropTweensOf,
-        modifier: _addPluginModifier,
-        rawVars: 0
-      }, statics = {
-        targetTest: 0,
-        get: 0,
-        getSetter: _getSetter,
-        aliases: {},
-        register: 0
-      };
-      _wake();
-      if (config3 !== Plugin) {
-        if (_plugins[name]) {
-          return;
-        }
-        _setDefaults(Plugin, _setDefaults(_copyExcluding(config3, instanceDefaults), statics));
-        _merge(Plugin.prototype, _merge(instanceDefaults, _copyExcluding(config3, statics)));
-        _plugins[Plugin.prop = name] = Plugin;
-        if (config3.targetTest) {
-          _harnessPlugins.push(Plugin);
-          _reservedProps[name] = 1;
-        }
-        name = (name === "css" ? "CSS" : name.charAt(0).toUpperCase() + name.substr(1)) + "Plugin";
-      }
-      _addGlobal(name, Plugin);
-      config3.register && config3.register(gsap, Plugin, PropTween);
-    } else {
-      _registerPluginQueue.push(config3);
-    }
-  };
-  var _255 = 255;
-  var _colorLookup = {
-    aqua: [0, _255, _255],
-    lime: [0, _255, 0],
-    silver: [192, 192, 192],
-    black: [0, 0, 0],
-    maroon: [128, 0, 0],
-    teal: [0, 128, 128],
-    blue: [0, 0, _255],
-    navy: [0, 0, 128],
-    white: [_255, _255, _255],
-    olive: [128, 128, 0],
-    yellow: [_255, _255, 0],
-    orange: [_255, 165, 0],
-    gray: [128, 128, 128],
-    purple: [128, 0, 128],
-    green: [0, 128, 0],
-    red: [_255, 0, 0],
-    pink: [_255, 192, 203],
-    cyan: [0, _255, _255],
-    transparent: [_255, _255, _255, 0]
-  };
-  var _hue = function _hue2(h2, m1, m2) {
-    h2 += h2 < 0 ? 1 : h2 > 1 ? -1 : 0;
-    return (h2 * 6 < 1 ? m1 + (m2 - m1) * h2 * 6 : h2 < 0.5 ? m2 : h2 * 3 < 2 ? m1 + (m2 - m1) * (2 / 3 - h2) * 6 : m1) * _255 + 0.5 | 0;
-  };
-  var splitColor = function splitColor2(v2, toHSL, forceAlpha) {
-    var a2 = !v2 ? _colorLookup.black : _isNumber(v2) ? [v2 >> 16, v2 >> 8 & _255, v2 & _255] : 0, r2, g2, b2, h2, s2, l2, max, min, d2, wasHSL;
-    if (!a2) {
-      if (v2.substr(-1) === ",") {
-        v2 = v2.substr(0, v2.length - 1);
-      }
-      if (_colorLookup[v2]) {
-        a2 = _colorLookup[v2];
-      } else if (v2.charAt(0) === "#") {
-        if (v2.length < 6) {
-          r2 = v2.charAt(1);
-          g2 = v2.charAt(2);
-          b2 = v2.charAt(3);
-          v2 = "#" + r2 + r2 + g2 + g2 + b2 + b2 + (v2.length === 5 ? v2.charAt(4) + v2.charAt(4) : "");
-        }
-        if (v2.length === 9) {
-          a2 = parseInt(v2.substr(1, 6), 16);
-          return [a2 >> 16, a2 >> 8 & _255, a2 & _255, parseInt(v2.substr(7), 16) / 255];
-        }
-        v2 = parseInt(v2.substr(1), 16);
-        a2 = [v2 >> 16, v2 >> 8 & _255, v2 & _255];
-      } else if (v2.substr(0, 3) === "hsl") {
-        a2 = wasHSL = v2.match(_strictNumExp);
-        if (!toHSL) {
-          h2 = +a2[0] % 360 / 360;
-          s2 = +a2[1] / 100;
-          l2 = +a2[2] / 100;
-          g2 = l2 <= 0.5 ? l2 * (s2 + 1) : l2 + s2 - l2 * s2;
-          r2 = l2 * 2 - g2;
-          a2.length > 3 && (a2[3] *= 1);
-          a2[0] = _hue(h2 + 1 / 3, r2, g2);
-          a2[1] = _hue(h2, r2, g2);
-          a2[2] = _hue(h2 - 1 / 3, r2, g2);
-        } else if (~v2.indexOf("=")) {
-          a2 = v2.match(_numExp);
-          forceAlpha && a2.length < 4 && (a2[3] = 1);
-          return a2;
-        }
-      } else {
-        a2 = v2.match(_strictNumExp) || _colorLookup.transparent;
-      }
-      a2 = a2.map(Number);
-    }
-    if (toHSL && !wasHSL) {
-      r2 = a2[0] / _255;
-      g2 = a2[1] / _255;
-      b2 = a2[2] / _255;
-      max = Math.max(r2, g2, b2);
-      min = Math.min(r2, g2, b2);
-      l2 = (max + min) / 2;
-      if (max === min) {
-        h2 = s2 = 0;
-      } else {
-        d2 = max - min;
-        s2 = l2 > 0.5 ? d2 / (2 - max - min) : d2 / (max + min);
-        h2 = max === r2 ? (g2 - b2) / d2 + (g2 < b2 ? 6 : 0) : max === g2 ? (b2 - r2) / d2 + 2 : (r2 - g2) / d2 + 4;
-        h2 *= 60;
-      }
-      a2[0] = ~~(h2 + 0.5);
-      a2[1] = ~~(s2 * 100 + 0.5);
-      a2[2] = ~~(l2 * 100 + 0.5);
-    }
-    forceAlpha && a2.length < 4 && (a2[3] = 1);
-    return a2;
-  };
-  var _colorOrderData = function _colorOrderData2(v2) {
-    var values = [], c2 = [], i2 = -1;
-    v2.split(_colorExp).forEach(function(v3) {
-      var a2 = v3.match(_numWithUnitExp) || [];
-      values.push.apply(values, a2);
-      c2.push(i2 += a2.length + 1);
-    });
-    values.c = c2;
-    return values;
-  };
-  var _formatColors = function _formatColors2(s2, toHSL, orderMatchData) {
-    var result = "", colors = (s2 + result).match(_colorExp), type = toHSL ? "hsla(" : "rgba(", i2 = 0, c2, shell, d2, l2;
-    if (!colors) {
-      return s2;
-    }
-    colors = colors.map(function(color) {
-      return (color = splitColor(color, toHSL, 1)) && type + (toHSL ? color[0] + "," + color[1] + "%," + color[2] + "%," + color[3] : color.join(",")) + ")";
-    });
-    if (orderMatchData) {
-      d2 = _colorOrderData(s2);
-      c2 = orderMatchData.c;
-      if (c2.join(result) !== d2.c.join(result)) {
-        shell = s2.replace(_colorExp, "1").split(_numWithUnitExp);
-        l2 = shell.length - 1;
-        for (; i2 < l2; i2++) {
-          result += shell[i2] + (~c2.indexOf(i2) ? colors.shift() || type + "0,0,0,0)" : (d2.length ? d2 : colors.length ? colors : orderMatchData).shift());
-        }
-      }
-    }
-    if (!shell) {
-      shell = s2.split(_colorExp);
-      l2 = shell.length - 1;
-      for (; i2 < l2; i2++) {
-        result += shell[i2] + colors[i2];
-      }
-    }
-    return result + shell[l2];
-  };
-  var _colorExp = (function() {
-    var s2 = "(?:\\b(?:(?:rgb|rgba|hsl|hsla)\\(.+?\\))|\\B#(?:[0-9a-f]{3,4}){1,2}\\b", p2;
-    for (p2 in _colorLookup) {
-      s2 += "|" + p2 + "\\b";
-    }
-    return new RegExp(s2 + ")", "gi");
-  })();
-  var _hslExp = /hsl[a]?\(/;
-  var _colorStringFilter = function _colorStringFilter2(a2) {
-    var combined = a2.join(" "), toHSL;
-    _colorExp.lastIndex = 0;
-    if (_colorExp.test(combined)) {
-      toHSL = _hslExp.test(combined);
-      a2[1] = _formatColors(a2[1], toHSL);
-      a2[0] = _formatColors(a2[0], toHSL, _colorOrderData(a2[1]));
-      return true;
-    }
-  };
-  var _tickerActive;
-  var _ticker = (function() {
-    var _getTime = Date.now, _lagThreshold = 500, _adjustedLag = 33, _startTime = _getTime(), _lastUpdate = _startTime, _gap = 1e3 / 240, _nextTime = _gap, _listeners2 = [], _id, _req, _raf, _self, _delta, _i, _tick = function _tick2(v2) {
-      var elapsed = _getTime() - _lastUpdate, manual = v2 === true, overlap, dispatch, time, frame;
-      (elapsed > _lagThreshold || elapsed < 0) && (_startTime += elapsed - _adjustedLag);
-      _lastUpdate += elapsed;
-      time = _lastUpdate - _startTime;
-      overlap = time - _nextTime;
-      if (overlap > 0 || manual) {
-        frame = ++_self.frame;
-        _delta = time - _self.time * 1e3;
-        _self.time = time = time / 1e3;
-        _nextTime += overlap + (overlap >= _gap ? 4 : _gap - overlap);
-        dispatch = 1;
-      }
-      manual || (_id = _req(_tick2));
-      if (dispatch) {
-        for (_i = 0; _i < _listeners2.length; _i++) {
-          _listeners2[_i](time, _delta, frame, v2);
-        }
-      }
-    };
-    _self = {
-      time: 0,
-      frame: 0,
-      tick: function tick() {
-        _tick(true);
-      },
-      deltaRatio: function deltaRatio(fps) {
-        return _delta / (1e3 / (fps || 60));
-      },
-      wake: function wake() {
-        if (_coreReady) {
-          if (!_coreInitted && _windowExists()) {
-            _win = _coreInitted = window;
-            _doc = _win.document || {};
-            _globals.gsap = gsap;
-            (_win.gsapVersions || (_win.gsapVersions = [])).push(gsap.version);
-            _install(_installScope || _win.GreenSockGlobals || !_win.gsap && _win || {});
-            _registerPluginQueue.forEach(_createPlugin);
-          }
-          _raf = typeof requestAnimationFrame !== "undefined" && requestAnimationFrame;
-          _id && _self.sleep();
-          _req = _raf || function(f2) {
-            return setTimeout(f2, _nextTime - _self.time * 1e3 + 1 | 0);
-          };
-          _tickerActive = 1;
-          _tick(2);
-        }
-      },
-      sleep: function sleep() {
-        (_raf ? cancelAnimationFrame : clearTimeout)(_id);
-        _tickerActive = 0;
-        _req = _emptyFunc;
-      },
-      lagSmoothing: function lagSmoothing(threshold, adjustedLag) {
-        _lagThreshold = threshold || Infinity;
-        _adjustedLag = Math.min(adjustedLag || 33, _lagThreshold);
-      },
-      fps: function fps(_fps) {
-        _gap = 1e3 / (_fps || 240);
-        _nextTime = _self.time * 1e3 + _gap;
-      },
-      add: function add(callback, once, prioritize) {
-        var func = once ? function(t2, d2, f2, v2) {
-          callback(t2, d2, f2, v2);
-          _self.remove(func);
-        } : callback;
-        _self.remove(callback);
-        _listeners2[prioritize ? "unshift" : "push"](func);
-        _wake();
-        return func;
-      },
-      remove: function remove(callback, i2) {
-        ~(i2 = _listeners2.indexOf(callback)) && _listeners2.splice(i2, 1) && _i >= i2 && _i--;
-      },
-      _listeners: _listeners2
-    };
-    return _self;
-  })();
-  var _wake = function _wake2() {
-    return !_tickerActive && _ticker.wake();
-  };
-  var _easeMap = {};
-  var _customEaseExp = /^[\d.\-M][\d.\-,\s]/;
-  var _quotesExp = /["']/g;
-  var _parseObjectInString = function _parseObjectInString2(value) {
-    var obj = {}, split = value.substr(1, value.length - 3).split(":"), key = split[0], i2 = 1, l2 = split.length, index, val, parsedVal;
-    for (; i2 < l2; i2++) {
-      val = split[i2];
-      index = i2 !== l2 - 1 ? val.lastIndexOf(",") : val.length;
-      parsedVal = val.substr(0, index);
-      obj[key] = isNaN(parsedVal) ? parsedVal.replace(_quotesExp, "").trim() : +parsedVal;
-      key = val.substr(index + 1).trim();
-    }
-    return obj;
-  };
-  var _valueInParentheses = function _valueInParentheses2(value) {
-    var open = value.indexOf("(") + 1, close = value.indexOf(")"), nested = value.indexOf("(", open);
-    return value.substring(open, ~nested && nested < close ? value.indexOf(")", close + 1) : close);
-  };
-  var _configEaseFromString = function _configEaseFromString2(name) {
-    var split = (name + "").split("("), ease = _easeMap[split[0]];
-    return ease && split.length > 1 && ease.config ? ease.config.apply(null, ~name.indexOf("{") ? [_parseObjectInString(split[1])] : _valueInParentheses(name).split(",").map(_numericIfPossible)) : _easeMap._CE && _customEaseExp.test(name) ? _easeMap._CE("", name) : ease;
-  };
-  var _invertEase = function _invertEase2(ease) {
-    return function(p2) {
-      return 1 - ease(1 - p2);
-    };
-  };
-  var _parseEase = function _parseEase2(ease, defaultEase) {
-    return !ease ? defaultEase : (_isFunction(ease) ? ease : _easeMap[ease] || _configEaseFromString(ease)) || defaultEase;
-  };
-  var _insertEase = function _insertEase2(names, easeIn, easeOut, easeInOut) {
-    if (easeOut === void 0) {
-      easeOut = function easeOut2(p2) {
-        return 1 - easeIn(1 - p2);
-      };
-    }
-    if (easeInOut === void 0) {
-      easeInOut = function easeInOut2(p2) {
-        return p2 < 0.5 ? easeIn(p2 * 2) / 2 : 1 - easeIn((1 - p2) * 2) / 2;
-      };
-    }
-    var ease = {
-      easeIn,
-      easeOut,
-      easeInOut
-    }, lowercaseName;
-    _forEachName(names, function(name) {
-      _easeMap[name] = _globals[name] = ease;
-      _easeMap[lowercaseName = name.toLowerCase()] = easeOut;
-      for (var p2 in ease) {
-        _easeMap[lowercaseName + (p2 === "easeIn" ? ".in" : p2 === "easeOut" ? ".out" : ".inOut")] = _easeMap[name + "." + p2] = ease[p2];
-      }
-    });
-    return ease;
-  };
-  var _easeInOutFromOut = function _easeInOutFromOut2(easeOut) {
-    return function(p2) {
-      return p2 < 0.5 ? (1 - easeOut(1 - p2 * 2)) / 2 : 0.5 + easeOut((p2 - 0.5) * 2) / 2;
-    };
-  };
-  var _configElastic = function _configElastic2(type, amplitude, period) {
-    var p1 = amplitude >= 1 ? amplitude : 1, p2 = (period || (type ? 0.3 : 0.45)) / (amplitude < 1 ? amplitude : 1), p3 = p2 / _2PI * (Math.asin(1 / p1) || 0), easeOut = function easeOut2(p4) {
-      return p4 === 1 ? 1 : p1 * Math.pow(2, -10 * p4) * _sin((p4 - p3) * p2) + 1;
-    }, ease = type === "out" ? easeOut : type === "in" ? function(p4) {
-      return 1 - easeOut(1 - p4);
-    } : _easeInOutFromOut(easeOut);
-    p2 = _2PI / p2;
-    ease.config = function(amplitude2, period2) {
-      return _configElastic2(type, amplitude2, period2);
-    };
-    return ease;
-  };
-  var _configBack = function _configBack2(type, overshoot) {
-    if (overshoot === void 0) {
-      overshoot = 1.70158;
-    }
-    var easeOut = function easeOut2(p2) {
-      return p2 ? --p2 * p2 * ((overshoot + 1) * p2 + overshoot) + 1 : 0;
-    }, ease = type === "out" ? easeOut : type === "in" ? function(p2) {
-      return 1 - easeOut(1 - p2);
-    } : _easeInOutFromOut(easeOut);
-    ease.config = function(overshoot2) {
-      return _configBack2(type, overshoot2);
-    };
-    return ease;
-  };
-  _forEachName("Linear,Quad,Cubic,Quart,Quint,Strong", function(name, i2) {
-    var power = i2 < 5 ? i2 + 1 : i2;
-    _insertEase(name + ",Power" + (power - 1), i2 ? function(p2) {
-      return Math.pow(p2, power);
-    } : function(p2) {
-      return p2;
-    }, function(p2) {
-      return 1 - Math.pow(1 - p2, power);
-    }, function(p2) {
-      return p2 < 0.5 ? Math.pow(p2 * 2, power) / 2 : 1 - Math.pow((1 - p2) * 2, power) / 2;
-    });
-  });
-  _easeMap.Linear.easeNone = _easeMap.none = _easeMap.Linear.easeIn;
-  _insertEase("Elastic", _configElastic("in"), _configElastic("out"), _configElastic());
-  (function(n2, c2) {
-    var n1 = 1 / c2, n22 = 2 * n1, n3 = 2.5 * n1, easeOut = function easeOut2(p2) {
-      return p2 < n1 ? n2 * p2 * p2 : p2 < n22 ? n2 * Math.pow(p2 - 1.5 / c2, 2) + 0.75 : p2 < n3 ? n2 * (p2 -= 2.25 / c2) * p2 + 0.9375 : n2 * Math.pow(p2 - 2.625 / c2, 2) + 0.984375;
-    };
-    _insertEase("Bounce", function(p2) {
-      return 1 - easeOut(1 - p2);
-    }, easeOut);
-  })(7.5625, 2.75);
-  _insertEase("Expo", function(p2) {
-    return Math.pow(2, 10 * (p2 - 1)) * p2 + p2 * p2 * p2 * p2 * p2 * p2 * (1 - p2);
-  });
-  _insertEase("Circ", function(p2) {
-    return -(_sqrt(1 - p2 * p2) - 1);
-  });
-  _insertEase("Sine", function(p2) {
-    return p2 === 1 ? 1 : -_cos(p2 * _HALF_PI) + 1;
-  });
-  _insertEase("Back", _configBack("in"), _configBack("out"), _configBack());
-  _easeMap.SteppedEase = _easeMap.steps = _globals.SteppedEase = {
-    config: function config(steps, immediateStart) {
-      if (steps === void 0) {
-        steps = 1;
-      }
-      var p1 = 1 / steps, p2 = steps + (immediateStart ? 0 : 1), p3 = immediateStart ? 1 : 0, max = 1 - _tinyNum;
-      return function(p4) {
-        return ((p2 * _clamp(0, max, p4) | 0) + p3) * p1;
-      };
-    }
-  };
-  _defaults.ease = _easeMap["quad.out"];
-  _forEachName("onComplete,onUpdate,onStart,onRepeat,onReverseComplete,onInterrupt", function(name) {
-    return _callbackNames += name + "," + name + "Params,";
-  });
-  var GSCache = function GSCache2(target, harness) {
-    this.id = _gsID++;
-    target._gsap = this;
-    this.target = target;
-    this.harness = harness;
-    this.get = harness ? harness.get : _getProperty;
-    this.set = harness ? harness.getSetter : _getSetter;
-  };
-  var Animation = /* @__PURE__ */ (function() {
-    function Animation2(vars) {
-      this.vars = vars;
-      this._delay = +vars.delay || 0;
-      if (this._repeat = vars.repeat === Infinity ? -2 : vars.repeat || 0) {
-        this._rDelay = vars.repeatDelay || 0;
-        this._yoyo = !!vars.yoyo || !!vars.yoyoEase;
-      }
-      this._ts = 1;
-      _setDuration(this, +vars.duration, 1, 1);
-      this.data = vars.data;
-      if (_context) {
-        this._ctx = _context;
-        _context.data.push(this);
-      }
-      _tickerActive || _ticker.wake();
-    }
-    var _proto = Animation2.prototype;
-    _proto.delay = function delay(value) {
-      if (value || value === 0) {
-        this.parent && this.parent.smoothChildTiming && this.startTime(this._start + value - this._delay);
-        this._delay = value;
-        return this;
-      }
-      return this._delay;
-    };
-    _proto.duration = function duration(value) {
-      return arguments.length ? this.totalDuration(this._repeat > 0 ? value + (value + this._rDelay) * this._repeat : value) : this.totalDuration() && this._dur;
-    };
-    _proto.totalDuration = function totalDuration(value) {
-      if (!arguments.length) {
-        return this._tDur;
-      }
-      this._dirty = 0;
-      return _setDuration(this, this._repeat < 0 ? value : (value - this._repeat * this._rDelay) / (this._repeat + 1));
-    };
-    _proto.totalTime = function totalTime(_totalTime, suppressEvents) {
-      _wake();
-      if (!arguments.length) {
-        return this._tTime;
-      }
-      var parent = this._dp;
-      if (parent && parent.smoothChildTiming && this._ts) {
-        _alignPlayhead(this, _totalTime);
-        !parent._dp || parent.parent || _postAddChecks(parent, this);
-        while (parent && parent.parent) {
-          if (parent.parent._time !== parent._start + (parent._ts >= 0 ? parent._tTime / parent._ts : (parent.totalDuration() - parent._tTime) / -parent._ts)) {
-            parent.totalTime(parent._tTime, true);
-          }
-          parent = parent.parent;
-        }
-        if (!this.parent && this._dp.autoRemoveChildren && (this._ts > 0 && _totalTime < this._tDur || this._ts < 0 && _totalTime > 0 || !this._tDur && !_totalTime)) {
-          _addToTimeline(this._dp, this, this._start - this._delay);
-        }
-      }
-      if (this._tTime !== _totalTime || !this._dur && !suppressEvents || this._initted && Math.abs(this._zTime) === _tinyNum || !this._initted && this._dur && _totalTime || !_totalTime && !this._initted && (this.add || this._ptLookup)) {
-        this._ts || (this._pTime = _totalTime);
-        _lazySafeRender(this, _totalTime, suppressEvents);
-      }
-      return this;
-    };
-    _proto.time = function time(value, suppressEvents) {
-      return arguments.length ? this.totalTime(Math.min(this.totalDuration(), value + _elapsedCycleDuration(this)) % (this._dur + this._rDelay) || (value ? this._dur : 0), suppressEvents) : this._time;
-    };
-    _proto.totalProgress = function totalProgress(value, suppressEvents) {
-      return arguments.length ? this.totalTime(this.totalDuration() * value, suppressEvents) : this.totalDuration() ? Math.min(1, this._tTime / this._tDur) : this.rawTime() >= 0 && this._initted ? 1 : 0;
-    };
-    _proto.progress = function progress(value, suppressEvents) {
-      return arguments.length ? this.totalTime(this.duration() * (this._yoyo && !(this.iteration() & 1) ? 1 - value : value) + _elapsedCycleDuration(this), suppressEvents) : this.duration() ? Math.min(1, this._time / this._dur) : this.rawTime() > 0 ? 1 : 0;
-    };
-    _proto.iteration = function iteration(value, suppressEvents) {
-      var cycleDuration = this.duration() + this._rDelay;
-      return arguments.length ? this.totalTime(this._time + (value - 1) * cycleDuration, suppressEvents) : this._repeat ? _animationCycle(this._tTime, cycleDuration) + 1 : 1;
-    };
-    _proto.timeScale = function timeScale(value, suppressEvents) {
-      if (!arguments.length) {
-        return this._rts === -_tinyNum ? 0 : this._rts;
-      }
-      if (this._rts === value) {
-        return this;
-      }
-      var tTime = this.parent && this._ts ? _parentToChildTotalTime(this.parent._time, this) : this._tTime;
-      this._rts = +value || 0;
-      this._ts = this._ps || value === -_tinyNum ? 0 : this._rts;
-      this.totalTime(_clamp(-Math.abs(this._delay), this.totalDuration(), tTime), suppressEvents !== false);
-      _setEnd(this);
-      return _recacheAncestors(this);
-    };
-    _proto.paused = function paused(value) {
-      if (!arguments.length) {
-        return this._ps;
-      }
-      if (this._ps !== value) {
-        this._ps = value;
-        if (value) {
-          this._pTime = this._tTime || Math.max(-this._delay, this.rawTime());
-          this._ts = this._act = 0;
-        } else {
-          _wake();
-          this._ts = this._rts;
-          this.totalTime(this.parent && !this.parent.smoothChildTiming ? this.rawTime() : this._tTime || this._pTime, this.progress() === 1 && Math.abs(this._zTime) !== _tinyNum && (this._tTime -= _tinyNum));
-        }
-      }
-      return this;
-    };
-    _proto.startTime = function startTime(value) {
-      if (arguments.length) {
-        this._start = _roundPrecise(value);
-        var parent = this.parent || this._dp;
-        parent && (parent._sort || !this.parent) && _addToTimeline(parent, this, this._start - this._delay);
-        return this;
-      }
-      return this._start;
-    };
-    _proto.endTime = function endTime(includeRepeats) {
-      return this._start + (_isNotFalse(includeRepeats) ? this.totalDuration() : this.duration()) / Math.abs(this._ts || 1);
-    };
-    _proto.rawTime = function rawTime(wrapRepeats) {
-      var parent = this.parent || this._dp;
-      return !parent ? this._tTime : wrapRepeats && (!this._ts || this._repeat && this._time && this.totalProgress() < 1) ? this._tTime % (this._dur + this._rDelay) : !this._ts ? this._tTime : _parentToChildTotalTime(parent.rawTime(wrapRepeats), this);
-    };
-    _proto.revert = function revert(config3) {
-      if (config3 === void 0) {
-        config3 = _revertConfig;
-      }
-      var prevIsReverting = _reverting;
-      _reverting = config3;
-      if (_isRevertWorthy(this)) {
-        this.timeline && this.timeline.revert(config3);
-        this.totalTime(-0.01, config3.suppressEvents);
-      }
-      this.data !== "nested" && config3.kill !== false && this.kill();
-      _reverting = prevIsReverting;
-      return this;
-    };
-    _proto.globalTime = function globalTime(rawTime) {
-      var animation = this, time = arguments.length ? rawTime : animation.rawTime();
-      while (animation) {
-        time = animation._start + time / (Math.abs(animation._ts) || 1);
-        animation = animation._dp;
-      }
-      return !this.parent && this._sat ? this._sat.globalTime(rawTime) : time;
-    };
-    _proto.repeat = function repeat(value) {
-      if (arguments.length) {
-        this._repeat = value === Infinity ? -2 : value;
-        return _onUpdateTotalDuration(this);
-      }
-      return this._repeat === -2 ? Infinity : this._repeat;
-    };
-    _proto.repeatDelay = function repeatDelay(value) {
-      if (arguments.length) {
-        var time = this._time;
-        this._rDelay = value;
-        _onUpdateTotalDuration(this);
-        return time ? this.time(time) : this;
-      }
-      return this._rDelay;
-    };
-    _proto.yoyo = function yoyo(value) {
-      if (arguments.length) {
-        this._yoyo = value;
-        return this;
-      }
-      return this._yoyo;
-    };
-    _proto.seek = function seek(position, suppressEvents) {
-      return this.totalTime(_parsePosition(this, position), _isNotFalse(suppressEvents));
-    };
-    _proto.restart = function restart(includeDelay, suppressEvents) {
-      this.play().totalTime(includeDelay ? -this._delay : 0, _isNotFalse(suppressEvents));
-      this._dur || (this._zTime = -_tinyNum);
-      return this;
-    };
-    _proto.play = function play(from, suppressEvents) {
-      from != null && this.seek(from, suppressEvents);
-      return this.reversed(false).paused(false);
-    };
-    _proto.reverse = function reverse(from, suppressEvents) {
-      from != null && this.seek(from || this.totalDuration(), suppressEvents);
-      return this.reversed(true).paused(false);
-    };
-    _proto.pause = function pause(atTime, suppressEvents) {
-      atTime != null && this.seek(atTime, suppressEvents);
-      return this.paused(true);
-    };
-    _proto.resume = function resume() {
-      return this.paused(false);
-    };
-    _proto.reversed = function reversed(value) {
-      if (arguments.length) {
-        !!value !== this.reversed() && this.timeScale(-this._rts || (value ? -_tinyNum : 0));
-        return this;
-      }
-      return this._rts < 0;
-    };
-    _proto.invalidate = function invalidate() {
-      this._initted = this._act = 0;
-      this._zTime = -_tinyNum;
-      return this;
-    };
-    _proto.isActive = function isActive() {
-      var parent = this.parent || this._dp, start = this._start, rawTime;
-      return !!(!parent || this._ts && this._initted && parent.isActive() && (rawTime = parent.rawTime(true)) >= start && rawTime < this.endTime(true) - _tinyNum);
-    };
-    _proto.eventCallback = function eventCallback(type, callback, params) {
-      var vars = this.vars;
-      if (arguments.length > 1) {
-        if (!callback) {
-          delete vars[type];
-        } else {
-          vars[type] = callback;
-          params && (vars[type + "Params"] = params);
-          type === "onUpdate" && (this._onUpdate = callback);
-        }
-        return this;
-      }
-      return vars[type];
-    };
-    _proto.then = function then(onFulfilled) {
-      var self2 = this, prevProm = self2._prom;
-      return new Promise(function(resolve) {
-        var f2 = _isFunction(onFulfilled) ? onFulfilled : _passThrough, _resolve = function _resolve2() {
-          var _then = self2.then;
-          self2.then = null;
-          prevProm && prevProm();
-          _isFunction(f2) && (f2 = f2(self2)) && (f2.then || f2 === self2) && (self2.then = _then);
-          resolve(f2);
-          self2.then = _then;
-        };
-        if (self2._initted && self2.totalProgress() === 1 && self2._ts >= 0 || !self2._tTime && self2._ts < 0) {
-          _resolve();
-        } else {
-          self2._prom = _resolve;
-        }
-      });
-    };
-    _proto.kill = function kill() {
-      _interrupt(this);
-    };
-    return Animation2;
-  })();
-  _setDefaults(Animation.prototype, {
-    _time: 0,
-    _start: 0,
-    _end: 0,
-    _tTime: 0,
-    _tDur: 0,
-    _dirty: 0,
-    _repeat: 0,
-    _yoyo: false,
-    parent: null,
-    _initted: false,
-    _rDelay: 0,
-    _ts: 1,
-    _dp: 0,
-    ratio: 0,
-    _zTime: -_tinyNum,
-    _prom: 0,
-    _ps: false,
-    _rts: 1
-  });
-  var Timeline = /* @__PURE__ */ (function(_Animation) {
-    _inheritsLoose(Timeline2, _Animation);
-    function Timeline2(vars, position) {
-      var _this;
-      if (vars === void 0) {
-        vars = {};
-      }
-      _this = _Animation.call(this, vars) || this;
-      _this.labels = {};
-      _this.smoothChildTiming = !!vars.smoothChildTiming;
-      _this.autoRemoveChildren = !!vars.autoRemoveChildren;
-      _this._sort = _isNotFalse(vars.sortChildren);
-      _globalTimeline && _addToTimeline(vars.parent || _globalTimeline, _assertThisInitialized(_this), position);
-      vars.reversed && _this.reverse();
-      vars.paused && _this.paused(true);
-      vars.scrollTrigger && _scrollTrigger(_assertThisInitialized(_this), vars.scrollTrigger);
-      return _this;
-    }
-    var _proto2 = Timeline2.prototype;
-    _proto2.to = function to(targets, vars, position) {
-      _createTweenType(0, arguments, this);
-      return this;
-    };
-    _proto2.from = function from(targets, vars, position) {
-      _createTweenType(1, arguments, this);
-      return this;
-    };
-    _proto2.fromTo = function fromTo(targets, fromVars, toVars, position) {
-      _createTweenType(2, arguments, this);
-      return this;
-    };
-    _proto2.set = function set(targets, vars, position) {
-      vars.duration = 0;
-      vars.parent = this;
-      _inheritDefaults(vars).repeatDelay || (vars.repeat = 0);
-      vars.immediateRender = !!vars.immediateRender;
-      new Tween(targets, vars, _parsePosition(this, position), 1);
-      return this;
-    };
-    _proto2.call = function call(callback, params, position) {
-      return _addToTimeline(this, Tween.delayedCall(0, callback, params), position);
-    };
-    _proto2.staggerTo = function staggerTo(targets, duration, vars, stagger, position, onCompleteAll, onCompleteAllParams) {
-      vars.duration = duration;
-      vars.stagger = vars.stagger || stagger;
-      vars.onComplete = onCompleteAll;
-      vars.onCompleteParams = onCompleteAllParams;
-      vars.parent = this;
-      new Tween(targets, vars, _parsePosition(this, position));
-      return this;
-    };
-    _proto2.staggerFrom = function staggerFrom(targets, duration, vars, stagger, position, onCompleteAll, onCompleteAllParams) {
-      vars.runBackwards = 1;
-      _inheritDefaults(vars).immediateRender = _isNotFalse(vars.immediateRender);
-      return this.staggerTo(targets, duration, vars, stagger, position, onCompleteAll, onCompleteAllParams);
-    };
-    _proto2.staggerFromTo = function staggerFromTo(targets, duration, fromVars, toVars, stagger, position, onCompleteAll, onCompleteAllParams) {
-      toVars.startAt = fromVars;
-      _inheritDefaults(toVars).immediateRender = _isNotFalse(toVars.immediateRender);
-      return this.staggerTo(targets, duration, toVars, stagger, position, onCompleteAll, onCompleteAllParams);
-    };
-    _proto2.render = function render2(totalTime, suppressEvents, force) {
-      var prevTime = this._time, tDur = this._dirty ? this.totalDuration() : this._tDur, dur = this._dur, tTime = totalTime <= 0 ? 0 : _roundPrecise(totalTime), crossingStart = this._zTime < 0 !== totalTime < 0 && (this._initted || !dur), time, child, next, iteration, cycleDuration, prevPaused, pauseTween, timeScale, prevStart, prevIteration, yoyo, isYoyo;
-      this !== _globalTimeline && tTime > tDur && totalTime >= 0 && (tTime = tDur);
-      if (tTime !== this._tTime || force || crossingStart) {
-        if (prevTime !== this._time && dur) {
-          tTime += this._time - prevTime;
-          totalTime += this._time - prevTime;
-        }
-        time = tTime;
-        prevStart = this._start;
-        timeScale = this._ts;
-        prevPaused = !timeScale;
-        if (crossingStart) {
-          dur || (prevTime = this._zTime);
-          (totalTime || !suppressEvents) && (this._zTime = totalTime);
-        }
-        if (this._repeat) {
-          yoyo = this._yoyo;
-          cycleDuration = dur + this._rDelay;
-          if (this._repeat < -1 && totalTime < 0) {
-            return this.totalTime(cycleDuration * 100 + totalTime, suppressEvents, force);
-          }
-          time = _roundPrecise(tTime % cycleDuration);
-          if (tTime === tDur) {
-            iteration = this._repeat;
-            time = dur;
-          } else {
-            prevIteration = _roundPrecise(tTime / cycleDuration);
-            iteration = ~~prevIteration;
-            if (iteration && iteration === prevIteration) {
-              time = dur;
-              iteration--;
-            }
-            time > dur && (time = dur);
-          }
-          prevIteration = _animationCycle(this._tTime, cycleDuration);
-          !prevTime && this._tTime && prevIteration !== iteration && this._tTime - prevIteration * cycleDuration - this._dur <= 0 && (prevIteration = iteration);
-          if (yoyo && iteration & 1) {
-            time = dur - time;
-            isYoyo = 1;
-          }
-          if (iteration !== prevIteration && !this._lock) {
-            var rewinding = yoyo && prevIteration & 1, doesWrap = rewinding === (yoyo && iteration & 1);
-            iteration < prevIteration && (rewinding = !rewinding);
-            prevTime = rewinding ? 0 : tTime % dur ? dur : tTime;
-            this._lock = 1;
-            this.render(prevTime || (isYoyo ? 0 : _roundPrecise(iteration * cycleDuration)), suppressEvents, !dur)._lock = 0;
-            this._tTime = tTime;
-            !suppressEvents && this.parent && _callback(this, "onRepeat");
-            if (this.vars.repeatRefresh && !isYoyo) {
-              this.invalidate()._lock = 1;
-              prevIteration = iteration;
-            }
-            if (prevTime && prevTime !== this._time || prevPaused !== !this._ts || this.vars.onRepeat && !this.parent && !this._act) {
-              return this;
-            }
-            dur = this._dur;
-            tDur = this._tDur;
-            if (doesWrap) {
-              this._lock = 2;
-              prevTime = rewinding ? dur : -1e-4;
-              this.render(prevTime, true);
-              this.vars.repeatRefresh && !isYoyo && this.invalidate();
-            }
-            this._lock = 0;
-            if (!this._ts && !prevPaused) {
-              return this;
-            }
-          }
-        }
-        if (this._hasPause && !this._forcing && this._lock < 2) {
-          pauseTween = _findNextPauseTween(this, _roundPrecise(prevTime), _roundPrecise(time));
-          if (pauseTween) {
-            tTime -= time - (time = pauseTween._start);
-          }
-        }
-        this._tTime = tTime;
-        this._time = time;
-        this._act = !!timeScale;
-        if (!this._initted) {
-          this._onUpdate = this.vars.onUpdate;
-          this._initted = 1;
-          this._zTime = totalTime;
-          prevTime = 0;
-        }
-        if (!prevTime && tTime && dur && !suppressEvents && !prevIteration) {
-          _callback(this, "onStart");
-          if (this._tTime !== tTime) {
-            return this;
-          }
-        }
-        if (time >= prevTime && totalTime >= 0) {
-          child = this._first;
-          while (child) {
-            next = child._next;
-            if ((child._act || time >= child._start) && child._ts && pauseTween !== child) {
-              if (child.parent !== this) {
-                return this.render(totalTime, suppressEvents, force);
-              }
-              child.render(child._ts > 0 ? (time - child._start) * child._ts : (child._dirty ? child.totalDuration() : child._tDur) + (time - child._start) * child._ts, suppressEvents, force);
-              if (time !== this._time || !this._ts && !prevPaused) {
-                pauseTween = 0;
-                next && (tTime += this._zTime = -_tinyNum);
-                break;
-              }
-            }
-            child = next;
-          }
-        } else {
-          child = this._last;
-          var adjustedTime = totalTime < 0 ? totalTime : time;
-          while (child) {
-            next = child._prev;
-            if ((child._act || adjustedTime <= child._end) && child._ts && pauseTween !== child) {
-              if (child.parent !== this) {
-                return this.render(totalTime, suppressEvents, force);
-              }
-              child.render(child._ts > 0 ? (adjustedTime - child._start) * child._ts : (child._dirty ? child.totalDuration() : child._tDur) + (adjustedTime - child._start) * child._ts, suppressEvents, force || _reverting && _isRevertWorthy(child));
-              if (time !== this._time || !this._ts && !prevPaused) {
-                pauseTween = 0;
-                next && (tTime += this._zTime = adjustedTime ? -_tinyNum : _tinyNum);
-                break;
-              }
-            }
-            child = next;
-          }
-        }
-        if (pauseTween && !suppressEvents) {
-          this.pause();
-          pauseTween.render(time >= prevTime ? 0 : -_tinyNum)._zTime = time >= prevTime ? 1 : -1;
-          if (this._ts) {
-            this._start = prevStart;
-            _setEnd(this);
-            return this.render(totalTime, suppressEvents, force);
-          }
-        }
-        this._onUpdate && !suppressEvents && _callback(this, "onUpdate", true);
-        if (tTime === tDur && this._tTime >= this.totalDuration() || !tTime && prevTime) {
-          if (prevStart === this._start || Math.abs(timeScale) !== Math.abs(this._ts)) {
-            if (!this._lock) {
-              (totalTime || !dur) && (tTime === tDur && this._ts > 0 || !tTime && this._ts < 0) && _removeFromParent(this, 1);
-              if (!suppressEvents && !(totalTime < 0 && !prevTime) && (tTime || prevTime || !tDur)) {
-                _callback(this, tTime === tDur && totalTime >= 0 ? "onComplete" : "onReverseComplete", true);
-                this._prom && !(tTime < tDur && this.timeScale() > 0) && this._prom();
-              }
-            }
-          }
-        }
-      }
-      return this;
-    };
-    _proto2.add = function add(child, position) {
-      var _this2 = this;
-      _isNumber(position) || (position = _parsePosition(this, position, child));
-      if (!(child instanceof Animation)) {
-        if (_isArray(child)) {
-          child.forEach(function(obj) {
-            return _this2.add(obj, position);
-          });
-          return this;
-        }
-        if (_isString(child)) {
-          return this.addLabel(child, position);
-        }
-        if (_isFunction(child)) {
-          child = Tween.delayedCall(0, child);
-        } else {
-          return this;
-        }
-      }
-      return this !== child ? _addToTimeline(this, child, position) : this;
-    };
-    _proto2.getChildren = function getChildren(nested, tweens, timelines, ignoreBeforeTime) {
-      if (nested === void 0) {
-        nested = true;
-      }
-      if (tweens === void 0) {
-        tweens = true;
-      }
-      if (timelines === void 0) {
-        timelines = true;
-      }
-      if (ignoreBeforeTime === void 0) {
-        ignoreBeforeTime = -_bigNum;
-      }
-      var a2 = [], child = this._first;
-      while (child) {
-        if (child._start >= ignoreBeforeTime) {
-          if (child instanceof Tween) {
-            tweens && a2.push(child);
-          } else {
-            timelines && a2.push(child);
-            nested && a2.push.apply(a2, child.getChildren(true, tweens, timelines));
-          }
-        }
-        child = child._next;
-      }
-      return a2;
-    };
-    _proto2.getById = function getById2(id) {
-      var animations = this.getChildren(1, 1, 1), i2 = animations.length;
-      while (i2--) {
-        if (animations[i2].vars.id === id) {
-          return animations[i2];
-        }
-      }
-    };
-    _proto2.remove = function remove(child) {
-      if (_isString(child)) {
-        return this.removeLabel(child);
-      }
-      if (_isFunction(child)) {
-        return this.killTweensOf(child);
-      }
-      child.parent === this && _removeLinkedListItem(this, child);
-      if (child === this._recent) {
-        this._recent = this._last;
-      }
-      return _uncache(this);
-    };
-    _proto2.totalTime = function totalTime(_totalTime2, suppressEvents) {
-      if (!arguments.length) {
-        return this._tTime;
-      }
-      this._forcing = 1;
-      if (!this._dp && this._ts) {
-        this._start = _roundPrecise(_ticker.time - (this._ts > 0 ? _totalTime2 / this._ts : (this.totalDuration() - _totalTime2) / -this._ts));
-      }
-      _Animation.prototype.totalTime.call(this, _totalTime2, suppressEvents);
-      this._forcing = 0;
-      return this;
-    };
-    _proto2.addLabel = function addLabel(label, position) {
-      this.labels[label] = _parsePosition(this, position);
-      return this;
-    };
-    _proto2.removeLabel = function removeLabel(label) {
-      delete this.labels[label];
-      return this;
-    };
-    _proto2.addPause = function addPause(position, callback, params) {
-      var t2 = Tween.delayedCall(0, callback || _emptyFunc, params);
-      t2.data = "isPause";
-      this._hasPause = 1;
-      return _addToTimeline(this, t2, _parsePosition(this, position));
-    };
-    _proto2.removePause = function removePause(position) {
-      var child = this._first;
-      position = _parsePosition(this, position);
-      while (child) {
-        if (child._start === position && child.data === "isPause") {
-          _removeFromParent(child);
-        }
-        child = child._next;
-      }
-    };
-    _proto2.killTweensOf = function killTweensOf(targets, props, onlyActive) {
-      var tweens = this.getTweensOf(targets, onlyActive), i2 = tweens.length;
-      while (i2--) {
-        _overwritingTween !== tweens[i2] && tweens[i2].kill(targets, props);
-      }
-      return this;
-    };
-    _proto2.getTweensOf = function getTweensOf2(targets, onlyActive) {
-      var a2 = [], parsedTargets = toArray(targets), child = this._first, isGlobalTime = _isNumber(onlyActive), children;
-      while (child) {
-        if (child instanceof Tween) {
-          if (_arrayContainsAny(child._targets, parsedTargets) && (isGlobalTime ? (!_overwritingTween || child._initted && child._ts) && child.globalTime(0) <= onlyActive && child.globalTime(child.totalDuration()) > onlyActive : !onlyActive || child.isActive())) {
-            a2.push(child);
-          }
-        } else if ((children = child.getTweensOf(parsedTargets, onlyActive)).length) {
-          a2.push.apply(a2, children);
-        }
-        child = child._next;
-      }
-      return a2;
-    };
-    _proto2.tweenTo = function tweenTo(position, vars) {
-      vars = vars || {};
-      var tl = this, endTime = _parsePosition(tl, position), _vars = vars, startAt = _vars.startAt, _onStart = _vars.onStart, onStartParams = _vars.onStartParams, immediateRender = _vars.immediateRender, initted, tween = Tween.to(tl, _setDefaults({
-        ease: vars.ease || "none",
-        lazy: false,
-        immediateRender: false,
-        time: endTime,
-        overwrite: "auto",
-        duration: vars.duration || Math.abs((endTime - (startAt && "time" in startAt ? startAt.time : tl._time)) / tl.timeScale()) || _tinyNum,
-        onStart: function onStart() {
-          tl.pause();
-          if (!initted) {
-            var duration = vars.duration || Math.abs((endTime - (startAt && "time" in startAt ? startAt.time : tl._time)) / tl.timeScale());
-            tween._dur !== duration && _setDuration(tween, duration, 0, 1).render(tween._time, true, true);
-            initted = 1;
-          }
-          _onStart && _onStart.apply(tween, onStartParams || []);
-        }
-      }, vars));
-      return immediateRender ? tween.render(0) : tween;
-    };
-    _proto2.tweenFromTo = function tweenFromTo(fromPosition, toPosition, vars) {
-      return this.tweenTo(toPosition, _setDefaults({
-        startAt: {
-          time: _parsePosition(this, fromPosition)
-        }
-      }, vars));
-    };
-    _proto2.recent = function recent() {
-      return this._recent;
-    };
-    _proto2.nextLabel = function nextLabel(afterTime) {
-      if (afterTime === void 0) {
-        afterTime = this._time;
-      }
-      return _getLabelInDirection(this, _parsePosition(this, afterTime));
-    };
-    _proto2.previousLabel = function previousLabel(beforeTime) {
-      if (beforeTime === void 0) {
-        beforeTime = this._time;
-      }
-      return _getLabelInDirection(this, _parsePosition(this, beforeTime), 1);
-    };
-    _proto2.currentLabel = function currentLabel(value) {
-      return arguments.length ? this.seek(value, true) : this.previousLabel(this._time + _tinyNum);
-    };
-    _proto2.shiftChildren = function shiftChildren(amount, adjustLabels, ignoreBeforeTime) {
-      if (ignoreBeforeTime === void 0) {
-        ignoreBeforeTime = 0;
-      }
-      var child = this._first, labels = this.labels, p2;
-      amount = _roundPrecise(amount);
-      while (child) {
-        if (child._start >= ignoreBeforeTime) {
-          child._start += amount;
-          child._end += amount;
-        }
-        child = child._next;
-      }
-      if (adjustLabels) {
-        for (p2 in labels) {
-          if (labels[p2] >= ignoreBeforeTime) {
-            labels[p2] += amount;
-          }
-        }
-      }
-      return _uncache(this);
-    };
-    _proto2.invalidate = function invalidate(soft) {
-      var child = this._first;
-      this._lock = 0;
-      while (child) {
-        child.invalidate(soft);
-        child = child._next;
-      }
-      return _Animation.prototype.invalidate.call(this, soft);
-    };
-    _proto2.clear = function clear(includeLabels) {
-      if (includeLabels === void 0) {
-        includeLabels = true;
-      }
-      var child = this._first, next;
-      while (child) {
-        next = child._next;
-        this.remove(child);
-        child = next;
-      }
-      this._dp && (this._time = this._tTime = this._pTime = 0);
-      includeLabels && (this.labels = {});
-      return _uncache(this);
-    };
-    _proto2.totalDuration = function totalDuration(value) {
-      var max = 0, self2 = this, child = self2._last, prevStart = _bigNum, prev, start, parent;
-      if (arguments.length) {
-        return self2.timeScale((self2._repeat < 0 ? self2.duration() : self2.totalDuration()) / (self2.reversed() ? -value : value));
-      }
-      if (self2._dirty) {
-        parent = self2.parent;
-        while (child) {
-          prev = child._prev;
-          child._dirty && child.totalDuration();
-          start = child._start;
-          if (start > prevStart && self2._sort && child._ts && !self2._lock) {
-            self2._lock = 1;
-            _addToTimeline(self2, child, start - child._delay, 1)._lock = 0;
-          } else {
-            prevStart = start;
-          }
-          if (start < 0 && child._ts) {
-            max -= start;
-            if (!parent && !self2._dp || parent && parent.smoothChildTiming) {
-              self2._start += _roundPrecise(start / self2._ts);
-              self2._time -= start;
-              self2._tTime -= start;
-            }
-            self2.shiftChildren(-start, false, -Infinity);
-            prevStart = 0;
-          }
-          child._end > max && child._ts && (max = child._end);
-          child = prev;
-        }
-        _setDuration(self2, self2 === _globalTimeline && self2._time > max ? self2._time : max, 1, 1);
-        self2._dirty = 0;
-      }
-      return self2._tDur;
-    };
-    Timeline2.updateRoot = function updateRoot(time) {
-      if (_globalTimeline._ts) {
-        _lazySafeRender(_globalTimeline, _parentToChildTotalTime(time, _globalTimeline));
-        _lastRenderedFrame = _ticker.frame;
-      }
-      if (_ticker.frame >= _nextGCFrame) {
-        _nextGCFrame += _config.autoSleep || 120;
-        var child = _globalTimeline._first;
-        if (!child || !child._ts) {
-          if (_config.autoSleep && _ticker._listeners.length < 2) {
-            while (child && !child._ts) {
-              child = child._next;
-            }
-            child || _ticker.sleep();
-          }
-        }
-      }
-    };
-    return Timeline2;
-  })(Animation);
-  _setDefaults(Timeline.prototype, {
-    _lock: 0,
-    _hasPause: 0,
-    _forcing: 0
-  });
-  var _addComplexStringPropTween = function _addComplexStringPropTween2(target, prop, start, end, setter, stringFilter, funcParam) {
-    var pt = new PropTween(this._pt, target, prop, 0, 1, _renderComplexString, null, setter), index = 0, matchIndex = 0, result, startNums, color, endNum, chunk, startNum, hasRandom, a2;
-    pt.b = start;
-    pt.e = end;
-    start += "";
-    end += "";
-    if (hasRandom = ~end.indexOf("random(")) {
-      end = _replaceRandom(end);
-    }
-    if (stringFilter) {
-      a2 = [start, end];
-      stringFilter(a2, target, prop);
-      start = a2[0];
-      end = a2[1];
-    }
-    startNums = start.match(_complexStringNumExp) || [];
-    while (result = _complexStringNumExp.exec(end)) {
-      endNum = result[0];
-      chunk = end.substring(index, result.index);
-      if (color) {
-        color = (color + 1) % 5;
-      } else if (chunk.substr(-5) === "rgba(") {
-        color = 1;
-      }
-      if (endNum !== startNums[matchIndex++]) {
-        startNum = parseFloat(startNums[matchIndex - 1]) || 0;
-        pt._pt = {
-          _next: pt._pt,
-          p: chunk || matchIndex === 1 ? chunk : ",",
-          //note: SVG spec allows omission of comma/space when a negative sign is wedged between two numbers, like 2.5-5.3 instead of 2.5,-5.3 but when tweening, the negative value may switch to positive, so we insert the comma just in case.
-          s: startNum,
-          c: endNum.charAt(1) === "=" ? _parseRelative(startNum, endNum) - startNum : parseFloat(endNum) - startNum,
-          m: color && color < 4 ? Math.round : 0
-        };
-        index = _complexStringNumExp.lastIndex;
-      }
-    }
-    pt.c = index < end.length ? end.substring(index, end.length) : "";
-    pt.fp = funcParam;
-    if (_relExp.test(end) || hasRandom) {
-      pt.e = 0;
-    }
-    this._pt = pt;
-    return pt;
-  };
-  var _addPropTween = function _addPropTween2(target, prop, start, end, index, targets, modifier, stringFilter, funcParam, optional) {
-    _isFunction(end) && (end = end(index || 0, target, targets));
-    var currentValue = target[prop], parsedStart = start !== "get" ? start : !_isFunction(currentValue) ? currentValue : funcParam ? target[prop.indexOf("set") || !_isFunction(target["get" + prop.substr(3)]) ? prop : "get" + prop.substr(3)](funcParam) : target[prop](), setter = !_isFunction(currentValue) ? _setterPlain : funcParam ? _setterFuncWithParam : _setterFunc, pt;
-    if (_isString(end)) {
-      if (~end.indexOf("random(")) {
-        end = _replaceRandom(end);
-      }
-      if (end.charAt(1) === "=") {
-        pt = _parseRelative(parsedStart, end) + (getUnit(parsedStart) || 0);
-        if (pt || pt === 0) {
-          end = pt;
-        }
-      }
-    }
-    if (!optional || parsedStart !== end || _forceAllPropTweens) {
-      if (!isNaN(parsedStart * end) && end !== "") {
-        pt = new PropTween(this._pt, target, prop, +parsedStart || 0, end - (parsedStart || 0), typeof currentValue === "boolean" ? _renderBoolean : _renderPlain, 0, setter);
-        funcParam && (pt.fp = funcParam);
-        modifier && pt.modifier(modifier, this, target);
-        return this._pt = pt;
-      }
-      !currentValue && !(prop in target) && _missingPlugin(prop, end);
-      return _addComplexStringPropTween.call(this, target, prop, parsedStart, end, setter, stringFilter || _config.stringFilter, funcParam);
-    }
-  };
-  var _processVars = function _processVars2(vars, index, target, targets, tween) {
-    _isFunction(vars) && (vars = _parseFuncOrString(vars, tween, index, target, targets));
-    if (!_isObject(vars) || vars.style && vars.nodeType || _isArray(vars) || _isTypedArray(vars)) {
-      return _isString(vars) ? _parseFuncOrString(vars, tween, index, target, targets) : vars;
-    }
-    var copy = {}, p2;
-    for (p2 in vars) {
-      copy[p2] = _parseFuncOrString(vars[p2], tween, index, target, targets);
-    }
-    return copy;
-  };
-  var _checkPlugin = function _checkPlugin2(property, vars, tween, index, target, targets) {
-    var plugin, pt, ptLookup, i2;
-    if (_plugins[property] && (plugin = new _plugins[property]()).init(target, plugin.rawVars ? vars[property] : _processVars(vars[property], index, target, targets, tween), tween, index, targets) !== false) {
-      tween._pt = pt = new PropTween(tween._pt, target, property, 0, 1, plugin.render, plugin, 0, plugin.priority);
-      if (tween !== _quickTween) {
-        ptLookup = tween._ptLookup[tween._targets.indexOf(target)];
-        i2 = plugin._props.length;
-        while (i2--) {
-          ptLookup[plugin._props[i2]] = pt;
-        }
-      }
-    }
-    return plugin;
-  };
-  var _overwritingTween;
-  var _forceAllPropTweens;
-  var _initTween = function _initTween2(tween, time, tTime) {
-    var vars = tween.vars, ease = vars.ease, startAt = vars.startAt, immediateRender = vars.immediateRender, lazy = vars.lazy, onUpdate = vars.onUpdate, runBackwards = vars.runBackwards, yoyoEase = vars.yoyoEase, keyframes = vars.keyframes, autoRevert = vars.autoRevert, dur = tween._dur, prevStartAt = tween._startAt, targets = tween._targets, parent = tween.parent, fullTargets = parent && parent.data === "nested" ? parent.vars.targets : targets, autoOverwrite = tween._overwrite === "auto" && !_suppressOverwrites, tl = tween.timeline, reverseEase = vars.easeReverse || yoyoEase, cleanVars, i2, p2, pt, target, hasPriority, gsData, harness, plugin, ptLookup, index, harnessVars, overwritten;
-    tl && (!keyframes || !ease) && (ease = "none");
-    tween._ease = _parseEase(ease, _defaults.ease);
-    tween._rEase = reverseEase && (_parseEase(reverseEase) || tween._ease);
-    tween._from = !tl && !!vars.runBackwards;
-    if (tween._from) tween.ratio = 1;
-    if (!tl || keyframes && !vars.stagger) {
-      harness = targets[0] ? _getCache(targets[0]).harness : 0;
-      harnessVars = harness && vars[harness.prop];
-      cleanVars = _copyExcluding(vars, _reservedProps);
-      if (prevStartAt) {
-        prevStartAt._zTime < 0 && prevStartAt.progress(1);
-        time < 0 && runBackwards && immediateRender && !autoRevert ? prevStartAt.render(-1, true) : prevStartAt.revert(runBackwards && dur ? _revertConfigNoKill : _startAtRevertConfig);
-        prevStartAt._lazy = 0;
-      }
-      if (startAt) {
-        _removeFromParent(tween._startAt = Tween.set(targets, _setDefaults({
-          data: "isStart",
-          overwrite: false,
-          parent,
-          immediateRender: true,
-          lazy: !prevStartAt && _isNotFalse(lazy),
-          startAt: null,
-          delay: 0,
-          onUpdate: onUpdate && function() {
-            return _callback(tween, "onUpdate");
-          },
-          stagger: 0
-        }, startAt)));
-        tween._startAt._dp = 0;
-        tween._startAt._sat = tween;
-        time < 0 && (_reverting || !immediateRender && !autoRevert) && tween._startAt.revert(_revertConfigNoKill);
-        if (immediateRender) {
-          if (dur && time <= 0 && tTime <= 0) {
-            time && (tween._zTime = time);
-            return;
-          }
-        }
-      } else if (runBackwards && dur) {
-        if (!prevStartAt) {
-          time && (immediateRender = false);
-          p2 = _setDefaults({
-            overwrite: false,
-            data: "isFromStart",
-            //we tag the tween with as "isFromStart" so that if [inside a plugin] we need to only do something at the very END of a tween, we have a way of identifying this tween as merely the one that's setting the beginning values for a "from()" tween. For example, clearProps in CSSPlugin should only get applied at the very END of a tween and without this tag, from(...{height:100, clearProps:"height", delay:1}) would wipe the height at the beginning of the tween and after 1 second, it'd kick back in.
-            lazy: immediateRender && !prevStartAt && _isNotFalse(lazy),
-            immediateRender,
-            //zero-duration tweens render immediately by default, but if we're not specifically instructed to render this tween immediately, we should skip this and merely _init() to record the starting values (rendering them immediately would push them to completion which is wasteful in that case - we'd have to render(-1) immediately after)
-            stagger: 0,
-            parent
-            //ensures that nested tweens that had a stagger are handled properly, like gsap.from(".class", {y: gsap.utils.wrap([-100,100]), stagger: 0.5})
-          }, cleanVars);
-          harnessVars && (p2[harness.prop] = harnessVars);
-          _removeFromParent(tween._startAt = Tween.set(targets, p2));
-          tween._startAt._dp = 0;
-          tween._startAt._sat = tween;
-          time < 0 && (_reverting ? tween._startAt.revert(_revertConfigNoKill) : tween._startAt.render(-1, true));
-          tween._zTime = time;
-          if (!immediateRender) {
-            _initTween2(tween._startAt, _tinyNum, _tinyNum);
-          } else if (!time) {
-            return;
-          }
-        }
-      }
-      tween._pt = tween._ptCache = 0;
-      lazy = dur && _isNotFalse(lazy) || lazy && !dur;
-      for (i2 = 0; i2 < targets.length; i2++) {
-        target = targets[i2];
-        gsData = target._gsap || _harness(targets)[i2]._gsap;
-        tween._ptLookup[i2] = ptLookup = {};
-        _lazyLookup[gsData.id] && _lazyTweens.length && _lazyRender();
-        index = fullTargets === targets ? i2 : fullTargets.indexOf(target);
-        if (harness && (plugin = new harness()).init(target, harnessVars || cleanVars, tween, index, fullTargets) !== false) {
-          tween._pt = pt = new PropTween(tween._pt, target, plugin.name, 0, 1, plugin.render, plugin, 0, plugin.priority);
-          plugin._props.forEach(function(name) {
-            ptLookup[name] = pt;
-          });
-          plugin.priority && (hasPriority = 1);
-        }
-        if (!harness || harnessVars) {
-          for (p2 in cleanVars) {
-            if (_plugins[p2] && (plugin = _checkPlugin(p2, cleanVars, tween, index, target, fullTargets))) {
-              plugin.priority && (hasPriority = 1);
-            } else {
-              ptLookup[p2] = pt = _addPropTween.call(tween, target, p2, "get", cleanVars[p2], index, fullTargets, 0, vars.stringFilter);
-            }
-          }
-        }
-        tween._op && tween._op[i2] && tween.kill(target, tween._op[i2]);
-        if (autoOverwrite && tween._pt) {
-          _overwritingTween = tween;
-          _globalTimeline.killTweensOf(target, ptLookup, tween.globalTime(time));
-          overwritten = !tween.parent;
-          _overwritingTween = 0;
-        }
-        tween._pt && lazy && (_lazyLookup[gsData.id] = 1);
-      }
-      hasPriority && _sortPropTweensByPriority(tween);
-      tween._onInit && tween._onInit(tween);
-    }
-    tween._onUpdate = onUpdate;
-    tween._initted = (!tween._op || tween._pt) && !overwritten;
-    keyframes && time <= 0 && tl.render(_bigNum, true, true);
-  };
-  var _updatePropTweens = function _updatePropTweens2(tween, property, value, start, startIsRelative, ratio, time, skipRecursion) {
-    var ptCache = (tween._pt && tween._ptCache || (tween._ptCache = {}))[property], pt, rootPT, lookup, i2;
-    if (!ptCache) {
-      ptCache = tween._ptCache[property] = [];
-      lookup = tween._ptLookup;
-      i2 = tween._targets.length;
-      while (i2--) {
-        pt = lookup[i2][property];
-        if (pt && pt.d && pt.d._pt) {
-          pt = pt.d._pt;
-          while (pt && pt.p !== property && pt.fp !== property) {
-            pt = pt._next;
-          }
-        }
-        if (!pt) {
-          _forceAllPropTweens = 1;
-          tween.vars[property] = "+=0";
-          _initTween(tween, time);
-          _forceAllPropTweens = 0;
-          return skipRecursion ? _warn(property + " not eligible for reset. Try splitting into individual properties") : 1;
-        }
-        ptCache.push(pt);
-      }
-    }
-    i2 = ptCache.length;
-    while (i2--) {
-      rootPT = ptCache[i2];
-      pt = rootPT._pt || rootPT;
-      pt.s = (start || start === 0) && !startIsRelative ? start : pt.s + (start || 0) + ratio * pt.c;
-      pt.c = value - pt.s;
-      rootPT.e && (rootPT.e = _round(value) + getUnit(rootPT.e));
-      rootPT.b && (rootPT.b = pt.s + getUnit(rootPT.b));
-    }
-  };
-  var _addAliasesToVars = function _addAliasesToVars2(targets, vars) {
-    var harness = targets[0] ? _getCache(targets[0]).harness : 0, propertyAliases = harness && harness.aliases, copy, p2, i2, aliases;
-    if (!propertyAliases) {
-      return vars;
-    }
-    copy = _merge({}, vars);
-    for (p2 in propertyAliases) {
-      if (p2 in copy) {
-        aliases = propertyAliases[p2].split(",");
-        i2 = aliases.length;
-        while (i2--) {
-          copy[aliases[i2]] = copy[p2];
-        }
-      }
-    }
-    return copy;
-  };
-  var _parseKeyframe = function _parseKeyframe2(prop, obj, allProps, easeEach) {
-    var ease = obj.ease || easeEach || "power1.inOut", p2, a2;
-    if (_isArray(obj)) {
-      a2 = allProps[prop] || (allProps[prop] = []);
-      obj.forEach(function(value, i2) {
-        return a2.push({
-          t: i2 / (obj.length - 1) * 100,
-          v: value,
-          e: ease
-        });
-      });
-    } else {
-      for (p2 in obj) {
-        a2 = allProps[p2] || (allProps[p2] = []);
-        p2 === "ease" || a2.push({
-          t: parseFloat(prop),
-          v: obj[p2],
-          e: ease
-        });
-      }
-    }
-  };
-  var _parseFuncOrString = function _parseFuncOrString2(value, tween, i2, target, targets) {
-    return _isFunction(value) ? value.call(tween, i2, target, targets) : _isString(value) && ~value.indexOf("random(") ? _replaceRandom(value) : value;
-  };
-  var _staggerTweenProps = _callbackNames + "repeat,repeatDelay,yoyo,repeatRefresh,yoyoEase,easeReverse,autoRevert";
-  var _staggerPropsToSkip = {};
-  _forEachName(_staggerTweenProps + ",id,stagger,delay,duration,paused,scrollTrigger", function(name) {
-    return _staggerPropsToSkip[name] = 1;
-  });
-  var Tween = /* @__PURE__ */ (function(_Animation2) {
-    _inheritsLoose(Tween2, _Animation2);
-    function Tween2(targets, vars, position, skipInherit) {
-      var _this3;
-      if (typeof vars === "number") {
-        position.duration = vars;
-        vars = position;
-        position = null;
-      }
-      _this3 = _Animation2.call(this, skipInherit ? vars : _inheritDefaults(vars)) || this;
-      var _this3$vars = _this3.vars, duration = _this3$vars.duration, delay = _this3$vars.delay, immediateRender = _this3$vars.immediateRender, stagger = _this3$vars.stagger, overwrite = _this3$vars.overwrite, keyframes = _this3$vars.keyframes, defaults2 = _this3$vars.defaults, scrollTrigger = _this3$vars.scrollTrigger, parent = vars.parent || _globalTimeline, parsedTargets = (_isArray(targets) || _isTypedArray(targets) ? _isNumber(targets[0]) : "length" in vars) ? [targets] : toArray(targets), tl, i2, copy, l2, p2, curTarget, staggerFunc, staggerVarsToMerge;
-      _this3._targets = parsedTargets.length ? _harness(parsedTargets) : _warn("GSAP target " + targets + " not found. https://gsap.com", !_config.nullTargetWarn) || [];
-      _this3._ptLookup = [];
-      _this3._overwrite = overwrite;
-      if (keyframes || stagger || _isFuncOrString(duration) || _isFuncOrString(delay)) {
-        vars = _this3.vars;
-        var easeReverse = vars.easeReverse || vars.yoyoEase;
-        tl = _this3.timeline = new Timeline({
-          data: "nested",
-          defaults: defaults2 || {},
-          targets: parent && parent.data === "nested" ? parent.vars.targets : parsedTargets
-        });
-        tl.kill();
-        tl.parent = tl._dp = _assertThisInitialized(_this3);
-        tl._start = 0;
-        if (stagger || _isFuncOrString(duration) || _isFuncOrString(delay)) {
-          l2 = parsedTargets.length;
-          staggerFunc = stagger && distribute(stagger);
-          if (_isObject(stagger)) {
-            for (p2 in stagger) {
-              if (~_staggerTweenProps.indexOf(p2)) {
-                staggerVarsToMerge || (staggerVarsToMerge = {});
-                staggerVarsToMerge[p2] = stagger[p2];
-              }
-            }
-          }
-          for (i2 = 0; i2 < l2; i2++) {
-            copy = _copyExcluding(vars, _staggerPropsToSkip);
-            copy.stagger = 0;
-            easeReverse && (copy.easeReverse = easeReverse);
-            staggerVarsToMerge && _merge(copy, staggerVarsToMerge);
-            curTarget = parsedTargets[i2];
-            copy.duration = +_parseFuncOrString(duration, _assertThisInitialized(_this3), i2, curTarget, parsedTargets);
-            copy.delay = (+_parseFuncOrString(delay, _assertThisInitialized(_this3), i2, curTarget, parsedTargets) || 0) - _this3._delay;
-            if (!stagger && l2 === 1 && copy.delay) {
-              _this3._delay = delay = copy.delay;
-              _this3._start += delay;
-              copy.delay = 0;
-            }
-            tl.to(curTarget, copy, staggerFunc ? staggerFunc(i2, curTarget, parsedTargets) : 0);
-            tl._ease = _easeMap.none;
-          }
-          tl.duration() ? duration = delay = 0 : _this3.timeline = 0;
-        } else if (keyframes) {
-          _inheritDefaults(_setDefaults(tl.vars.defaults, {
-            ease: "none"
-          }));
-          tl._ease = _parseEase(keyframes.ease || vars.ease || "none");
-          var time = 0, a2, kf, v2;
-          if (_isArray(keyframes)) {
-            keyframes.forEach(function(frame) {
-              return tl.to(parsedTargets, frame, ">");
-            });
-            tl.duration();
-          } else {
-            copy = {};
-            for (p2 in keyframes) {
-              p2 === "ease" || p2 === "easeEach" || _parseKeyframe(p2, keyframes[p2], copy, keyframes.easeEach);
-            }
-            for (p2 in copy) {
-              a2 = copy[p2].sort(function(a3, b2) {
-                return a3.t - b2.t;
-              });
-              time = 0;
-              for (i2 = 0; i2 < a2.length; i2++) {
-                kf = a2[i2];
-                v2 = {
-                  ease: kf.e,
-                  duration: (kf.t - (i2 ? a2[i2 - 1].t : 0)) / 100 * duration
-                };
-                v2[p2] = kf.v;
-                tl.to(parsedTargets, v2, time);
-                time += v2.duration;
-              }
-            }
-            tl.duration() < duration && tl.to({}, {
-              duration: duration - tl.duration()
-            });
-          }
-        }
-        duration || _this3.duration(duration = tl.duration());
-      } else {
-        _this3.timeline = 0;
-      }
-      if (overwrite === true && !_suppressOverwrites) {
-        _overwritingTween = _assertThisInitialized(_this3);
-        _globalTimeline.killTweensOf(parsedTargets);
-        _overwritingTween = 0;
-      }
-      _addToTimeline(parent, _assertThisInitialized(_this3), position);
-      vars.reversed && _this3.reverse();
-      vars.paused && _this3.paused(true);
-      if (immediateRender || !duration && !keyframes && _this3._start === _roundPrecise(parent._time) && _isNotFalse(immediateRender) && _hasNoPausedAncestors(_assertThisInitialized(_this3)) && parent.data !== "nested") {
-        _this3._tTime = -_tinyNum;
-        _this3.render(Math.max(0, -delay) || 0);
-      }
-      scrollTrigger && _scrollTrigger(_assertThisInitialized(_this3), scrollTrigger);
-      return _this3;
-    }
-    var _proto3 = Tween2.prototype;
-    _proto3.render = function render2(totalTime, suppressEvents, force) {
-      var prevTime = this._time, tDur = this._tDur, dur = this._dur, isNegative = totalTime < 0, tTime = totalTime > tDur - _tinyNum && !isNegative ? tDur : totalTime < _tinyNum ? 0 : totalTime, time, pt, iteration, cycleDuration, prevIteration, isYoyo, ratio, timeline2;
-      if (!dur) {
-        _renderZeroDurationTween(this, totalTime, suppressEvents, force);
-      } else if (tTime !== this._tTime || !totalTime || force || !this._initted && this._tTime || this._startAt && this._zTime < 0 !== isNegative || this._lazy) {
-        time = tTime;
-        timeline2 = this.timeline;
-        if (this._repeat) {
-          cycleDuration = dur + this._rDelay;
-          if (this._repeat < -1 && isNegative) {
-            return this.totalTime(cycleDuration * 100 + totalTime, suppressEvents, force);
-          }
-          time = _roundPrecise(tTime % cycleDuration);
-          if (tTime === tDur) {
-            iteration = this._repeat;
-            time = dur;
-          } else {
-            prevIteration = _roundPrecise(tTime / cycleDuration);
-            iteration = ~~prevIteration;
-            if (iteration && iteration === prevIteration) {
-              time = dur;
-              iteration--;
-            } else if (time > dur) {
-              time = dur;
-            }
-          }
-          isYoyo = this._yoyo && iteration & 1;
-          if (isYoyo) time = dur - time;
-          prevIteration = _animationCycle(this._tTime, cycleDuration);
-          if (time === prevTime && !force && this._initted && iteration === prevIteration) {
-            this._tTime = tTime;
-            return this;
-          }
-          if (iteration !== prevIteration) {
-            if (this.vars.repeatRefresh && !isYoyo && !this._lock && time !== cycleDuration && this._initted) {
-              this._lock = force = 1;
-              this.render(_roundPrecise(cycleDuration * iteration), true).invalidate()._lock = 0;
-            }
-          }
-        }
-        if (!this._initted) {
-          if (_attemptInitTween(this, isNegative ? totalTime : time, force, suppressEvents, tTime)) {
-            this._tTime = 0;
-            return this;
-          }
-          if (prevTime !== this._time && !(force && this.vars.repeatRefresh && iteration !== prevIteration)) {
-            return this;
-          }
-          if (dur !== this._dur) {
-            return this.render(totalTime, suppressEvents, force);
-          }
-        }
-        if (this._rEase) {
-          var inv = time < prevTime;
-          if (inv !== this._inv) {
-            var segDur = inv ? prevTime : dur - prevTime;
-            this._inv = inv;
-            if (this._from) this.ratio = 1 - this.ratio;
-            this._invRatio = this.ratio;
-            this._invTime = prevTime;
-            this._invRecip = segDur ? (inv ? -1 : 1) / segDur : 0;
-            this._invScale = inv ? -this.ratio : 1 - this.ratio;
-            this._invEase = inv ? this._rEase : this._ease;
-          }
-          this.ratio = ratio = this._invRatio + this._invScale * this._invEase((time - this._invTime) * this._invRecip);
-        } else {
-          this.ratio = ratio = this._ease(time / dur);
-        }
-        if (this._from) this.ratio = ratio = 1 - ratio;
-        this._tTime = tTime;
-        this._time = time;
-        if (!this._act && this._ts) {
-          this._act = 1;
-          this._lazy = 0;
-        }
-        if (!prevTime && tTime && !suppressEvents && !prevIteration) {
-          _callback(this, "onStart");
-          if (this._tTime !== tTime) {
-            return this;
-          }
-        }
-        pt = this._pt;
-        while (pt) {
-          pt.r(ratio, pt.d);
-          pt = pt._next;
-        }
-        timeline2 && timeline2.render(totalTime < 0 ? totalTime : timeline2._dur * timeline2._ease(time / this._dur), suppressEvents, force) || this._startAt && (this._zTime = totalTime);
-        if (this._onUpdate && !suppressEvents) {
-          isNegative && _rewindStartAt(this, totalTime, suppressEvents, force);
-          _callback(this, "onUpdate");
-        }
-        this._repeat && iteration !== prevIteration && this.vars.onRepeat && !suppressEvents && this.parent && _callback(this, "onRepeat");
-        if ((tTime === this._tDur || !tTime) && this._tTime === tTime) {
-          isNegative && !this._onUpdate && _rewindStartAt(this, totalTime, true, true);
-          (totalTime || !dur) && (tTime === this._tDur && this._ts > 0 || !tTime && this._ts < 0) && _removeFromParent(this, 1);
-          if (!suppressEvents && !(isNegative && !prevTime) && (tTime || prevTime || isYoyo)) {
-            _callback(this, tTime === tDur ? "onComplete" : "onReverseComplete", true);
-            this._prom && !(tTime < tDur && this.timeScale() > 0) && this._prom();
-          }
-        }
-      }
-      return this;
-    };
-    _proto3.targets = function targets() {
-      return this._targets;
-    };
-    _proto3.invalidate = function invalidate(soft) {
-      (!soft || !this.vars.runBackwards) && (this._startAt = 0);
-      this._pt = this._op = this._onUpdate = this._lazy = this.ratio = 0;
-      this._ptLookup = [];
-      this.timeline && this.timeline.invalidate(soft);
-      return _Animation2.prototype.invalidate.call(this, soft);
-    };
-    _proto3.resetTo = function resetTo(property, value, start, startIsRelative, skipRecursion) {
-      _tickerActive || _ticker.wake();
-      this._ts || this.play();
-      var time = Math.min(this._dur, (this._dp._time - this._start) * this._ts), ratio;
-      this._initted || _initTween(this, time);
-      ratio = this._ease(time / this._dur);
-      if (_updatePropTweens(this, property, value, start, startIsRelative, ratio, time, skipRecursion)) {
-        return this.resetTo(property, value, start, startIsRelative, 1);
-      }
-      _alignPlayhead(this, 0);
-      this.parent || _addLinkedListItem(this._dp, this, "_first", "_last", this._dp._sort ? "_start" : 0);
-      return this.render(0);
-    };
-    _proto3.kill = function kill(targets, vars) {
-      if (vars === void 0) {
-        vars = "all";
-      }
-      if (!targets && (!vars || vars === "all")) {
-        this._lazy = this._pt = 0;
-        this.parent ? _interrupt(this) : this.scrollTrigger && this.scrollTrigger.kill(!!_reverting);
-        return this;
-      }
-      if (this.timeline) {
-        var tDur = this.timeline.totalDuration();
-        this.timeline.killTweensOf(targets, vars, _overwritingTween && _overwritingTween.vars.overwrite !== true)._first || _interrupt(this);
-        this.parent && tDur !== this.timeline.totalDuration() && _setDuration(this, this._dur * this.timeline._tDur / tDur, 0, 1);
-        return this;
-      }
-      var parsedTargets = this._targets, killingTargets = targets ? toArray(targets) : parsedTargets, propTweenLookup = this._ptLookup, firstPT = this._pt, overwrittenProps, curLookup, curOverwriteProps, props, p2, pt, i2;
-      if ((!vars || vars === "all") && _arraysMatch(parsedTargets, killingTargets)) {
-        vars === "all" && (this._pt = 0);
-        return _interrupt(this);
-      }
-      overwrittenProps = this._op = this._op || [];
-      if (vars !== "all") {
-        if (_isString(vars)) {
-          p2 = {};
-          _forEachName(vars, function(name) {
-            return p2[name] = 1;
-          });
-          vars = p2;
-        }
-        vars = _addAliasesToVars(parsedTargets, vars);
-      }
-      i2 = parsedTargets.length;
-      while (i2--) {
-        if (~killingTargets.indexOf(parsedTargets[i2])) {
-          curLookup = propTweenLookup[i2];
-          if (vars === "all") {
-            overwrittenProps[i2] = vars;
-            props = curLookup;
-            curOverwriteProps = {};
-          } else {
-            curOverwriteProps = overwrittenProps[i2] = overwrittenProps[i2] || {};
-            props = vars;
-          }
-          for (p2 in props) {
-            pt = curLookup && curLookup[p2];
-            if (pt) {
-              if (!("kill" in pt.d) || pt.d.kill(p2) === true) {
-                _removeLinkedListItem(this, pt, "_pt");
-              }
-              delete curLookup[p2];
-            }
-            if (curOverwriteProps !== "all") {
-              curOverwriteProps[p2] = 1;
-            }
-          }
-        }
-      }
-      this._initted && !this._pt && firstPT && _interrupt(this);
-      return this;
-    };
-    Tween2.to = function to(targets, vars) {
-      return new Tween2(targets, vars, arguments[2]);
-    };
-    Tween2.from = function from(targets, vars) {
-      return _createTweenType(1, arguments);
-    };
-    Tween2.delayedCall = function delayedCall(delay, callback, params, scope) {
-      return new Tween2(callback, 0, {
-        immediateRender: false,
-        lazy: false,
-        overwrite: false,
-        delay,
-        onComplete: callback,
-        onReverseComplete: callback,
-        onCompleteParams: params,
-        onReverseCompleteParams: params,
-        callbackScope: scope
-      });
-    };
-    Tween2.fromTo = function fromTo(targets, fromVars, toVars) {
-      return _createTweenType(2, arguments);
-    };
-    Tween2.set = function set(targets, vars) {
-      vars.duration = 0;
-      vars.repeatDelay || (vars.repeat = 0);
-      return new Tween2(targets, vars);
-    };
-    Tween2.killTweensOf = function killTweensOf(targets, props, onlyActive) {
-      return _globalTimeline.killTweensOf(targets, props, onlyActive);
-    };
-    return Tween2;
-  })(Animation);
-  _setDefaults(Tween.prototype, {
-    _targets: [],
-    _lazy: 0,
-    _startAt: 0,
-    _op: 0,
-    _onInit: 0
-  });
-  _forEachName("staggerTo,staggerFrom,staggerFromTo", function(name) {
-    Tween[name] = function() {
-      var tl = new Timeline(), params = _slice.call(arguments, 0);
-      params.splice(name === "staggerFromTo" ? 5 : 4, 0, 0);
-      return tl[name].apply(tl, params);
-    };
-  });
-  var _setterPlain = function _setterPlain2(target, property, value) {
-    return target[property] = value;
-  };
-  var _setterFunc = function _setterFunc2(target, property, value) {
-    return target[property](value);
-  };
-  var _setterFuncWithParam = function _setterFuncWithParam2(target, property, value, data) {
-    return target[property](data.fp, value);
-  };
-  var _setterAttribute = function _setterAttribute2(target, property, value) {
-    return target.setAttribute(property, value);
-  };
-  var _getSetter = function _getSetter2(target, property) {
-    return _isFunction(target[property]) ? _setterFunc : _isUndefined(target[property]) && target.setAttribute ? _setterAttribute : _setterPlain;
-  };
-  var _renderPlain = function _renderPlain2(ratio, data) {
-    return data.set(data.t, data.p, Math.round((data.s + data.c * ratio) * 1e6) / 1e6, data);
-  };
-  var _renderBoolean = function _renderBoolean2(ratio, data) {
-    return data.set(data.t, data.p, !!(data.s + data.c * ratio), data);
-  };
-  var _renderComplexString = function _renderComplexString2(ratio, data) {
-    var pt = data._pt, s2 = "";
-    if (!ratio && data.b) {
-      s2 = data.b;
-    } else if (ratio === 1 && data.e) {
-      s2 = data.e;
-    } else {
-      while (pt) {
-        s2 = pt.p + (pt.m ? pt.m(pt.s + pt.c * ratio) : Math.round((pt.s + pt.c * ratio) * 1e4) / 1e4) + s2;
-        pt = pt._next;
-      }
-      s2 += data.c;
-    }
-    data.set(data.t, data.p, s2, data);
-  };
-  var _renderPropTweens = function _renderPropTweens2(ratio, data) {
-    var pt = data._pt;
-    while (pt) {
-      pt.r(ratio, pt.d);
-      pt = pt._next;
-    }
-  };
-  var _addPluginModifier = function _addPluginModifier2(modifier, tween, target, property) {
-    var pt = this._pt, next;
-    while (pt) {
-      next = pt._next;
-      pt.p === property && pt.modifier(modifier, tween, target);
-      pt = next;
-    }
-  };
-  var _killPropTweensOf = function _killPropTweensOf2(property) {
-    var pt = this._pt, hasNonDependentRemaining, next;
-    while (pt) {
-      next = pt._next;
-      if (pt.p === property && !pt.op || pt.op === property) {
-        _removeLinkedListItem(this, pt, "_pt");
-      } else if (!pt.dep) {
-        hasNonDependentRemaining = 1;
-      }
-      pt = next;
-    }
-    return !hasNonDependentRemaining;
-  };
-  var _setterWithModifier = function _setterWithModifier2(target, property, value, data) {
-    data.mSet(target, property, data.m.call(data.tween, value, data.mt), data);
-  };
-  var _sortPropTweensByPriority = function _sortPropTweensByPriority2(parent) {
-    var pt = parent._pt, next, pt2, first, last;
-    while (pt) {
-      next = pt._next;
-      pt2 = first;
-      while (pt2 && pt2.pr > pt.pr) {
-        pt2 = pt2._next;
-      }
-      if (pt._prev = pt2 ? pt2._prev : last) {
-        pt._prev._next = pt;
-      } else {
-        first = pt;
-      }
-      if (pt._next = pt2) {
-        pt2._prev = pt;
-      } else {
-        last = pt;
-      }
-      pt = next;
-    }
-    parent._pt = first;
-  };
-  var PropTween = /* @__PURE__ */ (function() {
-    function PropTween2(next, target, prop, start, change, renderer, data, setter, priority) {
-      this.t = target;
-      this.s = start;
-      this.c = change;
-      this.p = prop;
-      this.r = renderer || _renderPlain;
-      this.d = data || this;
-      this.set = setter || _setterPlain;
-      this.pr = priority || 0;
-      this._next = next;
-      if (next) {
-        next._prev = this;
-      }
-    }
-    var _proto4 = PropTween2.prototype;
-    _proto4.modifier = function modifier(func, tween, target) {
-      this.mSet = this.mSet || this.set;
-      this.set = _setterWithModifier;
-      this.m = func;
-      this.mt = target;
-      this.tween = tween;
-    };
-    return PropTween2;
-  })();
-  _forEachName(_callbackNames + "parent,duration,ease,delay,overwrite,runBackwards,startAt,yoyo,immediateRender,repeat,repeatDelay,data,paused,reversed,lazy,callbackScope,stringFilter,id,yoyoEase,stagger,inherit,repeatRefresh,keyframes,autoRevert,scrollTrigger,easeReverse", function(name) {
-    return _reservedProps[name] = 1;
-  });
-  _globals.TweenMax = _globals.TweenLite = Tween;
-  _globals.TimelineLite = _globals.TimelineMax = Timeline;
-  _globalTimeline = new Timeline({
-    sortChildren: false,
-    defaults: _defaults,
-    autoRemoveChildren: true,
-    id: "root",
-    smoothChildTiming: true
-  });
-  _config.stringFilter = _colorStringFilter;
-  var _media = [];
-  var _listeners = {};
-  var _emptyArray = [];
-  var _lastMediaTime = 0;
-  var _contextID = 0;
-  var _dispatch = function _dispatch2(type) {
-    return (_listeners[type] || _emptyArray).map(function(f2) {
-      return f2();
-    });
-  };
-  var _onMediaChange = function _onMediaChange2() {
-    var time = Date.now(), matches = [];
-    if (time - _lastMediaTime > 2) {
-      _dispatch("matchMediaInit");
-      _media.forEach(function(c2) {
-        var queries = c2.queries, conditions = c2.conditions, match, p2, anyMatch, toggled;
-        for (p2 in queries) {
-          match = _win.matchMedia(queries[p2]).matches;
-          match && (anyMatch = 1);
-          if (match !== conditions[p2]) {
-            conditions[p2] = match;
-            toggled = 1;
-          }
-        }
-        if (toggled) {
-          c2.revert();
-          anyMatch && matches.push(c2);
-        }
-      });
-      _dispatch("matchMediaRevert");
-      matches.forEach(function(c2) {
-        return c2.onMatch(c2, function(func) {
-          return c2.add(null, func);
-        });
-      });
-      _lastMediaTime = time;
-      _dispatch("matchMedia");
-    }
-  };
-  var Context = /* @__PURE__ */ (function() {
-    function Context2(func, scope) {
-      this.selector = scope && selector(scope);
-      this.data = [];
-      this._r = [];
-      this.isReverted = false;
-      this.id = _contextID++;
-      func && this.add(func);
-    }
-    var _proto5 = Context2.prototype;
-    _proto5.add = function add(name, func, scope) {
-      if (_isFunction(name)) {
-        scope = func;
-        func = name;
-        name = _isFunction;
-      }
-      var self2 = this, f2 = function f3() {
-        var prev = _context, prevSelector = self2.selector, result;
-        prev && prev !== self2 && prev.data.push(self2);
-        scope && (self2.selector = selector(scope));
-        _context = self2;
-        result = func.apply(self2, arguments);
-        _isFunction(result) && self2._r.push(result);
-        _context = prev;
-        self2.selector = prevSelector;
-        self2.isReverted = false;
-        return result;
-      };
-      self2.last = f2;
-      return name === _isFunction ? f2(self2, function(func2) {
-        return self2.add(null, func2);
-      }) : name ? self2[name] = f2 : f2;
-    };
-    _proto5.ignore = function ignore(func) {
-      var prev = _context;
-      _context = null;
-      func(this);
-      _context = prev;
-    };
-    _proto5.getTweens = function getTweens() {
-      var a2 = [];
-      this.data.forEach(function(e2) {
-        return e2 instanceof Context2 ? a2.push.apply(a2, e2.getTweens()) : e2 instanceof Tween && !(e2.parent && e2.parent.data === "nested") && a2.push(e2);
-      });
-      return a2;
-    };
-    _proto5.clear = function clear() {
-      this._r.length = this.data.length = 0;
-    };
-    _proto5.kill = function kill(revert, matchMedia2) {
-      var _this4 = this;
-      if (revert) {
-        (function() {
-          var tweens = _this4.getTweens(), i3 = _this4.data.length, t2;
-          while (i3--) {
-            t2 = _this4.data[i3];
-            if (t2.data === "isFlip") {
-              t2.revert();
-              t2.getChildren(true, true, false).forEach(function(tween) {
-                return tweens.splice(tweens.indexOf(tween), 1);
-              });
-            }
-          }
-          tweens.map(function(t3) {
-            return {
-              g: t3._dur || t3._delay || t3._sat && !t3._sat.vars.immediateRender ? t3.globalTime(0) : -Infinity,
-              t: t3
-            };
-          }).sort(function(a2, b2) {
-            return b2.g - a2.g || -Infinity;
-          }).forEach(function(o2) {
-            return o2.t.revert(revert);
-          });
-          i3 = _this4.data.length;
-          while (i3--) {
-            t2 = _this4.data[i3];
-            if (t2 instanceof Timeline) {
-              if (t2.data !== "nested") {
-                t2.scrollTrigger && t2.scrollTrigger.revert();
-                t2.kill();
-              }
-            } else {
-              !(t2 instanceof Tween) && t2.revert && t2.revert(revert);
-            }
-          }
-          _this4._r.forEach(function(f2) {
-            return f2(revert, _this4);
-          });
-          _this4.isReverted = true;
+        (async () => {
+          this.fontcard = await Assets.load(await fontAsset[index]);
+          const row = Math.floor(index / cols);
+          const col = index % cols;
+          this.cardB = new Sprite(await backCardTexture());
+          this.cardB.anchor.set(0.5);
+          this.cardB.scale.set(0.3);
+          this.cardB.x = 100 + col * 300;
+          this.cardB.y = 110 + row * 350;
+          this.cardContainer.addChild(this.cardB);
         })();
-      } else {
-        this.data.forEach(function(e2) {
-          return e2.kill && e2.kill();
-        });
-      }
-      this.clear();
-      if (matchMedia2) {
-        var i2 = _media.length;
-        while (i2--) {
-          _media[i2].id === this.id && _media.splice(i2, 1);
-        }
-      }
-    };
-    _proto5.revert = function revert(config3) {
-      this.kill(config3 || {});
-    };
-    return Context2;
-  })();
-  var MatchMedia = /* @__PURE__ */ (function() {
-    function MatchMedia2(scope) {
-      this.contexts = [];
-      this.scope = scope;
-      _context && _context.data.push(this);
-    }
-    var _proto6 = MatchMedia2.prototype;
-    _proto6.add = function add(conditions, func, scope) {
-      _isObject(conditions) || (conditions = {
-        matches: conditions
-      });
-      var context4 = new Context(0, scope || this.scope), cond = context4.conditions = {}, mq, p2, active;
-      _context && !context4.selector && (context4.selector = _context.selector);
-      this.contexts.push(context4);
-      func = context4.add("onMatch", func);
-      context4.queries = conditions;
-      for (p2 in conditions) {
-        if (p2 === "all") {
-          active = 1;
-        } else {
-          mq = _win.matchMedia(conditions[p2]);
-          if (mq) {
-            _media.indexOf(context4) < 0 && _media.push(context4);
-            (cond[p2] = mq.matches) && (active = 1);
-            mq.addListener ? mq.addListener(_onMediaChange) : mq.addEventListener("change", _onMediaChange);
-          }
-        }
-      }
-      active && func(context4, function(f2) {
-        return context4.add(null, f2);
-      });
-      return this;
-    };
-    _proto6.revert = function revert(config3) {
-      this.kill(config3 || {});
-    };
-    _proto6.kill = function kill(revert) {
-      this.contexts.forEach(function(c2) {
-        return c2.kill(revert, true);
-      });
-    };
-    return MatchMedia2;
-  })();
-  var _gsap = {
-    registerPlugin: function registerPlugin() {
-      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
-      }
-      args.forEach(function(config3) {
-        return _createPlugin(config3);
-      });
-    },
-    timeline: function timeline(vars) {
-      return new Timeline(vars);
-    },
-    getTweensOf: function getTweensOf(targets, onlyActive) {
-      return _globalTimeline.getTweensOf(targets, onlyActive);
-    },
-    getProperty: function getProperty(target, property, unit, uncache) {
-      _isString(target) && (target = toArray(target)[0]);
-      var getter = _getCache(target || {}).get, format = unit ? _passThrough : _numericIfPossible;
-      unit === "native" && (unit = "");
-      return !target ? target : !property ? function(property2, unit2, uncache2) {
-        return format((_plugins[property2] && _plugins[property2].get || getter)(target, property2, unit2, uncache2));
-      } : format((_plugins[property] && _plugins[property].get || getter)(target, property, unit, uncache));
-    },
-    quickSetter: function quickSetter(target, property, unit) {
-      target = toArray(target);
-      if (target.length > 1) {
-        var setters = target.map(function(t2) {
-          return gsap.quickSetter(t2, property, unit);
-        }), l2 = setters.length;
-        return function(value) {
-          var i2 = l2;
-          while (i2--) {
-            setters[i2](value);
-          }
-        };
-      }
-      target = target[0] || {};
-      var Plugin = _plugins[property], cache = _getCache(target), p2 = cache.harness && (cache.harness.aliases || {})[property] || property, setter = Plugin ? function(value) {
-        var p3 = new Plugin();
-        _quickTween._pt = 0;
-        p3.init(target, unit ? value + unit : value, _quickTween, 0, [target]);
-        p3.render(1, p3);
-        _quickTween._pt && _renderPropTweens(1, _quickTween);
-      } : cache.set(target, p2);
-      return Plugin ? setter : function(value) {
-        return setter(target, p2, unit ? value + unit : value, cache, 1);
-      };
-    },
-    quickTo: function quickTo(target, property, vars) {
-      var _setDefaults22;
-      var tween = gsap.to(target, _setDefaults((_setDefaults22 = {}, _setDefaults22[property] = "+=0.1", _setDefaults22.paused = true, _setDefaults22.stagger = 0, _setDefaults22), vars || {})), func = function func2(value, start, startIsRelative) {
-        return tween.resetTo(property, value, start, startIsRelative);
-      };
-      func.tween = tween;
-      return func;
-    },
-    isTweening: function isTweening(targets) {
-      return _globalTimeline.getTweensOf(targets, true).length > 0;
-    },
-    defaults: function defaults(value) {
-      value && value.ease && (value.ease = _parseEase(value.ease, _defaults.ease));
-      return _mergeDeep(_defaults, value || {});
-    },
-    config: function config2(value) {
-      return _mergeDeep(_config, value || {});
-    },
-    registerEffect: function registerEffect(_ref3) {
-      var name = _ref3.name, effect = _ref3.effect, plugins = _ref3.plugins, defaults2 = _ref3.defaults, extendTimeline = _ref3.extendTimeline;
-      (plugins || "").split(",").forEach(function(pluginName) {
-        return pluginName && !_plugins[pluginName] && !_globals[pluginName] && _warn(name + " effect requires " + pluginName + " plugin.");
-      });
-      _effects[name] = function(targets, vars, tl) {
-        return effect(toArray(targets), _setDefaults(vars || {}, defaults2), tl);
-      };
-      if (extendTimeline) {
-        Timeline.prototype[name] = function(targets, vars, position) {
-          return this.add(_effects[name](targets, _isObject(vars) ? vars : (position = vars) && {}, this), position);
-        };
-      }
-    },
-    registerEase: function registerEase(name, ease) {
-      _easeMap[name] = _parseEase(ease);
-    },
-    parseEase: function parseEase(ease, defaultEase) {
-      return arguments.length ? _parseEase(ease, defaultEase) : _easeMap;
-    },
-    getById: function getById(id) {
-      return _globalTimeline.getById(id);
-    },
-    exportRoot: function exportRoot(vars, includeDelayedCalls) {
-      if (vars === void 0) {
-        vars = {};
-      }
-      var tl = new Timeline(vars), child, next;
-      tl.smoothChildTiming = _isNotFalse(vars.smoothChildTiming);
-      _globalTimeline.remove(tl);
-      tl._dp = 0;
-      tl._time = tl._tTime = _globalTimeline._time;
-      child = _globalTimeline._first;
-      while (child) {
-        next = child._next;
-        if (includeDelayedCalls || !(!child._dur && child instanceof Tween && child.vars.onComplete === child._targets[0])) {
-          _addToTimeline(tl, child, child._start - child._delay);
-        }
-        child = next;
-      }
-      _addToTimeline(_globalTimeline, tl, 0);
-      return tl;
-    },
-    context: function context2(func, scope) {
-      return func ? new Context(func, scope) : _context;
-    },
-    matchMedia: function matchMedia(scope) {
-      return new MatchMedia(scope);
-    },
-    matchMediaRefresh: function matchMediaRefresh() {
-      return _media.forEach(function(c2) {
-        var cond = c2.conditions, found, p2;
-        for (p2 in cond) {
-          if (cond[p2]) {
-            cond[p2] = false;
-            found = 1;
-          }
-        }
-        found && c2.revert();
-      }) || _onMediaChange();
-    },
-    addEventListener: function addEventListener(type, callback) {
-      var a2 = _listeners[type] || (_listeners[type] = []);
-      ~a2.indexOf(callback) || a2.push(callback);
-    },
-    removeEventListener: function removeEventListener(type, callback) {
-      var a2 = _listeners[type], i2 = a2 && a2.indexOf(callback);
-      i2 >= 0 && a2.splice(i2, 1);
-    },
-    utils: {
-      wrap,
-      wrapYoyo,
-      distribute,
-      random,
-      snap,
-      normalize,
-      getUnit,
-      clamp,
-      splitColor,
-      toArray,
-      selector,
-      mapRange,
-      pipe,
-      unitize,
-      interpolate,
-      shuffle
-    },
-    install: _install,
-    effects: _effects,
-    ticker: _ticker,
-    updateRoot: Timeline.updateRoot,
-    plugins: _plugins,
-    globalTimeline: _globalTimeline,
-    core: {
-      PropTween,
-      globals: _addGlobal,
-      Tween,
-      Timeline,
-      Animation,
-      getCache: _getCache,
-      _removeLinkedListItem,
-      reverting: function reverting() {
-        return _reverting;
-      },
-      context: function context3(toAdd) {
-        if (toAdd && _context) {
-          _context.data.push(toAdd);
-          toAdd._ctx = _context;
-        }
-        return _context;
-      },
-      suppressOverwrites: function suppressOverwrites(value) {
-        return _suppressOverwrites = value;
       }
     }
   };
-  _forEachName("to,from,fromTo,delayedCall,set,killTweensOf", function(name) {
-    return _gsap[name] = Tween[name];
-  });
-  _ticker.add(Timeline.updateRoot);
-  _quickTween = _gsap.to({}, {
-    duration: 0
-  });
-  var _getPluginPropTween = function _getPluginPropTween2(plugin, prop) {
-    var pt = plugin._pt;
-    while (pt && pt.p !== prop && pt.op !== prop && pt.fp !== prop) {
-      pt = pt._next;
-    }
-    return pt;
-  };
-  var _addModifiers = function _addModifiers2(tween, modifiers) {
-    var targets = tween._targets, p2, i2, pt;
-    for (p2 in modifiers) {
-      i2 = targets.length;
-      while (i2--) {
-        pt = tween._ptLookup[i2][p2];
-        if (pt && (pt = pt.d)) {
-          if (pt._pt) {
-            pt = _getPluginPropTween(pt, p2);
-          }
-          pt && pt.modifier && pt.modifier(modifiers[p2], tween, targets[i2], p2);
-        }
-      }
-    }
-  };
-  var _buildModifierPlugin = function _buildModifierPlugin2(name, modifier) {
-    return {
-      name,
-      headless: 1,
-      rawVars: 1,
-      //don't pre-process function-based values or "random()" strings.
-      init: function init4(target, vars, tween) {
-        tween._onInit = function(tween2) {
-          var temp, p2;
-          if (_isString(vars)) {
-            temp = {};
-            _forEachName(vars, function(name2) {
-              return temp[name2] = 1;
-            });
-            vars = temp;
-          }
-          if (modifier) {
-            temp = {};
-            for (p2 in vars) {
-              temp[p2] = modifier(vars[p2]);
-            }
-            vars = temp;
-          }
-          _addModifiers(tween2, vars);
-        };
-      }
-    };
-  };
-  var gsap = _gsap.registerPlugin({
-    name: "attr",
-    init: function init2(target, vars, tween, index, targets) {
-      var p2, pt, v2;
-      this.tween = tween;
-      for (p2 in vars) {
-        v2 = target.getAttribute(p2) || "";
-        pt = this.add(target, "setAttribute", (v2 || 0) + "", vars[p2], index, targets, 0, 0, p2);
-        pt.op = p2;
-        pt.b = v2;
-        this._props.push(p2);
-      }
-    },
-    render: function render(ratio, data) {
-      var pt = data._pt;
-      while (pt) {
-        _reverting ? pt.set(pt.t, pt.p, pt.b, pt) : pt.r(ratio, pt.d);
-        pt = pt._next;
-      }
-    }
-  }, {
-    name: "endArray",
-    headless: 1,
-    init: function init3(target, value) {
-      var i2 = value.length;
-      while (i2--) {
-        this.add(target, i2, target[i2] || 0, value[i2], 0, 0, 0, 0, 0, 1);
-      }
-    }
-  }, _buildModifierPlugin("roundProps", _roundModifier), _buildModifierPlugin("modifiers"), _buildModifierPlugin("snap", snap)) || _gsap;
-  Tween.version = Timeline.version = gsap.version = "3.15.0";
-  _coreReady = 1;
-  _windowExists() && _wake();
-  var Power0 = _easeMap.Power0;
-  var Power1 = _easeMap.Power1;
-  var Power2 = _easeMap.Power2;
-  var Power3 = _easeMap.Power3;
-  var Power4 = _easeMap.Power4;
-  var Linear = _easeMap.Linear;
-  var Quad = _easeMap.Quad;
-  var Cubic = _easeMap.Cubic;
-  var Quart = _easeMap.Quart;
-  var Quint = _easeMap.Quint;
-  var Strong = _easeMap.Strong;
-  var Elastic = _easeMap.Elastic;
-  var Back = _easeMap.Back;
-  var SteppedEase = _easeMap.SteppedEase;
-  var Bounce = _easeMap.Bounce;
-  var Sine = _easeMap.Sine;
-  var Expo = _easeMap.Expo;
-  var Circ = _easeMap.Circ;
+  var cardbackimgae = new cardStructure();
 
-  // src/ts/gameControl.ts
-  var flipcardActive = class extends cardstructure {
-    flip;
-    // sprite;
-    constructor() {
-      super();
-      let sprite = this.cardB;
-      this.cardB = (sprite2, scaleTo, callback = void 0) => {
-        gsap.to(sprite2.scale, {
-          x: scaleTo,
-          onComplete() {
-            callback?.();
-          }
-        });
-      };
-      sprite.eventMode = `static`;
-      sprite.interactive = true;
-      sprite.cursor = "pointer";
-      sprite.on("pointerdown", () => {
-        console.log("check");
-        this.flip(sprite, 0, () => {
-          this.cardB = this.fontcard;
-          this.flip(this.cardB, 0.8);
-        });
-      });
+  // src/ts/view/bg.ts
+  var background = class {
+    backgroundLoad;
+    async init() {
+      this.backgroundLoad = new Sprite(await backgroundAsset());
+      this.backgroundLoad.width = app.screen.width;
+      this.backgroundLoad.height = app.screen.height;
+      app.stage.addChild(this.backgroundLoad);
+      console.log("background loaded");
     }
   };
+  var bg = new background();
+  bg.init();
 
   // src/ts/main.ts
   console.log("set up ready!");
   application();
-  new cardstructure();
-  new boxcard();
-  new flipcardActive();
 })();
 /*! Bundled license information:
 
@@ -48433,14 +45251,4 @@ tiny-lru/dist/tiny-lru.js:
    * @license BSD-3-Clause
    * @version 11.4.7
    *)
-
-gsap/gsap-core.js:
-  (*!
-   * GSAP 3.15.0
-   * https://gsap.com
-   *
-   * @license Copyright 2008-2026, GreenSock. All rights reserved.
-   * Subject to the terms at https://gsap.com/standard-license
-   * @author: Jack Doyle, jack@greensock.com
-  *)
 */

@@ -1,14 +1,15 @@
 console.log('set up ready!');
 
-import { application } from './App';
-import { cardstructure } from './card';
-import { boxcard } from './createUI';
-import {flipcardActive} from'./gameControl'
+import { application } from './view/app';
+import { cardStructure } from './view/card';
+import { boxcard,  } from './view/createUI';
+import { flipCardActive } from './view/gameControl'
+import { background } from './view/bg';
+// import { loadAsset } from './view/utily';
+
 
 
 application();
-new cardstructure()
-new boxcard()
-new flipcardActive()
+
 
 
