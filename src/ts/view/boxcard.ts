@@ -1,17 +1,15 @@
 
-import { Graphics } from "pixi.js";
+import { Container,Graphics } from "pixi.js";
 import { app } from "./app";
 
 
 //create the container use by graphica
-export class boxcard {
+  export class boxcard {
 
     public cardContainer: any;
 
     constructor() {
-        this.cardContainer = new Graphics();
-        this.cardContainer.lineStyle(2, 0xff0000, 1);
-        this.cardContainer.drawRect(0, 0, 500, 500);
+        this.cardContainer = new Container();
         this.cardContainer.zIndex = 10;
         this.cardContainer.scale.set(1.0);
         this.cardContainer.x = 543.5;
@@ -21,5 +19,8 @@ export class boxcard {
     }
 
 }
+ 
+  export const containter1 = new boxcard();
 
+  
 

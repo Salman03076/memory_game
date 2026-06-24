@@ -1,6 +1,6 @@
 import { Sprite, Texture } from "pixi.js";
 import { app } from "./app";
-import { backgroundAsset } from "./utily";
+import { backgroundAsset } from "../Utily/utily";
 
 
 
@@ -19,10 +19,6 @@ export class background {
     }
 
 }
-
-
-const bg = new background();
-bg.init();
 
 
 

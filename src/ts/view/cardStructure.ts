@@ -1,20 +1,16 @@
 import { Sprite, Texture, Assets } from "pixi.js"
-import { boxcard } from "./createUI";
-import { fontAsset, backCardTexture } from './utily'
+import { containter1 } from "./boxcard";
+import { fontAsset, backCardTexture } from '../Utily/utily'
 
 
 // creta the card structure
 
-export class cardStructure extends boxcard {
-    public backcard: Texture;
-    protected fontcard: Texture;
-    public cardB: any;
+ export class cardStructure {
+    private backcard: Texture;
+    public fontcard: Texture;
+    public cardB: Sprite;
 
     constructor() {
-
-        super(); //call the present class
-
-
 
         // create  the colums and rows
         let rows: number = 2;
@@ -26,9 +22,8 @@ export class cardStructure extends boxcard {
         for (let index = 0; index < cardnum; index++) {
 
 
-            (async () => {
-
-                this.fontcard = await Assets.load(await fontAsset[index]);
+            (async (): Promise<void> => {
+                // this.fontcard = await Assets.load(await fontAsset[index]);
                 const row = Math.floor(index / cols);
                 const col = index % cols;
                 this.cardB = new Sprite(await backCardTexture());
@@ -36,7 +31,7 @@ export class cardStructure extends boxcard {
                 this.cardB.scale.set(0.3);
                 this.cardB.x = 100 + col * 300;
                 this.cardB.y = 110 + row * 350;
-                this.cardContainer.addChild(this.cardB);
+                containter1.cardContainer.addChild(this.cardB);
             })()
 
 

@@ -1,5 +1,5 @@
 
-import { Assets, Sprite, Texture } from 'pixi.js';
+import { Assets, Texture } from 'pixi.js';
 
 
 

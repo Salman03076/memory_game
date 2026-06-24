@@ -1,8 +1,6 @@
 import { Application } from "pixi.js";
 
 
-//set the canvas envirament
-export const app = new Application();
 
 export const application = async () => {
 
@@ -14,3 +12,5 @@ export const application = async () => {
     gamebody?.appendChild(app.canvas);
 }
 
+//set the canvas envirament
+export const app = new Application();

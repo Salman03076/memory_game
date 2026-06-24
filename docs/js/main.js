@@ -45151,27 +45151,25 @@ ${e2}`);
 
   // node_modules/pixi.js/lib/index.mjs
   init_textureFrom();
-  init_Graphics();
+  init_Container();
   init_Sprite();
   init_eventemitter3();
   extensions.add(browserExt, webworkerExt);
 
   // src/ts/view/app.ts
-  var app = new Application();
   var application = async () => {
     await app.init({ background: "white", resizeTo: window });
     globalThis.__PIXI_APP__ = app;
     const gamebody = document.getElementById("gamebody");
     gamebody?.appendChild(app.canvas);
   };
+  var app = new Application();
 
-  // src/ts/view/createUI.ts
+  // src/ts/view/boxcard.ts
   var boxcard = class {
     cardContainer;
     constructor() {
-      this.cardContainer = new Graphics();
-      this.cardContainer.lineStyle(2, 16711680, 1);
-      this.cardContainer.drawRect(0, 0, 500, 500);
+      this.cardContainer = new Container();
       this.cardContainer.zIndex = 10;
       this.cardContainer.scale.set(1);
       this.cardContainer.x = 543.5;
@@ -45179,16 +45177,9 @@ ${e2}`);
       app.stage.addChild(this.cardContainer);
     }
   };
+  var containter1 = new boxcard();
 
-  // src/ts/view/utily.ts
-  var fontAsset = [
-    "Assets/image (0).png",
-    "Assets/image (0).png",
-    "Assets/image (1).png",
-    "Assets/image (1).png",
-    "Assets/image (2).png",
-    "Assets/image (2).png"
-  ];
+  // src/ts/Utily/utily.ts
   var backgroundAsset = async () => {
     return await Assets.load(`Assets/background/background.avif`);
   };
@@ -45196,19 +45187,17 @@ ${e2}`);
     return await Assets.load(`Assets/Back Card/BACK.png`);
   };
 
-  // src/ts/view/card.ts
-  var cardStructure = class extends boxcard {
+  // src/ts/view/cardStructure.ts
+  var cardStructure = class {
     backcard;
     fontcard;
     cardB;
     constructor() {
-      super();
       let rows = 2;
       let cols = 3;
       let cardnum = 6;
       for (let index = 0; index < cardnum; index++) {
         (async () => {
-          this.fontcard = await Assets.load(await fontAsset[index]);
           const row = Math.floor(index / cols);
           const col = index % cols;
           this.cardB = new Sprite(await backCardTexture());
@@ -45216,14 +45205,14 @@ ${e2}`);
           this.cardB.scale.set(0.3);
           this.cardB.x = 100 + col * 300;
           this.cardB.y = 110 + row * 350;
-          this.cardContainer.addChild(this.cardB);
+          containter1.cardContainer.addChild(this.cardB);
         })();
       }
     }
   };
   var cardbackimgae = new cardStructure();
 
-  // src/ts/view/bg.ts
+  // src/ts/view/background.ts
   var background = class {
     backgroundLoad;
     async init() {
@@ -45234,12 +45223,17 @@ ${e2}`);
       console.log("background loaded");
     }
   };
-  var bg = new background();
-  bg.init();
+
+  // src/ts/view/initializationView.ts
+  var viewinit = () => {
+    application();
+    new cardStructure();
+    new background().init();
+  };
 
   // src/ts/main.ts
   console.log("set up ready!");
-  application();
+  viewinit();
 })();
 /*! Bundled license information:
 
