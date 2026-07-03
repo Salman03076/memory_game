@@ -45168,6 +45168,7 @@ ${e2}`);
   var app = new Application();
   var application = async () => {
     await app.init({ background: "white", resizeTo: window });
+    globalThis.__PIXI_APP_ = app;
     const gamebody = document.getElementById("gamebody");
     gamebody?.appendChild(app.canvas);
   };
@@ -45180,7 +45181,6 @@ ${e2}`);
       this.backgroundLoad.width = app.screen.width;
       this.backgroundLoad.height = app.screen.height;
       app.stage.addChild(this.backgroundLoad);
-      console.log("background loaded");
     }
   };
   var boxcard = class {
@@ -45212,12 +45212,13 @@ ${e2}`);
           const col = index % cols;
           const texture = await backCardTexture();
           this.backcard = new Sprite(texture);
+          this.backcard.id = `card${index}`;
           this.backcard.anchor.set(0.5);
           this.backcard.scale.set(0.3);
           this.backcard.x = 100 + col * 300;
           this.backcard.y = 110 + row * 350;
           this.card.push(this.backcard);
-          this.cardContainer.addChild(this.backcard);
+          this.cardContainer.addChild(this.card[index]);
         })();
       }
     }
@@ -48407,7 +48408,6 @@ ${e2}`);
   var viewinit = async () => {
     await application();
     await new background().init();
-    new boxcard();
     new cardStructure();
     await new animation();
   };

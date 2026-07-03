@@ -15,7 +15,6 @@ export class background {
         this.backgroundLoad.width = app.screen.width;
         this.backgroundLoad.height = app.screen.height;
         app.stage.addChild(this.backgroundLoad);
-        console.log("background loaded");
 
     }
 
@@ -26,7 +25,7 @@ export class background {
 
 //create the container use by graphica
 export class boxcard {
-    
+
     public cardContainer: Container;
 
     constructor() {

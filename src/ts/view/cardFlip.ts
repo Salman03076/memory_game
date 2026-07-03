@@ -26,12 +26,12 @@ export class animation extends cardStructure {
     }
 
 
-  async init(): Promise<void> {
+    async init(): Promise<void> {
         if (!this.backcard) console.error("backcard is not loaded");
         this.backcard.cursor = "pointer";
         this.backcard.eventMode = `static`;
         this.backcard.on('pointerdown', () => {
-           this.flip(this.backcard, 0, () => {
+            this.flip(this.backcard, 0, () => {
                 this.backcard = this.fontcard[3];
                 this.flip(this.backcard, 0.8);
                 console.log("load flip")
@@ -50,7 +50,7 @@ export class animation extends cardStructure {
 
 
 
- 
+
 
 
 

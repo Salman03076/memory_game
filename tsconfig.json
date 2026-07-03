@@ -1,8 +1,9 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    "rootDir": "./src/ts/",
+    "rootDir": "./src/ts",
     "outDir": "./docs/js",
 
     // Environment Settings

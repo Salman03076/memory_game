@@ -8,7 +8,7 @@ import { Application } from "pixi.js";
 export const application = async () => {
 
     await app.init({ background: 'white', resizeTo: window });
-    // globalThis.__PIXI_APP_ = app;
+    globalThis.__PIXI_APP_ = app;
 
     const gamebody = document.getElementById('gamebody');
 

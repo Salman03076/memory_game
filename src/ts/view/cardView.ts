@@ -12,15 +12,15 @@ import { backCardTexture } from './utily'
 export class cardStructure extends boxcard {
     public backcard: Sprite;
     public fontcard: Texture;
-     public card:Sprite[]=[]
+    public card: Sprite[] = []
 
     constructor() {
- super()
+        super()
         // create  the colums and rows
         let rows: number = 2;
         let cols: number = 3;
         let cardnum: number = 6;
-        
+
 
 
         // create the muliple card
@@ -33,14 +33,15 @@ export class cardStructure extends boxcard {
                 const col = index % cols;
                 const texture: Texture = await backCardTexture()
                 this.backcard = new Sprite(texture);
+                (this.backcard as any).id = `card${index}`;
                 this.backcard.anchor.set(0.5);
                 this.backcard.scale.set(0.3);
                 this.backcard.x = 100 + col * 300;
                 this.backcard.y = 110 + row * 350;
                 this.card.push(this.backcard)
-                this.cardContainer.addChild(this.backcard);
+                this.cardContainer.addChild(this.card[index]);
 
-               
+
 
 
             })()

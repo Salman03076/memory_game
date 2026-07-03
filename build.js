@@ -5,14 +5,15 @@ esbuild
   .build({
     entryPoints: ["./src/ts/index.ts"],
     bundle: true,
-    outdir: "./docs/js/",
+    outdir: "./docs/js",
     plugins: [
       copy({
         resolveFrom: "cwd",
         assets: [
           {
-            from: ["./src/ts/model/Assets/**/*.{png,avif,jpg,jpeg,webp,gif,svg}"],
-            to: ["./docs/model"],
+
+            from: ["./src/assets/**/*.{png,avif,jpg,jpeg,webp,gif,svg}"],
+            to: ["./docs/assets"],
           },
           {
             from: ["./src/index.html"],

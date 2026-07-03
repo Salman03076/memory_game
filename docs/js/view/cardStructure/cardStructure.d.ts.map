@@ -1,1 +1,0 @@
-{"version":3,"file":"cardStructure.d.ts","sourceRoot":"","sources":["../../../../src/ts/view/cardStructure/cardStructure.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,MAAM,EAAE,OAAO,EAAE,MAAM,SAAS,CAAA;AAOzC,qBAAa,aAAa;IACf,QAAQ,EAAG,MAAM,CAAC;IAClB,QAAQ,EAAG,OAAO,CAAC;IACnB,IAAI,EAAE,MAAM,EAAE,CAAM;IAC3B,SAAgB,WAAW,EAAE,OAAO,CAAC,IAAI,CAAC,CAAC;;YAM7B,WAAW;CAkB5B"}
