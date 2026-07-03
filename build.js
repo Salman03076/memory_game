@@ -3,16 +3,16 @@ import { copy } from "esbuild-plugin-copy";
 
 esbuild
   .build({
-    entryPoints: ["./src/ts/main.ts"],
+    entryPoints: ["./src/ts/index.ts"],
     bundle: true,
-    outdir: "./docs/js",
+    outdir: "./docs/js/",
     plugins: [
       copy({
         resolveFrom: "cwd",
         assets: [
           {
-            from: ["./src/Assets/**/*"],
-            to: ["./docs/Assets"],
+            from: ["./src/ts/model/Assets/**/*.{png,avif,jpg,jpeg,webp,gif,svg}"],
+            to: ["./docs/model"],
           },
           {
             from: ["./src/index.html"],

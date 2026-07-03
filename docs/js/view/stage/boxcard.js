@@ -1,13 +1,8 @@
-
-import { Container,Graphics } from "pixi.js";
+import { Container } from "pixi.js";
 import { app } from "./app";
-
-
 //create the container use by graphica
-  export class boxcard {
-
-    public cardContainer: any;
-
+export class boxcard {
+    cardContainer;
     constructor() {
         this.cardContainer = new Container();
         this.cardContainer.zIndex = 10;
@@ -15,12 +10,7 @@ import { app } from "./app";
         this.cardContainer.x = 543.5;
         this.cardContainer.y = 183.5;
         app.stage.addChild(this.cardContainer);
-
     }
-
 }
- 
-  export const containter1 = new boxcard();
-
-  
-
+export const containter1 = new boxcard();
+//# sourceMappingURL=boxcard.js.map

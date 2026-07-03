@@ -19,11 +19,11 @@ export const fontAsset: string[] = [
 
 
 export const backgroundAsset = async (): Promise<Texture> => {
-    return await Assets.load(`Assets/background/background.avif`);
+    return await Assets.load(`./Assets/background/background.avif`);
 }
 
 export const backCardTexture = async (): Promise<Texture> => {
-    return await Assets.load(`Assets/Back Card/BACK.png`);
+    return await Assets.load(`./Assets/Back Card/BACK.png`);
 }
 
 

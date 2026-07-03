@@ -45156,16 +45156,7 @@ ${e2}`);
   init_eventemitter3();
   extensions.add(browserExt, webworkerExt);
 
-  // src/ts/view/stage/app.ts
-  var app = new Application();
-  var application = async () => {
-    await app.init({ background: "white", resizeTo: window });
-    globalThis.__PIXI_APP_ = app;
-    const gamebody = document.getElementById("gamebody");
-    gamebody?.appendChild(app.canvas);
-  };
-
-  // src/ts/model/Assets/Utily/utily.ts
+  // src/ts/view/utily.ts
   var backgroundAsset = async () => {
     return await Assets.load(`./Assets/background/background.avif`);
   };
@@ -45173,7 +45164,15 @@ ${e2}`);
     return await Assets.load(`./Assets/Back Card/BACK.png`);
   };
 
-  // src/ts/view/stage/background.ts
+  // src/ts/app.ts
+  var app = new Application();
+  var application = async () => {
+    await app.init({ background: "white", resizeTo: window });
+    const gamebody = document.getElementById("gamebody");
+    gamebody?.appendChild(app.canvas);
+  };
+
+  // src/ts/view/background.ts
   var background = class {
     backgroundLoad;
     async init() {
@@ -45184,8 +45183,6 @@ ${e2}`);
       console.log("background loaded");
     }
   };
-
-  // src/ts/view/stage/boxcard.ts
   var boxcard = class {
     cardContainer;
     constructor() {
@@ -45197,43 +45194,33 @@ ${e2}`);
       app.stage.addChild(this.cardContainer);
     }
   };
-  var containter1 = new boxcard();
 
-  // src/ts/view/cardStructure/cardStructure.ts
+  // src/ts/view/cardView.ts
   console.log("Cardstructure file loaded ");
-  var cardStructure = class {
+  var cardStructure = class extends boxcard {
     backcard;
     fontcard;
     card = [];
-    cardsLoaded;
     constructor() {
-      this.cardsLoaded = this.createCards();
-    }
-    async createCards() {
-      const rows = 2;
-      const cols = 3;
-      const cardnum = 6;
+      super();
+      let rows = 2;
+      let cols = 3;
+      let cardnum = 6;
       for (let index = 0; index < cardnum; index++) {
-        const row = Math.floor(index / cols);
-        const col = index % cols;
-        const texture = await backCardTexture();
-        this.backcard = new Sprite(texture);
-        this.backcard.anchor.set(0.5);
-        this.backcard.scale.set(0.3);
-        this.backcard.x = 100 + col * 300;
-        this.backcard.y = 110 + row * 350;
-        this.card.push(this.backcard);
-        containter1.cardContainer.addChild(this.backcard);
+        (async () => {
+          const row = Math.floor(index / cols);
+          const col = index % cols;
+          const texture = await backCardTexture();
+          this.backcard = new Sprite(texture);
+          this.backcard.anchor.set(0.5);
+          this.backcard.scale.set(0.3);
+          this.backcard.x = 100 + col * 300;
+          this.backcard.y = 110 + row * 350;
+          this.card.push(this.backcard);
+          this.cardContainer.addChild(this.backcard);
+        })();
       }
     }
-  };
-
-  // src/ts/view/initializationView.ts
-  var viewinit = async () => {
-    await application();
-    await new background().init();
-    new boxcard();
-    new cardStructure();
   };
 
   // node_modules/gsap/gsap-core.js
@@ -48391,9 +48378,9 @@ ${e2}`);
   var Expo = _easeMap.Expo;
   var Circ = _easeMap.Circ;
 
-  // src/ts/view/cardAnimation/cardAnimate.ts
+  // src/ts/view/cardFlip.ts
   console.log("Flip file loaded");
-  var animation = class {
+  var animation = class extends cardStructure {
     flip(backcard, scaleTo, callback = void 0) {
       gsap.to(backcard.scale, {
         x: scaleTo,
@@ -48402,38 +48389,32 @@ ${e2}`);
         }
       });
     }
-  };
-
-  // src/ts/controller/AnimationEvent/controlAnimationEvent.ts
-  console.log("CardEventhandle file loaded");
-  var animate = new animation();
-  var eventhandle = class extends cardStructure {
-    constructor() {
-      super();
-    }
     async init() {
       if (!this.backcard) console.error("backcard is not loaded");
       this.backcard.cursor = "pointer";
       this.backcard.eventMode = `static`;
       this.backcard.on("pointerdown", () => {
-        animate.flip(this.backcard, 0, () => {
+        this.flip(this.backcard, 0, () => {
           this.backcard = this.fontcard[3];
-          animate.flip(this.backcard, 0.8);
+          this.flip(this.backcard, 0.8);
           console.log("load flip");
         });
       });
     }
   };
 
-  // src/ts/controller/initializationControl.ts
-  var controlcard = () => {
-    new eventhandle();
+  // src/ts/mangame.ts
+  var viewinit = async () => {
+    await application();
+    await new background().init();
+    new boxcard();
+    new cardStructure();
+    await new animation();
   };
 
-  // src/ts/main.ts
+  // src/ts/index.ts
   console.log("set up ready!");
   viewinit();
-  controlcard();
 })();
 /*! Bundled license information:
 
