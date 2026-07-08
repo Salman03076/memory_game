@@ -45156,6 +45156,17 @@ ${e2}`);
   init_eventemitter3();
   extensions.add(browserExt, webworkerExt);
 
+  // src/ts/app.ts
+  var app = new Application();
+  var application = async () => {
+    await app.init({ background: "white", resizeTo: window });
+    globalThis.__PIXI_APP_ = app;
+    globalThis.__PIXI_STAGE__ = app.stage;
+    globalThis.__PIXI_RENDERER__ = app.renderer;
+    const gamebody = document.getElementById("gamebody");
+    gamebody?.appendChild(app.canvas);
+  };
+
   // src/ts/view/utily.ts
   var backgroundAsset = async () => {
     return await Assets.load(`./Assets/background/background.avif`);
@@ -45164,63 +45175,24 @@ ${e2}`);
     return await Assets.load(`./Assets/Back Card/BACK.png`);
   };
 
-  // src/ts/app.ts
-  var app = new Application();
-  var application = async () => {
-    await app.init({ background: "white", resizeTo: window });
-    globalThis.__PIXI_APP_ = app;
-    const gamebody = document.getElementById("gamebody");
-    gamebody?.appendChild(app.canvas);
-  };
-
   // src/ts/view/background.ts
   var background = class {
     backgroundLoad;
-    async init() {
+    cardContainer;
+    constructor() {
+      this.initbackground();
+    }
+    async initbackground() {
       this.backgroundLoad = new Sprite(await backgroundAsset());
       this.backgroundLoad.width = app.screen.width;
       this.backgroundLoad.height = app.screen.height;
       app.stage.addChild(this.backgroundLoad);
-    }
-  };
-  var boxcard = class {
-    cardContainer;
-    constructor() {
       this.cardContainer = new Container();
       this.cardContainer.zIndex = 10;
       this.cardContainer.scale.set(1);
       this.cardContainer.x = 543.5;
       this.cardContainer.y = 183.5;
       app.stage.addChild(this.cardContainer);
-    }
-  };
-
-  // src/ts/view/cardView.ts
-  console.log("Cardstructure file loaded ");
-  var cardStructure = class extends boxcard {
-    backcard;
-    fontcard;
-    card = [];
-    constructor() {
-      super();
-      let rows = 2;
-      let cols = 3;
-      let cardnum = 6;
-      for (let index = 0; index < cardnum; index++) {
-        (async () => {
-          const row = Math.floor(index / cols);
-          const col = index % cols;
-          const texture = await backCardTexture();
-          this.backcard = new Sprite(texture);
-          this.backcard.id = `card${index}`;
-          this.backcard.anchor.set(0.5);
-          this.backcard.scale.set(0.3);
-          this.backcard.x = 100 + col * 300;
-          this.backcard.y = 110 + row * 350;
-          this.card.push(this.backcard);
-          this.cardContainer.addChild(this.card[index]);
-        })();
-      }
     }
   };
 
@@ -45389,12 +45361,12 @@ ${e2}`);
       tween && tween._lazy && (tween.render(tween._lazy[0], tween._lazy[1], true)._lazy = 0);
     }
   };
-  var _isRevertWorthy = function _isRevertWorthy2(animation2) {
-    return !!(animation2._initted || animation2._startAt || animation2.add);
+  var _isRevertWorthy = function _isRevertWorthy2(animation) {
+    return !!(animation._initted || animation._startAt || animation.add);
   };
-  var _lazySafeRender = function _lazySafeRender2(animation2, time, suppressEvents, force) {
+  var _lazySafeRender = function _lazySafeRender2(animation, time, suppressEvents, force) {
     _lazyTweens.length && !_reverting && _lazyRender();
-    animation2.render(time, suppressEvents, force || !!(_reverting && time < 0 && _isRevertWorthy(animation2)));
+    animation.render(time, suppressEvents, force || !!(_reverting && time < 0 && _isRevertWorthy(animation)));
     _lazyTweens.length && !_reverting && _lazyRender();
   };
   var _numericIfPossible = function _numericIfPossible2(value) {
@@ -45506,33 +45478,33 @@ ${e2}`);
     child.parent && (!onlyIfParentHasAutoRemove || child.parent.autoRemoveChildren) && child.parent.remove && child.parent.remove(child);
     child._act = 0;
   };
-  var _uncache = function _uncache2(animation2, child) {
-    if (animation2 && (!child || child._end > animation2._dur || child._start < 0)) {
-      var a2 = animation2;
+  var _uncache = function _uncache2(animation, child) {
+    if (animation && (!child || child._end > animation._dur || child._start < 0)) {
+      var a2 = animation;
       while (a2) {
         a2._dirty = 1;
         a2 = a2.parent;
       }
     }
-    return animation2;
+    return animation;
   };
-  var _recacheAncestors = function _recacheAncestors2(animation2) {
-    var parent = animation2.parent;
+  var _recacheAncestors = function _recacheAncestors2(animation) {
+    var parent = animation.parent;
     while (parent && parent.parent) {
       parent._dirty = 1;
       parent.totalDuration();
       parent = parent.parent;
     }
-    return animation2;
+    return animation;
   };
   var _rewindStartAt = function _rewindStartAt2(tween, totalTime, suppressEvents, force) {
     return tween._startAt && (_reverting ? tween._startAt.revert(_revertConfigNoKill) : tween.vars.immediateRender && !tween.vars.autoRevert || tween._startAt.render(totalTime, true, force));
   };
-  var _hasNoPausedAncestors = function _hasNoPausedAncestors2(animation2) {
-    return !animation2 || animation2._ts && _hasNoPausedAncestors2(animation2.parent);
+  var _hasNoPausedAncestors = function _hasNoPausedAncestors2(animation) {
+    return !animation || animation._ts && _hasNoPausedAncestors2(animation.parent);
   };
-  var _elapsedCycleDuration = function _elapsedCycleDuration2(animation2) {
-    return animation2._repeat ? _animationCycle(animation2._tTime, animation2 = animation2.duration() + animation2._rDelay) * animation2 : 0;
+  var _elapsedCycleDuration = function _elapsedCycleDuration2(animation) {
+    return animation._repeat ? _animationCycle(animation._tTime, animation = animation.duration() + animation._rDelay) * animation : 0;
   };
   var _animationCycle = function _animationCycle2(tTime, cycleDuration) {
     var whole = Math.floor(tTime = _roundPrecise(tTime / cycleDuration));
@@ -45541,17 +45513,17 @@ ${e2}`);
   var _parentToChildTotalTime = function _parentToChildTotalTime2(parentTime, child) {
     return (parentTime - child._start) * child._ts + (child._ts >= 0 ? 0 : child._dirty ? child.totalDuration() : child._tDur);
   };
-  var _setEnd = function _setEnd2(animation2) {
-    return animation2._end = _roundPrecise(animation2._start + (animation2._tDur / Math.abs(animation2._ts || animation2._rts || _tinyNum) || 0));
+  var _setEnd = function _setEnd2(animation) {
+    return animation._end = _roundPrecise(animation._start + (animation._tDur / Math.abs(animation._ts || animation._rts || _tinyNum) || 0));
   };
-  var _alignPlayhead = function _alignPlayhead2(animation2, totalTime) {
-    var parent = animation2._dp;
-    if (parent && parent.smoothChildTiming && animation2._ts) {
-      animation2._start = _roundPrecise(parent._time - (animation2._ts > 0 ? totalTime / animation2._ts : ((animation2._dirty ? animation2.totalDuration() : animation2._tDur) - totalTime) / -animation2._ts));
-      _setEnd(animation2);
-      parent._dirty || _uncache(parent, animation2);
+  var _alignPlayhead = function _alignPlayhead2(animation, totalTime) {
+    var parent = animation._dp;
+    if (parent && parent.smoothChildTiming && animation._ts) {
+      animation._start = _roundPrecise(parent._time - (animation._ts > 0 ? totalTime / animation._ts : ((animation._dirty ? animation.totalDuration() : animation._tDur) - totalTime) / -animation._ts));
+      _setEnd(animation);
+      parent._dirty || _uncache(parent, animation);
     }
-    return animation2;
+    return animation;
   };
   var _postAddChecks = function _postAddChecks2(timeline2, child) {
     var t2;
@@ -45582,8 +45554,8 @@ ${e2}`);
     timeline2._ts < 0 && _alignPlayhead(timeline2, timeline2._tTime);
     return timeline2;
   };
-  var _scrollTrigger = function _scrollTrigger2(animation2, trigger) {
-    return (_globals.ScrollTrigger || _missingPlugin("scrollTrigger", trigger)) && _globals.ScrollTrigger.create(trigger, animation2);
+  var _scrollTrigger = function _scrollTrigger2(animation, trigger) {
+    return (_globals.ScrollTrigger || _missingPlugin("scrollTrigger", trigger)) && _globals.ScrollTrigger.create(trigger, animation);
   };
   var _attemptInitTween = function _attemptInitTween2(tween, time, force, suppressEvents, tTime) {
     _initTween(tween, time, tTime);
@@ -45645,10 +45617,10 @@ ${e2}`);
       tween._zTime = totalTime;
     }
   };
-  var _findNextPauseTween = function _findNextPauseTween2(animation2, prevTime, time) {
+  var _findNextPauseTween = function _findNextPauseTween2(animation, prevTime, time) {
     var child;
     if (time > prevTime) {
-      child = animation2._first;
+      child = animation._first;
       while (child && child._start <= time) {
         if (child.data === "isPause" && child._start > prevTime) {
           return child;
@@ -45656,7 +45628,7 @@ ${e2}`);
         child = child._next;
       }
     } else {
-      child = animation2._last;
+      child = animation._last;
       while (child && child._start >= time) {
         if (child.data === "isPause" && child._start < prevTime) {
           return child;
@@ -45665,26 +45637,26 @@ ${e2}`);
       }
     }
   };
-  var _setDuration = function _setDuration2(animation2, duration, skipUncache, leavePlayhead) {
-    var repeat = animation2._repeat, dur = _roundPrecise(duration) || 0, totalProgress = animation2._tTime / animation2._tDur;
-    totalProgress && !leavePlayhead && (animation2._time *= dur / animation2._dur);
-    animation2._dur = dur;
-    animation2._tDur = !repeat ? dur : repeat < 0 ? 1e10 : _roundPrecise(dur * (repeat + 1) + animation2._rDelay * repeat);
-    totalProgress > 0 && !leavePlayhead && _alignPlayhead(animation2, animation2._tTime = animation2._tDur * totalProgress);
-    animation2.parent && _setEnd(animation2);
-    skipUncache || _uncache(animation2.parent, animation2);
-    return animation2;
+  var _setDuration = function _setDuration2(animation, duration, skipUncache, leavePlayhead) {
+    var repeat = animation._repeat, dur = _roundPrecise(duration) || 0, totalProgress = animation._tTime / animation._tDur;
+    totalProgress && !leavePlayhead && (animation._time *= dur / animation._dur);
+    animation._dur = dur;
+    animation._tDur = !repeat ? dur : repeat < 0 ? 1e10 : _roundPrecise(dur * (repeat + 1) + animation._rDelay * repeat);
+    totalProgress > 0 && !leavePlayhead && _alignPlayhead(animation, animation._tTime = animation._tDur * totalProgress);
+    animation.parent && _setEnd(animation);
+    skipUncache || _uncache(animation.parent, animation);
+    return animation;
   };
-  var _onUpdateTotalDuration = function _onUpdateTotalDuration2(animation2) {
-    return animation2 instanceof Timeline ? _uncache(animation2) : _setDuration(animation2, animation2._dur);
+  var _onUpdateTotalDuration = function _onUpdateTotalDuration2(animation) {
+    return animation instanceof Timeline ? _uncache(animation) : _setDuration(animation, animation._dur);
   };
   var _zeroPosition = {
     _start: 0,
     endTime: _emptyFunc,
     totalDuration: _emptyFunc
   };
-  var _parsePosition = function _parsePosition2(animation2, position, percentAnimation) {
-    var labels = animation2.labels, recent = animation2._recent || _zeroPosition, clippedDuration = animation2.duration() >= _bigNum ? recent.endTime(false) : animation2._dur, i2, offset, isPercent;
+  var _parsePosition = function _parsePosition2(animation, position, percentAnimation) {
+    var labels = animation.labels, recent = animation._recent || _zeroPosition, clippedDuration = animation.duration() >= _bigNum ? recent.endTime(false) : animation._dur, i2, offset, isPercent;
     if (_isString(position) && (isNaN(position) || position in labels)) {
       offset = position.charAt(0);
       isPercent = position.substr(-1) === "%";
@@ -45701,7 +45673,7 @@ ${e2}`);
       if (isPercent && percentAnimation) {
         offset = offset / 100 * (_isArray(percentAnimation) ? percentAnimation[0] : percentAnimation).totalDuration();
       }
-      return i2 > 1 ? _parsePosition2(animation2, position.substr(0, i2 - 1), percentAnimation) + offset : clippedDuration + offset;
+      return i2 > 1 ? _parsePosition2(animation, position.substr(0, i2 - 1), percentAnimation) + offset : clippedDuration + offset;
     }
     return position == null ? clippedDuration : +position;
   };
@@ -45962,24 +45934,24 @@ ${e2}`);
     }
     return label;
   };
-  var _callback = function _callback2(animation2, type, executeLazyFirst) {
-    var v2 = animation2.vars, callback = v2[type], prevContext = _context, context4 = animation2._ctx, params, scope, result;
+  var _callback = function _callback2(animation, type, executeLazyFirst) {
+    var v2 = animation.vars, callback = v2[type], prevContext = _context, context4 = animation._ctx, params, scope, result;
     if (!callback) {
       return;
     }
     params = v2[type + "Params"];
-    scope = v2.callbackScope || animation2;
+    scope = v2.callbackScope || animation;
     executeLazyFirst && _lazyTweens.length && _lazyRender();
     context4 && (_context = context4);
     result = params ? callback.apply(scope, params) : callback.call(scope);
     _context = prevContext;
     return result;
   };
-  var _interrupt = function _interrupt2(animation2) {
-    _removeFromParent(animation2);
-    animation2.scrollTrigger && animation2.scrollTrigger.kill(!!_reverting);
-    animation2.progress() < 1 && _callback(animation2, "onInterrupt");
-    return animation2;
+  var _interrupt = function _interrupt2(animation) {
+    _removeFromParent(animation);
+    animation.scrollTrigger && animation.scrollTrigger.kill(!!_reverting);
+    animation.progress() < 1 && _callback(animation, "onInterrupt");
+    return animation;
   };
   var _quickTween;
   var _registerPluginQueue = [];
@@ -46530,10 +46502,10 @@ ${e2}`);
       return this;
     };
     _proto.globalTime = function globalTime(rawTime) {
-      var animation2 = this, time = arguments.length ? rawTime : animation2.rawTime();
-      while (animation2) {
-        time = animation2._start + time / (Math.abs(animation2._ts) || 1);
-        animation2 = animation2._dp;
+      var animation = this, time = arguments.length ? rawTime : animation.rawTime();
+      while (animation) {
+        time = animation._start + time / (Math.abs(animation._ts) || 1);
+        animation = animation._dp;
       }
       return !this.parent && this._sat ? this._sat.globalTime(rawTime) : time;
     };
@@ -48379,9 +48351,16 @@ ${e2}`);
   var Expo = _easeMap.Expo;
   var Circ = _easeMap.Circ;
 
-  // src/ts/view/cardFlip.ts
-  console.log("Flip file loaded");
-  var animation = class extends cardStructure {
+  // src/ts/view/cardView.ts
+  console.log("Cardstructure file loaded ");
+  var cardStructure = class extends background {
+    backcard;
+    fontcard;
+    cardF = [];
+    cardB = [];
+    rows = 2;
+    cols = 3;
+    cardnum = 6;
     flip(backcard, scaleTo, callback = void 0) {
       gsap.to(backcard.scale, {
         x: scaleTo,
@@ -48390,31 +48369,50 @@ ${e2}`);
         }
       });
     }
-    async init() {
-      if (!this.backcard) console.error("backcard is not loaded");
-      this.backcard.cursor = "pointer";
-      this.backcard.eventMode = `static`;
-      this.backcard.on("pointerdown", () => {
-        this.flip(this.backcard, 0, () => {
-          this.backcard = this.fontcard[3];
-          this.flip(this.backcard, 0.8);
-          console.log("load flip");
-        });
-      });
+    constructor() {
+      super();
+      this.initcard();
+    }
+    async initcard() {
+      for (let index = 0; index < this.cardnum; index++) {
+        const row = Math.floor(index / this.cols);
+        const col = index % this.cols;
+        const texture = await backCardTexture();
+        this.backcard = new Sprite(texture);
+        this.backcard.anchor.set(0.5);
+        this.backcard.scale.set(0.3);
+        this.backcard.x = 100 + col * 300;
+        this.backcard.y = 110 + row * 350;
+        this.cardB.push(this.backcard);
+        this.cardContainer.addChild(this.cardB[index]);
+        if (!this.cardB) console.error("backcard is not loaded");
+        this.backcard.cursor = "pointer";
+        this.backcard.eventMode = `static`;
+        this.backcard.on(
+          "pointerdown",
+          () => {
+            this.flip(this.cardB[index], 0, () => {
+              this.backcard = this.cardF[Math.floor(Math.random() * this.fontcard[index])];
+              this.flip(this.cardB[index], 1);
+              console.log("load flip");
+            });
+          }
+        );
+      }
     }
   };
 
   // src/ts/mangame.ts
-  var viewinit = async () => {
-    await application();
-    await new background().init();
+  var viewinit = () => {
     new cardStructure();
-    await new animation();
   };
 
   // src/ts/index.ts
   console.log("set up ready!");
-  viewinit();
+  (async () => {
+    await application();
+    viewinit();
+  })();
 })();
 /*! Bundled license information:
 
