@@ -45168,6 +45168,14 @@ ${e2}`);
   };
 
   // src/ts/view/utily.ts
+  var fontAsset = [
+    "assets/font Card/image (55).png",
+    "assets/font Card/image (13).png",
+    "assets/font Card/image (15).png",
+    "assets/font Card/image (20).png",
+    "assets/font Card/image (25).png",
+    "assets/font Card/image (30).png"
+  ];
   var backgroundAsset = async () => {
     return await Assets.load(`./Assets/background/background.avif`);
   };
@@ -48378,23 +48386,33 @@ ${e2}`);
         const row = Math.floor(index / this.cols);
         const col = index % this.cols;
         const texture = await backCardTexture();
+        const fontTexture = await Assets.load(fontAsset[index]);
+        this.fontcard = new Sprite(fontTexture);
         this.backcard = new Sprite(texture);
         this.backcard.anchor.set(0.5);
         this.backcard.scale.set(0.3);
         this.backcard.x = 100 + col * 300;
         this.backcard.y = 110 + row * 350;
         this.cardB.push(this.backcard);
+        this.cardF.push(this.fontcard);
+        this.cardB[index].label = `card${index}`;
         this.cardContainer.addChild(this.cardB[index]);
-        if (!this.cardB) console.error("backcard is not loaded");
-        this.backcard.cursor = "pointer";
-        this.backcard.eventMode = `static`;
-        this.backcard.on(
+        if (!this.cardB[index]) console.error("backcard is not loaded");
+        this.cardB[index].cursor = "pointer";
+        this.cardB[index].eventMode = `static`;
+        this.cardB[index].on(
           "pointerdown",
           () => {
             this.flip(this.cardB[index], 0, () => {
-              this.backcard = this.cardF[Math.floor(Math.random() * this.fontcard[index])];
-              this.flip(this.cardB[index], 1);
-              console.log("load flip");
+              let changeAset = false;
+              if (!changeAset) {
+                changeAset = true;
+                this.cardB[index].texture = this.cardF[Math.floor(Math.random() * index)].texture;
+              } else {
+                this.cardB[index].texture = this.backcard.texture;
+              }
+              this.flip(this.cardB[index], 0.3);
+              console.log(`load flip${index}`);
             });
           }
         );

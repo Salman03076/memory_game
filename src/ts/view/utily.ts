@@ -1,16 +1,16 @@
 
-import { Assets, Texture } from 'pixi.js';
+import { Assets, Sprite, Texture } from 'pixi.js';
 
 
 
 //asign the asset in Array
 export const fontAsset: string[] = [
-    "Assets/image (0).png",
-    "Assets/image (0).png",
-    "Assets/image (1).png",
-    "Assets/image (1).png",
-    "Assets/image (2).png",
-    "Assets/image (2).png",
+    "assets/font Card/image (55).png",
+    "assets/font Card/image (13).png",
+    "assets/font Card/image (15).png",
+    "assets/font Card/image (20).png",
+    "assets/font Card/image (25).png",
+    "assets/font Card/image (30).png"
 
 ];
 

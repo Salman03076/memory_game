@@ -1,9 +1,13 @@
 console.log('set up ready!');
 
+import { application } from "./app";
 import { viewinit } from "./mangame";
 
 //All file initialiazation
- viewinit();
+(async () => {
+    await application()
+    viewinit();
+})()
 
 
 
