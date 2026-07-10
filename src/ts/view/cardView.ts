@@ -63,7 +63,7 @@ export class cardStructure extends background {
             this.cardB.push(this.backcard)
             this.cardF.push(this.fontcard)
             this.cardB[index].label = `card${index}`;
-            this.cardContainer.addChild(this.cardB[index]);
+            this.cardContainer.addChild( await this.cardB[index]);
 
 
             // flip function

@@ -48396,7 +48396,7 @@ ${e2}`);
         this.cardB.push(this.backcard);
         this.cardF.push(this.fontcard);
         this.cardB[index].label = `card${index}`;
-        this.cardContainer.addChild(this.cardB[index]);
+        this.cardContainer.addChild(await this.cardB[index]);
         if (!this.cardB[index]) console.error("backcard is not loaded");
         this.cardB[index].cursor = "pointer";
         this.cardB[index].eventMode = `static`;
