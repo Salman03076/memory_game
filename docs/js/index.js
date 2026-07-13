@@ -45177,10 +45177,10 @@ ${e2}`);
     "assets/fontCard/image (30).png"
   ];
   var backgroundAsset = async () => {
-    return await Assets.load(`./Assets/background/background.avif`);
+    return await Assets.load(`./assets/background/background.avif`);
   };
   var backCardTexture = async () => {
-    return await Assets.load(`./Assets/BackCard/BACK.png`);
+    return await Assets.load(`./assets/BackCard/BACK.png`);
   };
 
   // src/ts/view/background.ts
