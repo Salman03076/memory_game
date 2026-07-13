@@ -63,7 +63,7 @@ export class cardStructure extends background {
             this.cardB.push(this.backcard)
             this.cardF.push(this.fontcard)
             this.cardB[index].label = `card${index}`;
-            this.cardContainer.addChild( await this.cardB[index]);
+            this.cardContainer.addChild(this.cardB[index]);
 
 
             // flip function
@@ -73,14 +73,19 @@ export class cardStructure extends background {
             this.cardB[index].on('pointerdown', () => {
 
                 this.flip(this.cardB[index], 0, () => {
-                    let changeAset = false;
-                    if (!changeAset) {
-                        changeAset = true;
+                    let changeAsset = false;
+                    if (changeAsset == false) {
+                        changeAsset = true;
                         this.cardB[index].texture = this.cardF[Math.floor(Math.random() * index)].texture;
+                        this.flip(this.cardB[index], 0.3);
                     } else {
-                        this.cardB[index].texture = this.backcard.texture;
+                        changeAsset = true;
+                        this.cardB[index] = this.backcard;
+                        this.cardContainer.addChild(this.cardB[index])
+
+                        this.flip(this.cardB[index], 0.3);
                     }
-                    this.flip(this.cardB[index], 0.3);
+
                     console.log(`load flip${index}`)
                 });
             }

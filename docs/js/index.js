@@ -45169,18 +45169,18 @@ ${e2}`);
 
   // src/ts/view/utily.ts
   var fontAsset = [
-    "assets/font Card/image (55).png",
-    "assets/font Card/image (13).png",
-    "assets/font Card/image (15).png",
-    "assets/font Card/image (20).png",
-    "assets/font Card/image (25).png",
-    "assets/font Card/image (30).png"
+    "assets/fontCard/image (55).png",
+    "assets/fontCard/image (13).png",
+    "assets/fontCard/image (15).png",
+    "assets/fontCard/image (20).png",
+    "assets/fontCard/image (25).png",
+    "assets/fontCard/image (30).png"
   ];
   var backgroundAsset = async () => {
     return await Assets.load(`./Assets/background/background.avif`);
   };
   var backCardTexture = async () => {
-    return await Assets.load(`./Assets/Back Card/BACK.png`);
+    return await Assets.load(`./Assets/BackCard/BACK.png`);
   };
 
   // src/ts/view/background.ts
@@ -48396,7 +48396,7 @@ ${e2}`);
         this.cardB.push(this.backcard);
         this.cardF.push(this.fontcard);
         this.cardB[index].label = `card${index}`;
-        this.cardContainer.addChild(await this.cardB[index]);
+        this.cardContainer.addChild(this.cardB[index]);
         if (!this.cardB[index]) console.error("backcard is not loaded");
         this.cardB[index].cursor = "pointer";
         this.cardB[index].eventMode = `static`;
@@ -48404,14 +48404,17 @@ ${e2}`);
           "pointerdown",
           () => {
             this.flip(this.cardB[index], 0, () => {
-              let changeAset = false;
-              if (!changeAset) {
-                changeAset = true;
+              let changeAsset = false;
+              if (changeAsset == false) {
+                changeAsset = true;
                 this.cardB[index].texture = this.cardF[Math.floor(Math.random() * index)].texture;
+                this.flip(this.cardB[index], 0.3);
               } else {
-                this.cardB[index].texture = this.backcard.texture;
+                changeAsset = true;
+                this.cardB[index] = this.backcard;
+                this.cardContainer.addChild(this.cardB[index]);
+                this.flip(this.cardB[index], 0.3);
               }
-              this.flip(this.cardB[index], 0.3);
               console.log(`load flip${index}`);
             });
           }
