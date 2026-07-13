@@ -45161,13 +45161,12 @@ ${e2}`);
   var application = async () => {
     await app.init({ background: "white", resizeTo: window });
     globalThis.__PIXI_APP_ = app;
-    globalThis.__PIXI_STAGE__ = app.stage;
-    globalThis.__PIXI_RENDERER__ = app.renderer;
     const gamebody = document.getElementById("gamebody");
     gamebody?.appendChild(app.canvas);
   };
 
   // src/ts/view/utily.ts
+  var assetsMap = {};
   var fontAsset = [
     "assets/fontCard/image (55).png",
     "assets/fontCard/image (13).png",
@@ -45177,10 +45176,16 @@ ${e2}`);
     "assets/fontCard/image (30).png"
   ];
   var backgroundAsset = async () => {
-    return await Assets.load(`./assets/background/background.avif`);
+    return await loadTexture("background", `assets/background/background.avif`);
   };
   var backCardTexture = async () => {
-    return await Assets.load(`./assets/BackCard/BACK.png`);
+    return await loadTexture("cardBack", `assets/BackCard/BACK.png`);
+  };
+  var loadTexture = async (textureName, textureURL) => {
+    if (assetsMap[`${textureName}`]) {
+      return assetsMap[`${textureName}`];
+    }
+    assetsMap[`${textureName}`] = await Assets.load(textureURL);
   };
 
   // src/ts/view/background.ts

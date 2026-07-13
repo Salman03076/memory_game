@@ -2,6 +2,8 @@
 import { Assets, Sprite, Texture } from 'pixi.js';
 
 
+export const assetsMap = {};
+
 
 //asign the asset in Array
 export const fontAsset: string[] = [
@@ -19,12 +21,21 @@ export const fontAsset: string[] = [
 
 
 export const backgroundAsset = async (): Promise<Texture> => {
-    return await Assets.load(`./Assets/background/background.avif`);
+    return await loadTexture('background', `assets/background/background.avif`);
 }
 
 export const backCardTexture = async (): Promise<Texture> => {
-    return await Assets.load(`./Assets/BackCard/BACK.png`);
+    return await loadTexture('cardBack', `assets/BackCard/BACK.png`);
 }
+
+const loadTexture = async (textureName: string, textureURL: string) => {
+    if (assetsMap[`${textureName}`]) {
+        return assetsMap[`${textureName}`];
+    }
+
+    assetsMap[`${textureName}`] = await Assets.load(textureURL);
+
+};
 
 
 
