@@ -1,1 +1,1 @@
-# mermory_game
+# mermory-game
