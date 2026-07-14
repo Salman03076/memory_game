@@ -4,6 +4,7 @@ import { copy } from "esbuild-plugin-copy";
 esbuild
   .build({
     entryPoints: ["./src/ts/index.ts"],
+    sourcemap: true,
     bundle: true,
     outdir: "./docs/js",
     plugins: [

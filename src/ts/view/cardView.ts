@@ -1,19 +1,15 @@
 console.log("Cardstructure file loaded ");
 
-import { Assets, Sprite, Texture, } from "pixi.js"
-import { background } from "./background";
+import { Assets, Container, Sprite, Texture, } from "pixi.js"
 import { gsap } from "gsap/gsap-core";
-
-
-
-
 import { backCardTexture, fontAsset } from './utily'
+import { getStage } from "..";
 
 
 
 // creta the card structure
 
-export class cardStructure extends background {
+export class cardStructure {
     private backcard: Sprite;
     private fontcard: Sprite;
     private cardF: Sprite[] = [];
@@ -21,6 +17,7 @@ export class cardStructure extends background {
     private rows: number = 2;
     private cols: number = 3;
     private cardnum: number = 6;
+    private cardContainer: Container;
 
 
 
@@ -41,9 +38,9 @@ export class cardStructure extends background {
 
 
     constructor() {
-        super()
-        this.initcard();
-
+        this.cardContainer = new Container();
+        this.cardContainer.label = "CardContaienrs";
+        getStage().addChild(this.cardContainer);
     };
 
 

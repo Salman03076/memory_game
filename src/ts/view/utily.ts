@@ -29,11 +29,11 @@ export const backCardTexture = async (): Promise<Texture> => {
 }
 
 const loadTexture = async (textureName: string, textureURL: string) => {
-    if (assetsMap[`${textureName}`]) {
-        return assetsMap[`${textureName}`];
+    if (!assetsMap[`${textureName}`]) {
+        assetsMap[`${textureName}`] = await Assets.load(textureURL);
     }
-
-    assetsMap[`${textureName}`] = await Assets.load(textureURL);
+    
+    return assetsMap[`${textureName}`];
 
 };
 

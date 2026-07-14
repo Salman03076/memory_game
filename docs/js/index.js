@@ -15734,14 +15734,14 @@ Deprecated since v${version}`;
           const strokeWidthInner = strokeWidth - strokeWidthOuter;
           const innerX = x2 + radius;
           const innerY = y2 + radius;
-          const innerWidth = width - radius * 2;
-          const innerHeight = height - radius * 2;
+          const innerWidth2 = width - radius * 2;
+          const innerHeight2 = height - radius * 2;
           const rightBound = x2 + width;
           const bottomBound = y2 + height;
-          if ((pX >= x2 - strokeWidthOuter && pX <= x2 + strokeWidthInner || pX >= rightBound - strokeWidthInner && pX <= rightBound + strokeWidthOuter) && pY >= innerY && pY <= innerY + innerHeight) {
+          if ((pX >= x2 - strokeWidthOuter && pX <= x2 + strokeWidthInner || pX >= rightBound - strokeWidthInner && pX <= rightBound + strokeWidthOuter) && pY >= innerY && pY <= innerY + innerHeight2) {
             return true;
           }
-          if ((pY >= y2 - strokeWidthOuter && pY <= y2 + strokeWidthInner || pY >= bottomBound - strokeWidthInner && pY <= bottomBound + strokeWidthOuter) && pX >= innerX && pX <= innerX + innerWidth) {
+          if ((pY >= y2 - strokeWidthOuter && pY <= y2 + strokeWidthInner || pY >= bottomBound - strokeWidthInner && pY <= bottomBound + strokeWidthOuter) && pX >= innerX && pX <= innerX + innerWidth2) {
             return true;
           }
           return (
@@ -45157,12 +45157,13 @@ ${e2}`);
   extensions.add(browserExt, webworkerExt);
 
   // src/ts/app.ts
-  var app = new Application();
   var application = async () => {
+    const app = new Application();
     await app.init({ background: "white", resizeTo: window });
     globalThis.__PIXI_APP_ = app;
     const gamebody = document.getElementById("gamebody");
     gamebody?.appendChild(app.canvas);
+    return app.stage;
   };
 
   // src/ts/view/utily.ts
@@ -45182,30 +45183,22 @@ ${e2}`);
     return await loadTexture("cardBack", `assets/BackCard/BACK.png`);
   };
   var loadTexture = async (textureName, textureURL) => {
-    if (assetsMap[`${textureName}`]) {
-      return assetsMap[`${textureName}`];
+    if (!assetsMap[`${textureName}`]) {
+      assetsMap[`${textureName}`] = await Assets.load(textureURL);
     }
-    assetsMap[`${textureName}`] = await Assets.load(textureURL);
+    return assetsMap[`${textureName}`];
   };
 
   // src/ts/view/background.ts
   var background = class {
     backgroundLoad;
     cardContainer;
-    constructor() {
-      this.initbackground();
-    }
     async initbackground() {
+      const app = getStage();
       this.backgroundLoad = new Sprite(await backgroundAsset());
-      this.backgroundLoad.width = app.screen.width;
-      this.backgroundLoad.height = app.screen.height;
-      app.stage.addChild(this.backgroundLoad);
-      this.cardContainer = new Container();
-      this.cardContainer.zIndex = 10;
-      this.cardContainer.scale.set(1);
-      this.cardContainer.x = 543.5;
-      this.cardContainer.y = 183.5;
-      app.stage.addChild(this.cardContainer);
+      this.backgroundLoad.width = innerWidth;
+      this.backgroundLoad.height = innerHeight;
+      app.addChildAt(this.backgroundLoad, 0);
     }
   };
 
@@ -48366,7 +48359,7 @@ ${e2}`);
 
   // src/ts/view/cardView.ts
   console.log("Cardstructure file loaded ");
-  var cardStructure = class extends background {
+  var cardStructure = class {
     backcard;
     fontcard;
     cardF = [];
@@ -48374,6 +48367,7 @@ ${e2}`);
     rows = 2;
     cols = 3;
     cardnum = 6;
+    cardContainer;
     flip(backcard, scaleTo, callback = void 0) {
       gsap.to(backcard.scale, {
         x: scaleTo,
@@ -48383,8 +48377,9 @@ ${e2}`);
       });
     }
     constructor() {
-      super();
-      this.initcard();
+      this.cardContainer = new Container();
+      this.cardContainer.label = "CardContaienrs";
+      getStage().addChild(this.cardContainer);
     }
     async initcard() {
       for (let index = 0; index < this.cardnum; index++) {
@@ -48429,16 +48424,23 @@ ${e2}`);
   };
 
   // src/ts/mangame.ts
-  var viewinit = () => {
-    new cardStructure();
+  var viewinit = async () => {
+    const cv = new cardStructure();
+    await cv.initcard();
+    const bg = new background();
+    await bg.initbackground();
   };
 
   // src/ts/index.ts
   console.log("set up ready!");
+  var stage;
   (async () => {
-    await application();
-    viewinit();
+    stage = await application();
+    await viewinit();
   })();
+  var getStage = () => {
+    return stage;
+  };
 })();
 /*! Bundled license information:
 
@@ -48461,3 +48463,4 @@ gsap/gsap-core.js:
    * @author: Jack Doyle, jack@greensock.com
   *)
 */
+//# sourceMappingURL=index.js.map

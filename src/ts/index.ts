@@ -3,11 +3,17 @@ console.log('set up ready!');
 import { application } from "./app";
 import { viewinit } from "./mangame";
 
+let stage;
+
 //All file initialiazation
 (async () => {
-    await application()
-    viewinit();
-})()
+    stage = await application();
+    await viewinit();
+})();
 
+
+export const getStage = () => {
+    return stage;
+};
 
 
