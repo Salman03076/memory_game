@@ -1,7 +1,7 @@
 console.log('set up ready!');
 
 import { application } from "./app";
-import { viewinit } from "./mangame";
+import { viewinit } from "./manage_game";
 
 let stage;
 
@@ -15,5 +15,7 @@ let stage;
 export const getStage = () => {
     return stage;
 };
+
+
 
 

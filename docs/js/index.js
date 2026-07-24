@@ -56,6 +56,8 @@
         ExtensionType2["MaskEffect"] = "mask-effect";
         ExtensionType2["BlendMode"] = "blend-mode";
         ExtensionType2["TextureSource"] = "texture-source";
+        ExtensionType2["TextureUploaderWebGL"] = "texture-uploader-webgl";
+        ExtensionType2["TextureUploaderWebGPU"] = "texture-uploader-webgpu";
         ExtensionType2["Environment"] = "environment";
         ExtensionType2["ShapeBuilder"] = "shape-builder";
         ExtensionType2["Batcher"] = "batcher";
@@ -386,8 +388,8 @@
           }
           listeners.fn.apply(listeners.context, args);
         } else {
-          var length = listeners.length, j2;
-          for (i2 = 0; i2 < length; i2++) {
+          var length2 = listeners.length, j2;
+          for (i2 = 0; i2 < length2; i2++) {
             if (listeners[i2].once) this.removeListener(event, listeners[i2].fn, void 0, true);
             switch (len) {
               case 1:
@@ -431,7 +433,7 @@
             clearEvent(this, evt);
           }
         } else {
-          for (var i2 = 0, events = [], length = listeners.length; i2 < length; i2++) {
+          for (var i2 = 0, events = [], length2 = listeners.length; i2 < length2; i2++) {
             if (listeners[i2].fn !== fn || once && !listeners[i2].once || context4 && listeners[i2].context !== context4) {
               events.push(listeners[i2]);
             }
@@ -3005,13 +3007,13 @@ Deprecated since v${version}`;
 
   // node_modules/pixi.js/lib/utils/data/removeItems.mjs
   function removeItems(arr, startIdx, removeCount) {
-    const length = arr.length;
+    const length2 = arr.length;
     let i2;
-    if (startIdx >= length || removeCount === 0) {
+    if (startIdx >= length2 || removeCount === 0) {
       return;
     }
-    removeCount = startIdx + removeCount > length ? length - startIdx : removeCount;
-    const len = length - removeCount;
+    removeCount = startIdx + removeCount > length2 ? length2 - startIdx : removeCount;
+    const len = length2 - removeCount;
     for (i2 = startIdx; i2 < len; ++i2) {
       arr[i2] = arr[i2 + removeCount];
     }
@@ -3196,8 +3198,8 @@ Deprecated since v${version}`;
         },
         collectRenderablesSimple(instructionSet, renderer, currentLayer) {
           const children = this.children;
-          const length = children.length;
-          for (let i2 = 0; i2 < length; i2++) {
+          const length2 = children.length;
+          for (let i2 = 0; i2 < length2; i2++) {
             children[i2].collectRenderables(instructionSet, renderer, currentLayer);
           }
         },
@@ -5554,6 +5556,7 @@ Deprecated since v${version}`;
           this.viewDimension = "2d";
           this.arrayLayerCount = 1;
           this.antialias = false;
+          this.transient = false;
           this._touched = 0;
           this._batchTick = -1;
           this._textureBindLocation = -1;
@@ -5582,6 +5585,7 @@ Deprecated since v${version}`;
           this.autoGenerateMipmaps = options.autoGenerateMipmaps;
           this.sampleCount = options.sampleCount;
           this.antialias = options.antialias;
+          this.transient = options.transient ?? false;
           this.alphaMode = options.alphaMode;
           this.style = new TextureStyle(definedProps(options));
           this.destroyed = false;
@@ -7542,8 +7546,8 @@ Deprecated since v${version}`;
             typeof opts.y === "number" ? opts.y : this.position.y
           );
           this.scale.set(
-            typeof opts.scaleX === "number" ? opts.scaleX || 1 : this.scale.x,
-            typeof opts.scaleY === "number" ? opts.scaleY || 1 : this.scale.y
+            typeof opts.scaleX === "number" ? opts.scaleX : this.scale.x,
+            typeof opts.scaleY === "number" ? opts.scaleY : this.scale.y
           );
           this.rotation = typeof opts.rotation === "number" ? opts.rotation : this.rotation;
           this.skew.set(
@@ -9650,8 +9654,8 @@ Deprecated since v${version}`;
           }
           this.didViewUpdate = false;
           const children = this.children;
-          const length = children.length;
-          for (let i2 = 0; i2 < length; i2++) {
+          const length2 = children.length;
+          for (let i2 = 0; i2 < length2; i2++) {
             children[i2].collectRenderables(instructionSet, renderer, currentLayer);
           }
           renderPipes4.blendMode.popBlendMode(instructionSet);
@@ -14339,7 +14343,15 @@ Deprecated since v${version}`;
       init_ImageSource();
       init_VideoSource();
       init_textureFrom();
-      extensions.add(AlphaMask, ColorMask, StencilMask, VideoSource, ImageSource, CanvasSource, BufferImageSource);
+      extensions.add(
+        AlphaMask,
+        ColorMask,
+        StencilMask,
+        VideoSource,
+        ImageSource,
+        CanvasSource,
+        BufferImageSource
+      );
     }
   });
 
@@ -15224,12 +15236,12 @@ Deprecated since v${version}`;
         isClockwise() {
           let area2 = 0;
           const points = this.points;
-          const length = points.length;
-          for (let i2 = 0; i2 < length; i2 += 2) {
+          const length2 = points.length;
+          for (let i2 = 0; i2 < length2; i2 += 2) {
             const x1 = points[i2];
             const y1 = points[i2 + 1];
-            const x2 = points[(i2 + 2) % length];
-            const y2 = points[(i2 + 3) % length];
+            const x2 = points[(i2 + 2) % length2];
+            const y2 = points[(i2 + 3) % length2];
             area2 += (x2 - x1) * (y2 + y1);
           }
           return area2 < 0;
@@ -15309,8 +15321,8 @@ Deprecated since v${version}`;
          */
         contains(x2, y2) {
           let inside = false;
-          const length = this.points.length / 2;
-          for (let i2 = 0, j2 = length - 1; i2 < length; j2 = i2++) {
+          const length2 = this.points.length / 2;
+          for (let i2 = 0, j2 = length2 - 1; i2 < length2; j2 = i2++) {
             const xi = this.points[i2 * 2];
             const yi = this.points[i2 * 2 + 1];
             const xj = this.points[j2 * 2];
@@ -20811,8 +20823,8 @@ ${parts.join("\n")}
     }
     if (!container.renderGroup) {
       const children = container.children;
-      const length = children.length;
-      for (let i2 = 0; i2 < length; i2++) {
+      const length2 = children.length;
+      for (let i2 = 0; i2 < length2; i2++) {
         updateTransformAndChildren(children[i2], updateTick, updateFlags);
       }
       const renderGroup = container.parentRenderGroup;
@@ -21092,7 +21104,7 @@ ${parts.join("\n")}
   var init_const6 = __esm({
     "node_modules/pixi.js/lib/utils/const.mjs"() {
       init_eventemitter3();
-      VERSION = "8.18.1";
+      VERSION = "8.19.0";
     }
   });
 
@@ -22024,8 +22036,8 @@ ${parts.join("\n")}
           this._adaptor = adaptor;
           this._adaptor.init?.(this);
         }
-        static getBatcher(name) {
-          return new this._availableBatchers[name]();
+        static getBatcher(name, maxTextures) {
+          return new this._availableBatchers[name]({ maxTextures });
         }
         buildStart(instructionSet) {
           let batchers = this._batchersByInstructionSet[instructionSet.uid];
@@ -22046,7 +22058,7 @@ ${parts.join("\n")}
             this._activeBatch.break(instructionSet);
             let batch = this._activeBatches[batchableObject.batcherName];
             if (!batch) {
-              batch = this._activeBatches[batchableObject.batcherName] = _BatcherPipe2.getBatcher(batchableObject.batcherName);
+              batch = this._activeBatches[batchableObject.batcherName] = _BatcherPipe2.getBatcher(batchableObject.batcherName, this.renderer.limits.maxBatchableTextures);
               batch.begin();
             }
             this._activeBatch = batch;
@@ -23633,14 +23645,6 @@ ${parts.join("\n")}
             }
             const isRecentlyUsed = now - resource._gcLastUsed < this.maxUnusedTime;
             if (!isRecentlyUsed && resource.autoGarbageCollect) {
-              if (!hashClone) {
-                if (nullCount + 1 !== 1e4) {
-                  hashValue[key] = null;
-                  nullCount++;
-                } else {
-                  hashClone = this._createHashClone(hashValue, key);
-                }
-              }
               if (type === "renderable") {
                 const res = resource;
                 const renderGroup = res.renderGroup ?? res.parentRenderGroup;
@@ -23649,6 +23653,14 @@ ${parts.join("\n")}
               resource.unload();
               resource._gcData = null;
               resource._gcLastUsed = -1;
+              if (!hashClone) {
+                if (nullCount + 1 !== 1e4) {
+                  hashValue[key] = null;
+                  nullCount++;
+                } else {
+                  hashClone = this._createHashClone(hashValue, key);
+                }
+              }
             } else if (hashClone) {
               hashClone[key] = resource;
             }
@@ -24843,6 +24855,9 @@ ${parts.join("\n")}
           if (this._initPromise) return this._initPromise;
           this._initPromise = (options.gpu ? Promise.resolve(options.gpu) : this._createDeviceAndAdaptor(options)).then((gpu) => {
             this.gpu = gpu;
+            this.extensions = {
+              transientAttachment: typeof GPUTextureUsage.TRANSIENT_ATTACHMENT === "number"
+            };
             this._renderer.runners.contextChange.emit(this.gpu);
           });
           return this._initPromise;
@@ -24878,6 +24893,7 @@ ${parts.join("\n")}
         }
         destroy() {
           this.gpu = null;
+          this.extensions = null;
           this._renderer = null;
         }
       };
@@ -26676,11 +26692,13 @@ ${parts.join("\n")}
                   arrayLayerCount: 1
                 });
               }
+              let attachmentIsTransient = false;
               if (gpuRenderTarget.msaaTextures[i2]) {
                 resolveTarget = view;
                 view = this._renderer.texture.getTextureView(
                   gpuRenderTarget.msaaTextures[i2]
                 );
+                attachmentIsTransient = gpuRenderTarget.msaaTextures[i2].transient;
               }
               const loadOp = clear & CLEAR.COLOR ? "clear" : "load";
               clearValue ?? (clearValue = renderTargetSystem.defaultClearColor);
@@ -26688,7 +26706,10 @@ ${parts.join("\n")}
                 view,
                 resolveTarget,
                 clearValue,
-                storeOp: "store",
+                // Only discard the MSAA buffer when it was created as transient — i.e. we know
+                // no later pass will try to load it. Non-transient MSAA targets keep storeOp:'store'
+                // so flows like filter pop-back (loadOp:'load' on the parent RT) keep working.
+                storeOp: attachmentIsTransient ? "discard" : "store",
                 loadOp
               };
             }
@@ -26697,10 +26718,12 @@ ${parts.join("\n")}
           if ((renderTarget.stencil || renderTarget.depth) && !renderTarget.depthStencilTexture) {
             renderTarget.ensureDepthStencilTexture();
             renderTarget.depthStencilTexture.source.sampleCount = gpuRenderTarget.msaa ? 4 : 1;
+            renderTarget.depthStencilTexture.source.transient = !!gpuRenderTarget.msaaTextures[0]?.transient;
           }
           if (renderTarget.depthStencilTexture) {
             const stencilLoadOp = clear & CLEAR.STENCIL ? "clear" : "load";
             const depthLoadOp = clear & CLEAR.DEPTH ? "clear" : "load";
+            const dsStoreOp = renderTarget.depthStencilTexture.source.transient ? "discard" : "store";
             depthStencilAttachment = {
               view: this._renderer.texture.getGpuSource(renderTarget.depthStencilTexture.source).createView({
                 dimension: "2d",
@@ -26709,11 +26732,11 @@ ${parts.join("\n")}
                 baseArrayLayer: layer,
                 arrayLayerCount: 1
               }),
-              stencilStoreOp: "store",
+              stencilStoreOp: dsStoreOp,
               stencilLoadOp,
               depthClearValue: 1,
               depthLoadOp,
-              depthStoreOp: "store"
+              depthStoreOp: dsStoreOp
             };
           }
           const descriptor = {
@@ -26767,6 +26790,7 @@ ${parts.join("\n")}
                 width: 0,
                 height: 0,
                 sampleCount: 4,
+                transient: colorTexture.source.transient,
                 arrayLayerCount: colorTexture.source.arrayLayerCount
               });
               gpuRenderTarget.msaaTextures[i2] = msaaTexture;
@@ -26776,6 +26800,7 @@ ${parts.join("\n")}
             gpuRenderTarget.msaaSamples = 4;
             if (renderTarget.depthStencilTexture) {
               renderTarget.depthStencilTexture.source.sampleCount = 4;
+              renderTarget.depthStencilTexture.source.transient = !!gpuRenderTarget.msaaTextures[0]?.transient;
             }
           }
           return gpuRenderTarget;
@@ -27385,7 +27410,7 @@ ${parts.join("\n")}
   });
 
   // node_modules/pixi.js/lib/rendering/renderers/gpu/texture/GpuTextureSystem.mjs
-  var GPUTextureGpuData, GpuTextureSystem;
+  var GPUTextureGpuData, _GpuTextureSystem, GpuTextureSystem;
   var init_GpuTextureSystem = __esm({
     "node_modules/pixi.js/lib/rendering/renderers/gpu/texture/GpuTextureSystem.mjs"() {
       init_adapter();
@@ -27412,7 +27437,7 @@ ${parts.join("\n")}
           this.gpuTexture = null;
         }
       };
-      GpuTextureSystem = class {
+      _GpuTextureSystem = class _GpuTextureSystem2 {
         constructor(renderer) {
           this._gpuSamplers = /* @__PURE__ */ Object.create(null);
           this._bindGroupHash = /* @__PURE__ */ Object.create(null);
@@ -27428,7 +27453,8 @@ ${parts.join("\n")}
             image: gpuUploadImageResource,
             buffer: gpuUploadBufferImageResource,
             video: gpuUploadVideoResource,
-            compressed: gpuUploadCompressedTextureResource
+            compressed: gpuUploadCompressedTextureResource,
+            ..._GpuTextureSystem2.uploadExtensions
           };
           this._uploads = {
             ...baseUploaders,
@@ -27457,10 +27483,18 @@ ${parts.join("\n")}
             const biggestDimension = Math.max(source3.pixelWidth, source3.pixelHeight);
             source3.mipLevelCount = Math.floor(Math.log2(biggestDimension)) + 1;
           }
-          let usage = GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST;
-          if (source3.uploadMethodId !== "compressed") {
-            usage |= GPUTextureUsage.RENDER_ATTACHMENT;
-            usage |= GPUTextureUsage.COPY_SRC;
+          let usage;
+          if (source3.sampleCount > 1) {
+            usage = GPUTextureUsage.RENDER_ATTACHMENT;
+            if (source3.transient && this._renderer.device.extensions.transientAttachment) {
+              usage |= GPUTextureUsage.TRANSIENT_ATTACHMENT;
+            }
+          } else {
+            usage = GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST;
+            if (source3.uploadMethodId !== "compressed") {
+              usage |= GPUTextureUsage.RENDER_ATTACHMENT;
+              usage |= GPUTextureUsage.COPY_SRC;
+            }
           }
           const blockData = blockDataMap[source3.format] || { blockBytes: 4, blockWidth: 1, blockHeight: 1 };
           const width = Math.ceil(source3.pixelWidth / blockData.blockWidth) * blockData.blockWidth;
@@ -27618,12 +27652,15 @@ ${parts.join("\n")}
           this._bindGroupHash = null;
         }
       };
-      GpuTextureSystem.extension = {
+      _GpuTextureSystem.extension = {
         type: [
           ExtensionType.WebGPUSystem
         ],
         name: "texture"
       };
+      _GpuTextureSystem.uploadExtensions = /* @__PURE__ */ Object.create(null);
+      GpuTextureSystem = _GpuTextureSystem;
+      extensions.handleByMap(ExtensionType.TextureUploaderWebGPU, GpuTextureSystem.uploadExtensions);
     }
   });
 
@@ -30086,8 +30123,13 @@ ${parts.join("\n")}
 
   // node_modules/pixi.js/lib/rendering/renderers/gl/shader/program/logProgramError.mjs
   function logPrettyShaderError(gl, shader) {
-    const shaderSrc = gl.getShaderSource(shader).split("\n").map((line, index) => `${index}: ${line}`);
-    const shaderLog = gl.getShaderInfoLog(shader);
+    const rawSource = gl.getShaderSource(shader);
+    if (rawSource === null) {
+      console.error("PixiJS Error: Could not retrieve shader source (WebGL context may be lost).");
+      return;
+    }
+    const shaderSrc = rawSource.split("\n").map((line, index) => `${index}: ${line}`);
+    const shaderLog = gl.getShaderInfoLog(shader) ?? "";
     const splitShader = shaderLog.split("\n");
     const dedupe = {};
     const lineNumbers = splitShader.map((line) => parseFloat(line.replace(/^ERROR\: 0\:([\d]+)\:.*$/, "$1"))).filter((n2) => {
@@ -30098,8 +30140,8 @@ ${parts.join("\n")}
       return false;
     });
     const logArgs = [""];
-    lineNumbers.forEach((number) => {
-      shaderSrc[number - 1] = `%c${shaderSrc[number - 1]}%c`;
+    lineNumbers.forEach((number2) => {
+      shaderSrc[number2 - 1] = `%c${shaderSrc[number2 - 1]}%c`;
       logArgs.push("background: #FF0000; color:#FFFFFF; font-size: 10px", "font-size: 10px");
     });
     const fragmentSourceToLog = shaderSrc.join("\n");
@@ -31582,7 +31624,7 @@ ${parts.join("\n")}
   });
 
   // node_modules/pixi.js/lib/rendering/renderers/gl/texture/GlTextureSystem.mjs
-  var BYTES_PER_PIXEL, GlTextureSystem;
+  var BYTES_PER_PIXEL, _GlTextureSystem, GlTextureSystem;
   var init_GlTextureSystem = __esm({
     "node_modules/pixi.js/lib/rendering/renderers/gl/texture/GlTextureSystem.mjs"() {
       init_adapter();
@@ -31601,7 +31643,7 @@ ${parts.join("\n")}
       init_mapFormatToGlType();
       init_mapViewDimensionToGlTarget();
       BYTES_PER_PIXEL = 4;
-      GlTextureSystem = class {
+      _GlTextureSystem = class _GlTextureSystem2 {
         constructor(renderer) {
           this._glSamplers = /* @__PURE__ */ Object.create(null);
           this._boundTextures = [];
@@ -31620,7 +31662,8 @@ ${parts.join("\n")}
             image: glUploadImageResource,
             buffer: glUploadBufferImageResource,
             video: glUploadVideoResource,
-            compressed: glUploadCompressedTextureResource
+            compressed: glUploadCompressedTextureResource,
+            ..._GlTextureSystem2.uploadExtensions
           };
           this._uploads = {
             ...baseUploaders,
@@ -32005,12 +32048,15 @@ ${parts.join("\n")}
           gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, this._premultiplyAlpha);
         }
       };
-      GlTextureSystem.extension = {
+      _GlTextureSystem.extension = {
         type: [
           ExtensionType.WebGLSystem
         ],
         name: "texture"
       };
+      _GlTextureSystem.uploadExtensions = /* @__PURE__ */ Object.create(null);
+      GlTextureSystem = _GlTextureSystem;
+      extensions.handleByMap(ExtensionType.TextureUploaderWebGL, GlTextureSystem.uploadExtensions);
     }
   });
 
@@ -32215,7 +32261,7 @@ ${parts.join("\n")}
       points.push(midPointX, midPointY);
     }
     const verts = vertices;
-    const length = points.length / 2;
+    const length2 = points.length / 2;
     let indexCount = points.length;
     const indexStart = verts.length / 2;
     const width = style.width / 2;
@@ -32263,7 +32309,7 @@ ${parts.join("\n")}
       x0 + perpX * outerWeight,
       y0 + perpY * outerWeight
     );
-    for (let i2 = 1; i2 < length - 1; ++i2) {
+    for (let i2 = 1; i2 < length2 - 1; ++i2) {
       x0 = points[(i2 - 1) * 2];
       y0 = points[(i2 - 1) * 2 + 1];
       x1 = points[i2 * 2];
@@ -32431,10 +32477,10 @@ ${parts.join("\n")}
         indexCount += 2;
       }
     }
-    x0 = points[(length - 2) * 2];
-    y0 = points[(length - 2) * 2 + 1];
-    x1 = points[(length - 1) * 2];
-    y1 = points[(length - 1) * 2 + 1];
+    x0 = points[(length2 - 2) * 2];
+    y0 = points[(length2 - 2) * 2 + 1];
+    x1 = points[(length2 - 1) * 2];
+    y1 = points[(length2 - 1) * 2 + 1];
     perpX = -(y0 - y1);
     perpY = x0 - x1;
     dist = Math.sqrt(perpX * perpX + perpY * perpY);
@@ -32664,11 +32710,12 @@ ${parts.join("\n")}
             })
           });
           const m2 = new Matrix();
-          m2.scale(1 / scale, 1 / scale);
-          m2.translate(ox, oy);
           if (this.textureSpace === "local") {
-            m2.scale(defaultSize, defaultSize);
+            m2.scale(2 * r1, 2 * r1);
+          } else {
+            m2.scale(1 / scale, 1 / scale);
           }
+          m2.translate(ox, oy);
           this.transform = m2;
         }
         /** Destroys the gradient, releasing resources. This will also destroy the internal texture. */
@@ -32706,6 +32753,7 @@ ${parts.join("\n")}
         outerRadius: 0.5,
         colorStops: [],
         scale: 1,
+        rotation: 0,
         textureSpace: "local",
         type: "radial",
         textureSize: 256,
@@ -32716,6 +32764,9 @@ ${parts.join("\n")}
   });
 
   // node_modules/pixi.js/lib/scene/graphics/shared/fill/FillPattern.mjs
+  function isFillPatternOptions(value) {
+    return value.texture !== void 0;
+  }
   var repetitionMap, FillPattern;
   var init_FillPattern = __esm({
     "node_modules/pixi.js/lib/scene/graphics/shared/fill/FillPattern.mjs"() {
@@ -32740,18 +32791,17 @@ ${parts.join("\n")}
         }
       };
       FillPattern = class {
-        constructor(texture, repetition) {
+        constructor(textureOrOptions, repetition) {
           this.uid = uid("fillPattern");
           this._tick = 0;
           this.transform = new Matrix();
-          this.texture = texture;
-          this.transform.scale(
-            1 / texture.frame.width,
-            1 / texture.frame.height
-          );
-          if (repetition) {
-            texture.source.style.addressModeU = repetitionMap[repetition].addressModeU;
-            texture.source.style.addressModeV = repetitionMap[repetition].addressModeV;
+          const options = isFillPatternOptions(textureOrOptions) ? textureOrOptions : { texture: textureOrOptions, repetition };
+          this.texture = options.texture;
+          this.textureSpace = options.textureSpace ?? "global";
+          const rep = options.repetition;
+          if (rep) {
+            this.texture.source.style.addressModeU = repetitionMap[rep].addressModeU;
+            this.texture.source.style.addressModeV = repetitionMap[rep].addressModeV;
           }
         }
         /**
@@ -32760,13 +32810,13 @@ ${parts.join("\n")}
          * If not provided, the pattern will use the default transform.
          */
         setTransform(transform) {
-          const texture = this.texture;
-          this.transform.copyFrom(transform);
-          this.transform.invert();
-          this.transform.scale(
-            1 / texture.frame.width,
-            1 / texture.frame.height
-          );
+          if (transform) {
+            if (this.transform.equals(transform)) return;
+            this.transform.copyFrom(transform);
+          } else {
+            if (this.transform.isIdentity()) return;
+            this.transform.identity();
+          }
           this._tick++;
         }
         /** Internal texture used to render the gradient */
@@ -33093,17 +33143,17 @@ ${parts.join("\n")}
     const ly = points[points.length - 1];
     const closePath = closed || Math.abs(fx - lx) < eps && Math.abs(fy - ly) < eps;
     const verts = vertices;
-    const length = points.length / 2;
+    const length2 = points.length / 2;
     const indexStart = verts.length / 2;
-    for (let i2 = 0; i2 < length; i2++) {
+    for (let i2 = 0; i2 < length2; i2++) {
       verts.push(points[i2 * 2]);
       verts.push(points[i2 * 2 + 1]);
     }
-    for (let i2 = 0; i2 < length - 1; i2++) {
+    for (let i2 = 0; i2 < length2 - 1; i2++) {
       indices.push(indexStart + i2, indexStart + i2 + 1);
     }
     if (closePath) {
-      indices.push(indexStart + length - 1, indexStart);
+      indices.push(indexStart + length2 - 1, indexStart);
     }
   }
   var init_buildPixelLine = __esm({
@@ -33588,7 +33638,7 @@ ${parts.join("\n")}
     }
     if (fill instanceof FillPattern) {
       const pattern = canvasUtils.getTintedPattern(fill.texture, tint);
-      canvasUtils.applyPatternTransform(pattern, fill.transform);
+      canvasUtils.applyPatternTransform(pattern, fill.transform, false);
       return pattern;
     }
     const texture = style.texture;
@@ -33904,10 +33954,14 @@ ${parts.join("\n")}
                 isFromCachedRenderGroup && isRootTarget
               );
             }
-            const drawX = applyRotateTransform ? 0 : dx;
-            const drawY = applyRotateTransform ? 0 : dy;
             const drawW = dw;
             const drawH = dh;
+            let drawX = applyRotateTransform ? 0 : dx;
+            let drawY = applyRotateTransform ? 0 : dy;
+            if (!applyRotateTransform && quad.roundPixels === 1) {
+              drawX |= 0;
+              drawY |= 0;
+            }
             if (needsRepeat) {
               let patternSource = source3;
               const canTint = tint !== 16777215 && !rotate;
@@ -34033,44 +34087,56 @@ ${parts.join("\n")}
     }
   });
 
-  // node_modules/parse-svg-path/index.js
-  var require_parse_svg_path = __commonJS({
-    "node_modules/parse-svg-path/index.js"(exports, module) {
-      module.exports = parse2;
-      var length = { a: 7, c: 6, h: 1, l: 2, m: 2, q: 4, s: 4, t: 2, v: 1, z: 0 };
-      var segment = /([astvzqmhlc])([^astvzqmhlc]*)/ig;
-      function parse2(path2) {
-        var data = [];
-        path2.replace(segment, function(_, command, args) {
-          var type = command.toLowerCase();
-          args = parseValues(args);
-          if (type == "m" && args.length > 2) {
-            data.push([command].concat(args.splice(0, 2)));
-            type = "l";
-            command = command == "m" ? "l" : "L";
-          }
-          while (true) {
-            if (args.length == length[type]) {
-              args.unshift(command);
-              return data.push(args);
-            }
-            if (args.length < length[type]) throw new Error("malformed path data");
-            data.push([command].concat(args.splice(0, length[type])));
-          }
-        });
-        return data;
+  // node_modules/parse-svg-path/dist/index.mjs
+  function parse(path2) {
+    const data = [];
+    path2.replace(segment, (_, cmd, args) => {
+      let type = cmd.toLowerCase();
+      let command = cmd;
+      const values = parseValues(args);
+      if (type === "m" && values.length > 2) {
+        data.push([command, ...values.splice(0, 2)]);
+        type = "l";
+        command = command === "m" ? "l" : "L";
       }
-      var number = /-?[0-9]*\.?[0-9]+(?:e[-+]?\d+)?/ig;
-      function parseValues(args) {
-        var numbers = args.match(number);
-        return numbers ? numbers.map(Number) : [];
+      while (true) {
+        if (values.length === length[type]) {
+          data.push([command, ...values]);
+          return "";
+        }
+        if (values.length < length[type]) throw new Error("malformed path data");
+        data.push([command, ...values.splice(0, length[type])]);
       }
+    });
+    return data;
+  }
+  function parseValues(args) {
+    const numbers = args.match(number);
+    return numbers ? numbers.map(Number) : [];
+  }
+  var length, segment, number;
+  var init_dist = __esm({
+    "node_modules/parse-svg-path/dist/index.mjs"() {
+      length = {
+        a: 7,
+        c: 6,
+        h: 1,
+        l: 2,
+        m: 2,
+        q: 4,
+        s: 4,
+        t: 2,
+        v: 1,
+        z: 0
+      };
+      segment = /([astvzqmhlc])([^astvzqmhlc]*)/gi;
+      number = /-?[0-9]*\.?[0-9]+(?:e[-+]?\d+)?/gi;
     }
   });
 
   // node_modules/pixi.js/lib/scene/graphics/shared/svg/parseSVGPath.mjs
   function parseSVGPath(svgPath, path2) {
-    const commands = (0, import_parse_svg_path.default)(svgPath);
+    const commands = parse(svgPath);
     const subpaths = [];
     let currentSubPath = null;
     let lastX = 0;
@@ -34278,10 +34344,9 @@ ${parts.join("\n")}
     }
     return path2;
   }
-  var import_parse_svg_path;
   var init_parseSVGPath = __esm({
     "node_modules/pixi.js/lib/scene/graphics/shared/svg/parseSVGPath.mjs"() {
-      import_parse_svg_path = __toESM(require_parse_svg_path(), 1);
+      init_dist();
       init_warn();
     }
   });
@@ -36504,6 +36569,7 @@ ${parts.join("\n")}
     fill.color = 16777215;
     fill.texture = value.texture;
     fill.matrix = value.transform;
+    fill.textureSpace = value.textureSpace;
     return { ...defaultStyle, ...fill };
   }
   function handleFillGradient(fill, value, defaultStyle) {
@@ -40920,8 +40986,8 @@ ${parts.join("\n")}
             const segments = segmenter.segment(s2);
             const result = [];
             let i2 = 0;
-            for (const segment of segments) {
-              result[i2++] = segment.segment;
+            for (const segment2 of segments) {
+              result[i2++] = segment2.segment;
             }
             return result;
           };
@@ -41553,12 +41619,7 @@ ${parts.join("\n")}
     } else if (fillStyle.fill instanceof FillPattern) {
       const fillPattern = fillStyle.fill;
       const pattern = context4.createPattern(fillPattern.texture.source.resource, "repeat");
-      const tempMatrix8 = fillPattern.transform.copyTo(Matrix.shared);
-      tempMatrix8.scale(
-        fillPattern.texture.source.pixelWidth,
-        fillPattern.texture.source.pixelHeight
-      );
-      pattern.setTransform(tempMatrix8);
+      canvasUtils.applyPatternTransform(pattern, fillPattern.transform, false);
       return pattern;
     } else if (fillStyle.fill instanceof FillGradient) {
       const fillGradient = fillStyle.fill;
@@ -41621,6 +41682,7 @@ ${parts.join("\n")}
     "node_modules/pixi.js/lib/scene/text/canvas/utils/getCanvasFillStyle.mjs"() {
       init_Color();
       init_Matrix();
+      init_canvasUtils();
       init_Texture();
       init_warn();
       init_FillGradient();
@@ -42044,13 +42106,13 @@ ${parts.join("\n")}
         if (addWordToNextLine) {
           nextLine();
           nextWord(currentWord);
-          if (!isEnd) {
+          if (!isEnd && charData) {
             currentLine.charPositions.push(0);
           }
         } else {
           currentWord.start = currentLine.width;
           nextWord(currentWord);
-          if (!isEnd) {
+          if (!isEnd && charData) {
             currentLine.charPositions.push(0);
           }
         }
@@ -45170,11 +45232,11 @@ ${e2}`);
   var assetsMap = {};
   var fontAsset = [
     "assets/fontCard/image (55).png",
+    "assets/fontCard/image (55).png",
+    "assets/fontCard/image (13).png",
     "assets/fontCard/image (13).png",
     "assets/fontCard/image (15).png",
-    "assets/fontCard/image (20).png",
-    "assets/fontCard/image (25).png",
-    "assets/fontCard/image (30).png"
+    "assets/fontCard/image (15).png"
   ];
   var backgroundAsset = async () => {
     return await loadTexture("background", `assets/background/background.avif`);
@@ -45192,13 +45254,11 @@ ${e2}`);
   // src/ts/view/background.ts
   var background = class {
     backgroundLoad;
-    cardContainer;
     async initbackground() {
-      const app = getStage();
       this.backgroundLoad = new Sprite(await backgroundAsset());
       this.backgroundLoad.width = innerWidth;
       this.backgroundLoad.height = innerHeight;
-      app.addChildAt(this.backgroundLoad, 0);
+      getStage().addChildAt(this.backgroundLoad, 0);
     }
   };
 
@@ -48358,16 +48418,17 @@ ${e2}`);
   var Circ = _easeMap.Circ;
 
   // src/ts/view/cardView.ts
-  console.log("Cardstructure file loaded ");
   var cardStructure = class {
     backcard;
     fontcard;
     cardF = [];
     cardB = [];
-    rows = 2;
+    currentcardstage = [];
     cols = 3;
     cardnum = 6;
     cardContainer;
+    isflip;
+    shuffleArray;
     flip(backcard, scaleTo, callback = void 0) {
       gsap.to(backcard.scale, {
         x: scaleTo,
@@ -48376,59 +48437,72 @@ ${e2}`);
         }
       });
     }
+    // create the container
     constructor() {
       this.cardContainer = new Container();
       this.cardContainer.label = "CardContaienrs";
+      this.cardContainer.x = 610;
+      this.cardContainer.y = 210;
       getStage().addChild(this.cardContainer);
     }
+    //initailixe backcard  and load
     async initcard() {
       for (let index = 0; index < this.cardnum; index++) {
         const row = Math.floor(index / this.cols);
         const col = index % this.cols;
         const texture = await backCardTexture();
-        const fontTexture = await Assets.load(fontAsset[index]);
-        this.fontcard = new Sprite(fontTexture);
         this.backcard = new Sprite(texture);
         this.backcard.anchor.set(0.5);
         this.backcard.scale.set(0.3);
         this.backcard.x = 100 + col * 300;
         this.backcard.y = 110 + row * 350;
         this.cardB.push(this.backcard);
+        this.currentcardstage.push(this.cardB[index]);
+        this.currentcardstage[index].label = `card${index}`;
+        this.cardContainer.addChild(this.currentcardstage[index]);
+      }
+      for (let i2 = 0; i2 < this.cardnum; i2++) {
+        const fontTexture = await Assets.load(fontAsset[i2]);
+        this.fontcard = new Sprite(fontTexture);
+        this.fontcard.label = `frontCard_${i2}`;
         this.cardF.push(this.fontcard);
-        this.cardB[index].label = `card${index}`;
-        this.cardContainer.addChild(this.cardB[index]);
-        if (!this.cardB[index]) console.error("backcard is not loaded");
-        this.cardB[index].cursor = "pointer";
-        this.cardB[index].eventMode = `static`;
-        this.cardB[index].on(
-          "pointerdown",
-          () => {
-            this.flip(this.cardB[index], 0, () => {
-              let changeAsset = false;
-              if (changeAsset == false) {
-                changeAsset = true;
-                this.cardB[index].texture = this.cardF[Math.floor(Math.random() * index)].texture;
-                this.flip(this.cardB[index], 0.3);
+      }
+      console.log(this.cardF);
+      for (let i2 = this.cardF.length - 1; i2 > 0; i2--) {
+        const j2 = Math.floor(Math.random() * (i2 + 1));
+        [this.cardF[i2], this.cardF[j2]] = [this.cardF[j2], this.cardF[i2]];
+      }
+      console.log(this.cardF);
+      for (let count2 = 0; count2 < this.cardnum; count2++) {
+        const currentStage = this.currentcardstage[count2];
+        const card_font = this.cardF[count2].texture;
+        const card_back = this.cardB[count2].texture;
+        currentStage.eventMode = `static`;
+        currentStage.cursor = "pointer";
+        currentStage.on("pointerdown", () => {
+          this.flip(
+            currentStage,
+            0,
+            () => {
+              this.isflip = !this.isflip;
+              if (this.isflip) {
+                currentStage.texture = card_font;
               } else {
-                changeAsset = true;
-                this.cardB[index] = this.backcard;
-                this.cardContainer.addChild(this.cardB[index]);
-                this.flip(this.cardB[index], 0.3);
+                currentStage.texture = card_back;
               }
-              console.log(`load flip${index}`);
-            });
-          }
-        );
+              this.flip(currentStage, 0.3);
+              console.log(`load flip${count2}`);
+            }
+          );
+        });
       }
     }
   };
 
-  // src/ts/mangame.ts
+  // src/ts/manage_game.ts
   var viewinit = async () => {
-    const cv = new cardStructure();
-    await cv.initcard();
-    const bg = new background();
-    await bg.initbackground();
+    await new background().initbackground();
+    await new cardStructure().initcard();
   };
 
   // src/ts/index.ts
