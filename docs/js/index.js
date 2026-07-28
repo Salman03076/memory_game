@@ -45236,7 +45236,13 @@ ${e2}`);
     "assets/fontCard/image (13).png",
     "assets/fontCard/image (13).png",
     "assets/fontCard/image (15).png",
-    "assets/fontCard/image (15).png"
+    "assets/fontCard/image (15).png",
+    "assets/fontCard/image (50).png",
+    "assets/fontCard/image (50).png",
+    "assets/fontCard/image (30).png",
+    "assets/fontCard/image (30).png",
+    "assets/fontCard/image (66).png",
+    "assets/fontCard/image (66).png"
   ];
   var backgroundAsset = async () => {
     return await loadTexture("background", `assets/background/background.avif`);
@@ -48253,7 +48259,7 @@ ${e2}`);
         found && c2.revert();
       }) || _onMediaChange();
     },
-    addEventListener: function addEventListener(type, callback) {
+    addEventListener: function addEventListener2(type, callback) {
       var a2 = _listeners[type] || (_listeners[type] = []);
       ~a2.indexOf(callback) || a2.push(callback);
     },
@@ -48424,14 +48430,22 @@ ${e2}`);
     cardF = [];
     cardB = [];
     currentcardstage = [];
-    cols = 3;
-    cardnum = 6;
+    cols = 4;
+    cardnum = 12;
     cardContainer;
     isflip;
     shuffleArray;
+    firstcard;
+    secondcard;
+    firstStage = null;
+    secondStage = null;
+    firstCard = null;
+    secondCard = null;
+    ismatch;
     flip(backcard, scaleTo, callback = void 0) {
       gsap.to(backcard.scale, {
         x: scaleTo,
+        duration: 0.5,
         onComplete: () => {
           callback?.();
         }
@@ -48441,9 +48455,10 @@ ${e2}`);
     constructor() {
       this.cardContainer = new Container();
       this.cardContainer.label = "CardContaienrs";
-      this.cardContainer.x = 610;
-      this.cardContainer.y = 210;
+      this.cardContainer.x = 570;
+      this.cardContainer.y = 70;
       getStage().addChild(this.cardContainer);
+      addEventListener("resize", this.resize.bind(this));
     }
     //initailixe backcard  and load
     async initcard() {
@@ -48454,8 +48469,8 @@ ${e2}`);
         this.backcard = new Sprite(texture);
         this.backcard.anchor.set(0.5);
         this.backcard.scale.set(0.3);
-        this.backcard.x = 100 + col * 300;
-        this.backcard.y = 110 + row * 350;
+        this.backcard.x = 100 + col * 200;
+        this.backcard.y = 110 + row * 300;
         this.cardB.push(this.backcard);
         this.currentcardstage.push(this.cardB[index]);
         this.currentcardstage[index].label = `card${index}`;
@@ -48480,22 +48495,59 @@ ${e2}`);
         currentStage.eventMode = `static`;
         currentStage.cursor = "pointer";
         currentStage.on("pointerdown", () => {
-          this.flip(
-            currentStage,
-            0,
-            () => {
-              this.isflip = !this.isflip;
-              if (this.isflip) {
-                currentStage.texture = card_font;
-              } else {
-                currentStage.texture = card_back;
+          this.flip(currentStage, 0, () => {
+            this.isflip = currentStage.texture === card_back;
+            if (this.isflip) {
+              currentStage.texture = card_font;
+              console.log(this.isflip);
+              if (!this.firstStage) {
+                this.firstStage = currentStage;
+                this.firstCard = card_font.label;
+                console.log("firstStage 1");
+              } else if (!this.secondcard) {
+                this.secondStage = currentStage;
+                this.secondCard = card_font.label;
+                console.log("secondStage 2");
               }
-              this.flip(currentStage, 0.3);
-              console.log(`load flip${count2}`);
+            } else {
+              currentStage.texture = card_back;
             }
-          );
+            this.flip(currentStage, 0.3);
+            if (this.firstStage && this.secondStage) {
+              if (this.firstCard === this.secondCard) {
+                this.firstStage.off("pointerdown");
+                this.secondStage.off("pointerdown");
+                this.ismatch = true;
+              } else {
+                console.log("it is not match card");
+                setTimeout(() => {
+                  this.flip(this.firstStage, 0);
+                  this.flip(this.secondStage, 0);
+                  console.log(this.secondCard);
+                  console.log(this.secondCard);
+                  this.ismatch = false;
+                }, 1e3);
+              }
+              setTimeout(() => {
+                this.flip(this.firstStage, 0.3);
+                this.flip(this.secondStage, 0.3);
+                if (!this.ismatch) {
+                  this.firstStage.texture = card_back;
+                  this.secondStage.texture = card_back;
+                }
+                this.firstStage = null;
+                this.secondStage = null;
+              }, 1300);
+            }
+          });
         });
       }
+      this.resize();
+    }
+    resize() {
+      const availableWidth = innerWidth;
+      const currentContainerWidth = this.cardContainer.width;
+      this.cardContainer.x = (availableWidth - currentContainerWidth) / 2;
     }
   };
 

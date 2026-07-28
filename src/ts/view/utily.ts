@@ -13,6 +13,12 @@ export const fontAsset: string[] = [
     "assets/fontCard/image (13).png",
     "assets/fontCard/image (15).png",
     "assets/fontCard/image (15).png",
+    "assets/fontCard/image (50).png",
+    "assets/fontCard/image (50).png",
+    "assets/fontCard/image (30).png",
+    "assets/fontCard/image (30).png",
+    "assets/fontCard/image (66).png",
+    "assets/fontCard/image (66).png",
 ];
 
 
