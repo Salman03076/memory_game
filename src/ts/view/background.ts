@@ -11,7 +11,7 @@ export class background {
 
     async initbackground(): Promise<void> {
         this.backgroundLoad = new Sprite(await backgroundAsset())
-        this.backgroundLoad.width = innerWidth
+        this.backgroundLoad.width = innerWidth;
         this.backgroundLoad.height = innerHeight;
         getStage().addChildAt(this.backgroundLoad, 0);
     }

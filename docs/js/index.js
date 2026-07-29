@@ -48434,8 +48434,6 @@ ${e2}`);
     cardnum = 12;
     cardContainer;
     isflip;
-    shuffleArray;
-    firstcard;
     secondcard;
     firstStage = null;
     secondStage = null;
@@ -48445,7 +48443,7 @@ ${e2}`);
     flip(backcard, scaleTo, callback = void 0) {
       gsap.to(backcard.scale, {
         x: scaleTo,
-        duration: 0.5,
+        duration: 0.3,
         onComplete: () => {
           callback?.();
         }
@@ -48459,6 +48457,7 @@ ${e2}`);
       this.cardContainer.y = 70;
       getStage().addChild(this.cardContainer);
       addEventListener("resize", this.resize.bind(this));
+      this.resize();
     }
     //initailixe backcard  and load
     async initcard() {
@@ -48475,7 +48474,11 @@ ${e2}`);
         this.currentcardstage.push(this.cardB[index]);
         this.currentcardstage[index].label = `card${index}`;
         this.cardContainer.addChild(this.currentcardstage[index]);
+        this.resize();
       }
+    }
+    // initialize fontcard and load
+    async initfontcardload() {
       for (let i2 = 0; i2 < this.cardnum; i2++) {
         const fontTexture = await Assets.load(fontAsset[i2]);
         this.fontcard = new Sprite(fontTexture);
@@ -48483,15 +48486,21 @@ ${e2}`);
         this.cardF.push(this.fontcard);
       }
       console.log(this.cardF);
+    }
+    // array data shuffle
+    async initArrayshuble() {
       for (let i2 = this.cardF.length - 1; i2 > 0; i2--) {
         const j2 = Math.floor(Math.random() * (i2 + 1));
         [this.cardF[i2], this.cardF[j2]] = [this.cardF[j2], this.cardF[i2]];
       }
       console.log(this.cardF);
+    }
+    //  set the event  
+    async initEvent() {
       for (let count2 = 0; count2 < this.cardnum; count2++) {
-        const currentStage = this.currentcardstage[count2];
-        const card_font = this.cardF[count2].texture;
-        const card_back = this.cardB[count2].texture;
+        let currentStage = this.currentcardstage[count2];
+        const card_font = await this.cardF[count2].texture;
+        const card_back = await this.cardB[count2].texture;
         currentStage.eventMode = `static`;
         currentStage.cursor = "pointer";
         currentStage.on("pointerdown", () => {
@@ -48514,12 +48523,19 @@ ${e2}`);
             }
             this.flip(currentStage, 0.3);
             if (this.firstStage && this.secondStage) {
+              if (this.firstCard) {
+                this.firstStage.eventMode = "none";
+              }
               if (this.firstCard === this.secondCard) {
-                this.firstStage.off("pointerdown");
-                this.secondStage.off("pointerdown");
+                this.firstStage.eventMode = "none";
+                this.secondStage.eventMode = "none";
                 this.ismatch = true;
+                this.firstStage = null;
+                this.secondStage = null;
               } else {
                 console.log("it is not match card");
+                this.firstStage.eventMode = "none";
+                this.secondStage.eventMode = "none";
                 setTimeout(() => {
                   this.flip(this.firstStage, 0);
                   this.flip(this.secondStage, 0);
@@ -48535,6 +48551,8 @@ ${e2}`);
                   this.firstStage.texture = card_back;
                   this.secondStage.texture = card_back;
                 }
+                this.firstStage.eventMode = "static";
+                this.secondStage.eventMode = "static";
                 this.firstStage = null;
                 this.secondStage = null;
               }, 1300);
@@ -48542,7 +48560,6 @@ ${e2}`);
           });
         });
       }
-      this.resize();
     }
     resize() {
       const availableWidth = innerWidth;
@@ -48553,8 +48570,13 @@ ${e2}`);
 
   // src/ts/manage_game.ts
   var viewinit = async () => {
-    await new background().initbackground();
-    await new cardStructure().initcard();
+    const bg = new background();
+    await bg.initbackground();
+    const card = new cardStructure();
+    await card.initcard();
+    await card.initfontcardload();
+    await card.initArrayshuble();
+    await card.initEvent();
   };
 
   // src/ts/index.ts

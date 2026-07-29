@@ -1,10 +1,9 @@
 // console.log("Cardstructure file loaded ");
 
-import { Assets, Container, Sprite, Texture, type StyleResult, } from "pixi.js"
+import { Assets, Container, Sprite, Texture, } from "pixi.js"
 import { gsap } from "gsap/gsap-core";
 import { backCardTexture, fontAsset } from './utily'
 import { getStage } from "..";
-import { application } from "../app";
 
 
 
@@ -19,14 +18,13 @@ export class cardStructure {
     private cardnum: number = 12;
     private cardContainer: Container;
     private isflip: boolean;
-    private shuffleArray: Function;
-    private firstcard: Sprite;
     private secondcard: Sprite;
     private firstStage: Sprite | null = null;
     private secondStage: Sprite | null = null;
     private firstCard: string | null = null;
     private secondCard: string | null = null;
     private ismatch: boolean;
+
 
     public flip(
         backcard: Sprite,
@@ -35,9 +33,10 @@ export class cardStructure {
     ): void {
         gsap.to(backcard.scale, {
             x: scaleTo,
-            duration: 0.5,
+            duration:0.3,
             onComplete: () => {
                 callback?.();
+
             },
         });
 
@@ -55,6 +54,7 @@ export class cardStructure {
         this.cardContainer.y = 70;
         getStage().addChild(this.cardContainer);
         addEventListener('resize', this.resize.bind(this));
+        this.resize();
     };
 
 
@@ -73,11 +73,14 @@ export class cardStructure {
             this.currentcardstage.push(this.cardB[index]);
             this.currentcardstage[index].label = `card${index}`;
             this.cardContainer.addChild(this.currentcardstage[index]);
+            this.resize();
         }
 
+    }
 
 
-        // initialize fontcard and load
+    // initialize fontcard and load
+    async initfontcardload(): Promise<void> {
         for (let i = 0; i < this.cardnum; i++) {
             const fontTexture = await Assets.load(fontAsset[i]);
             this.fontcard = new Sprite(fontTexture);
@@ -87,9 +90,11 @@ export class cardStructure {
 
         console.log(this.cardF);
 
+    }
 
 
-        // array data shuffle
+    // array data shuffle
+    async initArrayshuble(): Promise<void> {
         for (let i = this.cardF.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             // Swap
@@ -97,29 +102,23 @@ export class cardStructure {
 
         }
         console.log(this.cardF)
-        // 
+    }
 
 
-
-
-
-        // set event flip  function
+     //  set the event  
+    async initEvent(): Promise<void> {
         for (let count = 0; count < this.cardnum; count++) {
-            const currentStage = this.currentcardstage[count];
-            const card_font = this.cardF[count].texture;
-            const card_back = this.cardB[count].texture;
+            let currentStage = this.currentcardstage[count];
+            const card_font = await this.cardF[count].texture;
+            const card_back = await this.cardB[count].texture;
             currentStage.eventMode = `static`;
             currentStage.cursor = "pointer";
             currentStage.on("pointerdown", () => {
-
                 this.flip(currentStage, 0, () => {
-
-
-
-
                     this.isflip = currentStage.texture === card_back;
 
                     if (this.isflip) {
+
                         currentStage.texture = card_font
                         console.log(this.isflip);
 
@@ -141,15 +140,23 @@ export class cardStructure {
 
 
 
-
-
+                     // check the match card
                     if (this.firstStage && this.secondStage) {
+
+                        if (this.firstCard) {
+                            this.firstStage.eventMode = "none"
+                        }
+
                         if (this.firstCard === this.secondCard) {
-                            this.firstStage.off("pointerdown");
-                            this.secondStage.off("pointerdown")
+                            this.firstStage.eventMode = "none"
+                            this.secondStage.eventMode = "none"
                             this.ismatch = true
+                            this.firstStage = null;
+                            this.secondStage = null;
                         } else {
                             console.log("it is not match card");
+                            this.firstStage.eventMode = "none"
+                            this.secondStage.eventMode = "none"
                             setTimeout(() => {
                                 this.flip(this.firstStage, 0);
                                 this.flip(this.secondStage, 0)
@@ -160,31 +167,28 @@ export class cardStructure {
                         }
                         setTimeout(() => {
                             this.flip(this.firstStage, 0.3);
-
                             this.flip(this.secondStage, 0.3)
                             if (!this.ismatch) {
                                 this.firstStage.texture = card_back;
                                 this.secondStage.texture = card_back;
                             }
-
+                            this.firstStage.eventMode = "static"
+                            this.secondStage.eventMode = "static"
                             this.firstStage = null;
                             this.secondStage = null;
                         }, 1300);
                     }
                 });
             });
-        } 
-        this.resize();
+        }
     }
 
-    /**
-     * 
-     */
     private resize(): void {
         const availableWidth = innerWidth;
         const currentContainerWidth = this.cardContainer.width;
+        this.cardContainer.x = (availableWidth - currentContainerWidth) / 2;
 
-        this.cardContainer.x = (availableWidth - currentContainerWidth)/2;
+
     }
 }
 

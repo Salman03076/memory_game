@@ -7,9 +7,14 @@ import { cardStructure } from "./view/cardView";
 
 //each file initialize
 export const viewinit = async (): Promise<void> => {
-    await new background().initbackground();
-    await new cardStructure().initcard();
-    
+    const bg = new background();
+    await bg.initbackground()
+    const card = new cardStructure();
+    await card.initcard();
+    await card.initfontcardload();
+    await card.initArrayshuble();
+    await card.initEvent();
+
 };
 
 
