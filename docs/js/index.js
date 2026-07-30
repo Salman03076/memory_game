@@ -45250,6 +45250,9 @@ ${e2}`);
   var backCardTexture = async () => {
     return await loadTexture("cardBack", `assets/BackCard/BACK.png`);
   };
+  var WinTemple = async () => {
+    return await loadTexture(`win`, `assets/win_image/watermarked_.png`);
+  };
   var loadTexture = async (textureName, textureURL) => {
     if (!assetsMap[`${textureName}`]) {
       assetsMap[`${textureName}`] = await Assets.load(textureURL);
@@ -48440,6 +48443,9 @@ ${e2}`);
     firstCard = null;
     secondCard = null;
     ismatch;
+    label1;
+    label2;
+    MatchCard = 0;
     flip(backcard, scaleTo, callback = void 0) {
       gsap.to(backcard.scale, {
         x: scaleTo,
@@ -48485,7 +48491,6 @@ ${e2}`);
         this.fontcard.label = `frontCard_${i2}`;
         this.cardF.push(this.fontcard);
       }
-      console.log(this.cardF);
     }
     // array data shuffle
     async initArrayshuble() {
@@ -48493,7 +48498,6 @@ ${e2}`);
         const j2 = Math.floor(Math.random() * (i2 + 1));
         [this.cardF[i2], this.cardF[j2]] = [this.cardF[j2], this.cardF[i2]];
       }
-      console.log(this.cardF);
     }
     //  set the event  
     async initEvent() {
@@ -48504,6 +48508,7 @@ ${e2}`);
         currentStage.eventMode = `static`;
         currentStage.cursor = "pointer";
         currentStage.on("pointerdown", () => {
+          console.log(currentStage.label);
           this.flip(currentStage, 0, () => {
             this.isflip = currentStage.texture === card_back;
             if (this.isflip) {
@@ -48512,10 +48517,12 @@ ${e2}`);
               if (!this.firstStage) {
                 this.firstStage = currentStage;
                 this.firstCard = card_font.label;
+                this.label1 = currentStage.label;
                 console.log("firstStage 1");
               } else if (!this.secondcard) {
                 this.secondStage = currentStage;
                 this.secondCard = card_font.label;
+                this.label2 = currentStage.label;
                 console.log("secondStage 2");
               }
             } else {
@@ -48523,39 +48530,50 @@ ${e2}`);
             }
             this.flip(currentStage, 0.3);
             if (this.firstStage && this.secondStage) {
-              if (this.firstCard) {
+              if (this.label1 !== this.label2) {
                 this.firstStage.eventMode = "none";
-              }
-              if (this.firstCard === this.secondCard) {
-                this.firstStage.eventMode = "none";
-                this.secondStage.eventMode = "none";
-                this.ismatch = true;
-                this.firstStage = null;
-                this.secondStage = null;
-              } else {
-                console.log("it is not match card");
-                this.firstStage.eventMode = "none";
-                this.secondStage.eventMode = "none";
-                setTimeout(() => {
-                  this.flip(this.firstStage, 0);
-                  this.flip(this.secondStage, 0);
-                  console.log(this.secondCard);
-                  console.log(this.secondCard);
-                  this.ismatch = false;
-                }, 1e3);
-              }
-              setTimeout(() => {
-                this.flip(this.firstStage, 0.3);
-                this.flip(this.secondStage, 0.3);
-                if (!this.ismatch) {
-                  this.firstStage.texture = card_back;
-                  this.secondStage.texture = card_back;
+                if (this.firstCard === this.secondCard) {
+                  ++this.MatchCard;
+                  console.log(this.MatchCard);
+                  if (this.MatchCard == 6) {
+                    for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
+                      this.currentcardstage[disenablenum].eventMode = "none";
+                    }
+                  }
+                  this.firstStage.eventMode = "none";
+                  this.secondStage.eventMode = "none";
+                  this.ismatch = true;
+                  this.firstStage = null;
+                  this.secondStage = null;
+                } else {
+                  console.log("it is not match card");
+                  this.firstStage.eventMode = "none";
+                  this.secondStage.eventMode = "none";
+                  for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
+                    this.currentcardstage[disenablenum].eventMode = "none";
+                  }
+                  setTimeout(() => {
+                    this.flip(this.firstStage, 0);
+                    this.flip(this.secondStage, 0);
+                    this.ismatch = false;
+                  }, 1e3);
+                  setTimeout(() => {
+                    this.flip(this.firstStage, 0.3);
+                    this.flip(this.secondStage, 0.3);
+                    for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
+                      this.currentcardstage[disenablenum].eventMode = "static";
+                    }
+                    if (!this.ismatch) {
+                      this.firstStage.texture = card_back;
+                      this.secondStage.texture = card_back;
+                    }
+                    this.firstStage.eventMode = "static";
+                    this.secondStage.eventMode = "static";
+                    this.firstStage = null;
+                    this.secondStage = null;
+                  }, 1300);
                 }
-                this.firstStage.eventMode = "static";
-                this.secondStage.eventMode = "static";
-                this.firstStage = null;
-                this.secondStage = null;
-              }, 1300);
+              }
             }
           });
         });
@@ -48565,6 +48583,11 @@ ${e2}`);
       const availableWidth = innerWidth;
       const currentContainerWidth = this.cardContainer.width;
       this.cardContainer.x = (availableWidth - currentContainerWidth) / 2;
+    }
+    async initwinAssetload() {
+      const winTexture = await Assets.load(WinTemple);
+      const win = new Sprite(winTexture);
+      getStage().addChild(win);
     }
   };
 

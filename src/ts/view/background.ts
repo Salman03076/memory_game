@@ -16,3 +16,4 @@ export class background {
         getStage().addChildAt(this.backgroundLoad, 0);
     }
 }
+
