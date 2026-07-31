@@ -4,6 +4,8 @@ import { Assets, Container, Sprite, Texture, } from "pixi.js"
 import { gsap } from "gsap/gsap-core";
 import { backCardTexture, fontAsset, WinTemple } from './utily'
 import { getStage } from "..";
+import { SoundManager } from "./Audio";
+
 
 
 
@@ -27,15 +29,17 @@ export class cardStructure {
     private label1: string;
     private label2: string;
     private MatchCard: number = 0;
+    private cardBackTexture: Texture | null = null;
 
     public flip(
         backcard: Sprite,
         scaleTo: number,
+        duration?: number,
         callback: (() => void) | undefined = undefined
     ): void {
         gsap.to(backcard.scale, {
             x: scaleTo,
-            duration: 0.3,
+            duration: duration,
             onComplete: () => {
                 callback?.();
 
@@ -56,6 +60,7 @@ export class cardStructure {
         this.cardContainer.y = 70;
         getStage().addChild(this.cardContainer);
         addEventListener('resize', this.resize.bind(this));
+        addEventListener(`winimageresize`, this.initwinAssetload.bind(this));
         this.resize();
     };
 
@@ -103,19 +108,22 @@ export class cardStructure {
     }
 
 
-    //  set the event  
-    async initEvent(): Promise<void> {
 
+    //  set the event  
+
+    async initEvent(): Promise<void> {
         // Asign click event
         for (let count = 0; count < this.cardnum; count++) {
             let currentStage = this.currentcardstage[count];
             const card_font = await this.cardF[count].texture;
             const card_back = await this.cardB[count].texture;
+            this.cardBackTexture = card_back;
             currentStage.eventMode = `static`;
             currentStage.cursor = "pointer";
             currentStage.on("pointerdown", () => {
+                SoundManager.play(SoundManager.click);
                 console.log(currentStage.label)
-                this.flip(currentStage, 0, () => {
+                this.flip(currentStage, 0, 0.3, () => {
                     this.isflip = currentStage.texture === card_back;
                     if (this.isflip) {
                         currentStage.texture = card_font
@@ -134,65 +142,73 @@ export class cardStructure {
                     } else {
                         currentStage.texture = card_back
                     }
-                    this.flip(currentStage, 0.3);
-
-
-                    // check the match card
-                    if (this.firstStage && this.secondStage) {
-                        if (this.label1 !== this.label2) {
-                            this.firstStage.eventMode = "none"
-                            if (this.firstCard === this.secondCard) {
-                                ++this.MatchCard
-                                console.log(this.MatchCard)
-                                if (this.MatchCard == 6) {
-                                    // this.WinEvet()
-                                    // this.initwinAssetload();
-                                    for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
-                                        this.currentcardstage[disenablenum].eventMode = "none"
-                                    }
-                                }
-                                this.firstStage.eventMode = "none"
-                                this.secondStage.eventMode = "none"
-                                this.ismatch = true
-                                this.firstStage = null;
-                                this.secondStage = null;
-                            } else {
-                                console.log("it is not match card");
-                                this.firstStage.eventMode = "none"
-                                this.secondStage.eventMode = "none"
-                                for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
-                                    this.currentcardstage[disenablenum].eventMode = "none"
-                                }
-                                setTimeout(() => {
-                                    this.flip(this.firstStage, 0);
-                                    this.flip(this.secondStage, 0)
-                                    this.ismatch = false;
-                                }, 1000);
-                                setTimeout(() => {
-                                    this.flip(this.firstStage, 0.3);
-                                    this.flip(this.secondStage, 0.3)
-                                    for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
-                                        this.currentcardstage[disenablenum].eventMode = "static"
-                                    }
-                                    if (!this.ismatch) {
-                                        this.firstStage.texture = card_back;
-                                        this.secondStage.texture = card_back;
-                                    }
-                                    this.firstStage.eventMode = "static"
-                                    this.secondStage.eventMode = "static"
-                                    this.firstStage = null;
-                                    this.secondStage = null;
-                                }, 1300);
-                            }
-                        }
-
-                    }
-
+                    this.flip(currentStage, 0.3, 0.3);
                 });
-
             });
+
         }
+
     }
+
+
+
+    // check the match card
+    async checkMatchacrd(): Promise<void> {
+        if (this.firstStage && this.secondStage) {
+            if (this.label1 !== this.label2) {
+                this.firstStage.eventMode = "none"
+                if (this.firstCard === this.secondCard) {
+                    this.firstStage.alpha = 0.7;
+                    this.secondStage.alpha = 0.7;
+                    ++this.MatchCard
+                    console.log(this.MatchCard)
+                    if (this.MatchCard == 6) {
+                        this.initwinAssetload();
+                        for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
+                            this.currentcardstage[disenablenum].eventMode = "none"
+                        }
+                    }
+                    this.firstStage.eventMode = "none"
+                    this.secondStage.eventMode = "none"
+                    this.ismatch = true
+                    this.firstStage = null;
+                    this.secondStage = null;
+                } else {
+                    console.log("it is not match card");
+                    this.firstStage.eventMode = "none"
+                    this.secondStage.eventMode = "none"
+                    for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
+                        this.currentcardstage[disenablenum].eventMode = "none"
+                    }
+                    setTimeout(() => {
+                        this.flip(this.firstStage, 0, 0.3);
+                        this.flip(this.secondStage, 0, 0.3)
+                        this.ismatch = false;
+                    }, 1000);
+                    setTimeout(() => {
+                        this.flip(this.firstStage, 0.3, 0.3);
+                        this.flip(this.secondStage, 0.3, 0.3)
+                        for (let enablenum = 0; enablenum < this.cardnum; enablenum++) {
+                            this.currentcardstage[enablenum].eventMode = "static"
+                        }
+                        if (!this.ismatch) {
+                            this.firstStage.texture = this.cardBackTexture;
+                            this.secondStage.texture = this.cardBackTexture;
+                        }
+                        this.firstStage.eventMode = "static"
+                        this.secondStage.eventMode = "static"
+                        this.firstStage = null;
+                        this.secondStage = null;
+                    }, 1300);
+                }
+            }
+
+        }
+
+    }
+
+
+
 
     private resize(): void {
         const availableWidth = innerWidth;
@@ -203,16 +219,21 @@ export class cardStructure {
 
 
 
-
-
-
-    async initwinAssetload(): Promise<void> {
-        const winTexture = await Assets.load(WinTemple);
+    // win  Asset set the whenever event call
+    private async initwinAssetload(): Promise<void> {
+        const winTexture = await WinTemple();
         const win = new Sprite(winTexture);
+        win.anchor.set(0.5);
+        win.scale = 0;
+        win.x = 610;
+        win.y = 450;
+        const winwidth = innerWidth;
+        const wincurrentwidth = win.width;
+        win.x = (winwidth - wincurrentwidth) / 2;
+        win.height = 600;
+        this.flip(win, 0.5, 0.5)
         getStage().addChild(win);
     }
-
-
 }
 
 

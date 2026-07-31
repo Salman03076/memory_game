@@ -26,7 +26,7 @@ export const fontAsset: string[] = [
 
 
 export const backgroundAsset = async (): Promise<Texture> => {
-    return await loadTexture('background', `assets/background/background.avif`);
+    return await loadTexture('background', `assets/background/bg1.png`);
 }
 
 export const backCardTexture = async (): Promise<Texture> => {
@@ -34,7 +34,7 @@ export const backCardTexture = async (): Promise<Texture> => {
 }
 
 export const WinTemple = async (): Promise<Texture> => {
-    return await loadTexture(`win`, `assets/win_image/watermarked_.png`)
+    return await loadTexture(`win`, `assets/background/You win.png`)
 }
 
 const loadTexture = async (textureName: string, textureURL: string) => {
