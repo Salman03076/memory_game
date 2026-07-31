@@ -13,10 +13,7 @@ export const viewinit = async (): Promise<void> => {
     await card.initcard();
     await card.initfontcardload();
     await card.initArrayshuble();
-    await card.initEvent();
-    await card.checkMatchacrd();
-    
-
+    await card.initClickEvent();    
 };
 
 

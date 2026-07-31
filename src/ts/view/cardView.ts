@@ -1,10 +1,9 @@
-// console.log("Cardstructure file loaded ");
-
+console.log("Cardstructure file loaded ");
 import { Assets, Container, Sprite, Texture, } from "pixi.js"
 import { gsap } from "gsap/gsap-core";
 import { backCardTexture, fontAsset, WinTemple } from './utily'
 import { getStage } from "..";
-import { SoundManager } from "./Audio";
+// import { SoundManager } from "./Audio";
 
 
 
@@ -20,7 +19,6 @@ export class cardStructure {
     private cardnum: number = 12;
     private cardContainer: Container;
     private isflip: boolean;
-    private secondcard: Sprite;
     private firstStage: Sprite | null = null;
     private secondStage: Sprite | null = null;
     private firstCard: string | null = null;
@@ -31,6 +29,8 @@ export class cardStructure {
     private MatchCard: number = 0;
     private cardBackTexture: Texture | null = null;
 
+
+    // it is function thal help to card flip animation
     public flip(
         backcard: Sprite,
         scaleTo: number,
@@ -109,9 +109,8 @@ export class cardStructure {
 
 
 
-    //  set the event  
-
-    async initEvent(): Promise<void> {
+    //  set the click event
+    async initClickEvent(): Promise<void> {
         // Asign click event
         for (let count = 0; count < this.cardnum; count++) {
             let currentStage = this.currentcardstage[count];
@@ -121,7 +120,7 @@ export class cardStructure {
             currentStage.eventMode = `static`;
             currentStage.cursor = "pointer";
             currentStage.on("pointerdown", () => {
-                SoundManager.play(SoundManager.click);
+                // SoundManager.play(SoundManager.click);
                 console.log(currentStage.label)
                 this.flip(currentStage, 0, 0.3, () => {
                     this.isflip = currentStage.texture === card_back;
@@ -133,11 +132,12 @@ export class cardStructure {
                             this.firstCard = card_font.label;
                             this.label1 = currentStage.label
                             console.log("firstStage 1");
-                        } else if (!this.secondcard) {
+                        } else if (!this.secondStage) {
                             this.secondStage = currentStage;
                             this.secondCard = card_font.label;
                             this.label2 = currentStage.label;
                             console.log("secondStage 2");
+                            void this.checkMatchacrd();
                         }
                     } else {
                         currentStage.texture = card_back
@@ -149,6 +149,7 @@ export class cardStructure {
         }
 
     }
+
 
 
 

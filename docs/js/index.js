@@ -48439,6 +48439,7 @@ ${e2}`);
   };
 
   // src/ts/view/cardView.ts
+  console.log("Cardstructure file loaded ");
   var cardStructure = class {
     backcard;
     fontcard;
@@ -48449,7 +48450,6 @@ ${e2}`);
     cardnum = 12;
     cardContainer;
     isflip;
-    secondcard;
     firstStage = null;
     secondStage = null;
     firstCard = null;
@@ -48459,6 +48459,7 @@ ${e2}`);
     label2;
     MatchCard = 0;
     cardBackTexture = null;
+    // it is function thal help to card flip animation
     flip(backcard, scaleTo, duration, callback = void 0) {
       gsap.to(backcard.scale, {
         x: scaleTo,
@@ -48513,7 +48514,7 @@ ${e2}`);
         [this.cardF[i2], this.cardF[j2]] = [this.cardF[j2], this.cardF[i2]];
       }
     }
-    //  set the event  
+    //  set the click event
     async initEvent() {
       for (let count2 = 0; count2 < this.cardnum; count2++) {
         let currentStage = this.currentcardstage[count2];
@@ -48535,11 +48536,12 @@ ${e2}`);
                 this.firstCard = card_font.label;
                 this.label1 = currentStage.label;
                 console.log("firstStage 1");
-              } else if (!this.secondcard) {
+              } else if (!this.secondStage) {
                 this.secondStage = currentStage;
                 this.secondCard = card_font.label;
                 this.label2 = currentStage.label;
                 console.log("secondStage 2");
+                void this.checkMatchacrd();
               }
             } else {
               currentStage.texture = card_back;
@@ -48632,7 +48634,6 @@ ${e2}`);
     await card.initfontcardload();
     await card.initArrayshuble();
     await card.initEvent();
-    await card.checkMatchacrd();
   };
 
   // src/ts/index.ts
