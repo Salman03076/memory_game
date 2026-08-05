@@ -3,7 +3,7 @@ import { Assets, Container, Sprite, Texture, } from "pixi.js"
 import { gsap } from "gsap/gsap-core";
 import { backCardTexture, fontAsset, WinTemple } from './utily'
 import { getStage } from "..";
-// import { SoundManager } from "./Audio";
+import { SoundManager } from "./Audio";
 
 
 
@@ -62,6 +62,7 @@ export class cardStructure {
         addEventListener('resize', this.resize.bind(this));
         addEventListener(`winimageresize`, this.initwinAssetload.bind(this));
         this.resize();
+
     };
 
 
@@ -121,6 +122,7 @@ export class cardStructure {
             currentStage.cursor = "pointer";
             currentStage.on("pointerdown", () => {
                 // SoundManager.play(SoundManager.click);
+                SoundManager.play(SoundManager.flip);
                 console.log(currentStage.label)
                 this.flip(currentStage, 0, 0.3, () => {
                     this.isflip = currentStage.texture === card_back;
@@ -148,6 +150,7 @@ export class cardStructure {
 
         }
 
+        console.log(this.cardContainer.x)
     }
 
 
@@ -159,11 +162,12 @@ export class cardStructure {
             if (this.label1 !== this.label2) {
                 this.firstStage.eventMode = "none"
                 if (this.firstCard === this.secondCard) {
-                    this.firstStage.alpha = 0.7;
-                    this.secondStage.alpha = 0.7;
+                    this.firstStage.alpha = 0.8;
+                    this.secondStage.alpha = 0.8;
                     ++this.MatchCard
                     console.log(this.MatchCard)
                     if (this.MatchCard == 6) {
+                      SoundManager.play(SoundManager.win)
                         this.initwinAssetload();
                         for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
                             this.currentcardstage[disenablenum].eventMode = "none"
@@ -187,6 +191,7 @@ export class cardStructure {
                         this.ismatch = false;
                     }, 1000);
                     setTimeout(() => {
+                        SoundManager.play(SoundManager.flip);
                         this.flip(this.firstStage, 0.3, 0.3);
                         this.flip(this.secondStage, 0.3, 0.3)
                         for (let enablenum = 0; enablenum < this.cardnum; enablenum++) {

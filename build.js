@@ -13,7 +13,7 @@ esbuild
         assets: [
           {
 
-            from: ["./src/assets/**/*.{png,avif,jpg,jpeg,webp,gif,svg}"],
+            from: ["./src/assets/**/*.{png,avif,jpg,jpeg,webp,gif,svg,mp3,wav,ogg,m4a}"],
             to: ["./docs/assets"],
           },
           {

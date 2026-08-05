@@ -48428,13 +48428,16 @@ ${e2}`);
 
   // src/ts/view/Audio.ts
   var SoundManager = class {
-    static click = new Audio("/assets/cardClickAudiocomputer-mouse-click.mp3");
-    static flip = new Audio("assets/audio/flip.mp3");
-    static match = new Audio("assets/audio/match.mp3");
-    static win = new Audio("assets/audio/win.mp3");
+    static click = new Audio("assets/gameAudio/click-Sound.mp3");
+    static flip = new Audio("assets/gameAudio/flip-Sound.wav");
+    // static match = new Audio("assets/audio/match.mp3");
+    static win = new Audio("assets/gameAudio/win-Sound.wav");
     static play(sound) {
-      sound.currentTime = 10;
+      sound.currentTime = 0;
       sound.play();
+    }
+    static stop(sound) {
+      sound.pause();
     }
   };
 
@@ -48515,7 +48518,7 @@ ${e2}`);
       }
     }
     //  set the click event
-    async initEvent() {
+    async initClickEvent() {
       for (let count2 = 0; count2 < this.cardnum; count2++) {
         let currentStage = this.currentcardstage[count2];
         const card_font = await this.cardF[count2].texture;
@@ -48524,7 +48527,7 @@ ${e2}`);
         currentStage.eventMode = `static`;
         currentStage.cursor = "pointer";
         currentStage.on("pointerdown", () => {
-          SoundManager.play(SoundManager.click);
+          SoundManager.play(SoundManager.flip);
           console.log(currentStage.label);
           this.flip(currentStage, 0, 0.3, () => {
             this.isflip = currentStage.texture === card_back;
@@ -48550,6 +48553,7 @@ ${e2}`);
           });
         });
       }
+      console.log(this.cardContainer.x);
     }
     // check the match card
     async checkMatchacrd() {
@@ -48557,11 +48561,12 @@ ${e2}`);
         if (this.label1 !== this.label2) {
           this.firstStage.eventMode = "none";
           if (this.firstCard === this.secondCard) {
-            this.firstStage.alpha = 0.7;
-            this.secondStage.alpha = 0.7;
+            this.firstStage.alpha = 0.8;
+            this.secondStage.alpha = 0.8;
             ++this.MatchCard;
             console.log(this.MatchCard);
             if (this.MatchCard == 6) {
+              SoundManager.play(SoundManager.win);
               this.initwinAssetload();
               for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
                 this.currentcardstage[disenablenum].eventMode = "none";
@@ -48585,6 +48590,7 @@ ${e2}`);
               this.ismatch = false;
             }, 1e3);
             setTimeout(() => {
+              SoundManager.play(SoundManager.flip);
               this.flip(this.firstStage, 0.3, 0.3);
               this.flip(this.secondStage, 0.3, 0.3);
               for (let enablenum = 0; enablenum < this.cardnum; enablenum++) {
@@ -48633,7 +48639,7 @@ ${e2}`);
     await card.initcard();
     await card.initfontcardload();
     await card.initArrayshuble();
-    await card.initEvent();
+    await card.initClickEvent();
   };
 
   // src/ts/index.ts
