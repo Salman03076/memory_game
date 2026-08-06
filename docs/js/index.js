@@ -48437,7 +48437,7 @@ ${e2}`);
     static click = new Audio("assets/gameAudio/click-Sound.mp3");
     static flip = new Audio("assets/gameAudio/flip-Sound.wav");
     // static match = new Audio("assets/audio/match.mp3");
-    static win = new Audio("assets/gameAudio/win-Sound.wav");
+    static win = new Audio("assets/gameAudio/wining.mp3");
     static play(sound) {
       sound.currentTime = 0;
       sound.play();
@@ -48510,7 +48510,6 @@ ${e2}`);
         this.currentcardstage.push(this.cardB[index]);
         this.currentcardstage[index].label = `card${index}`;
         this.cardContainer.addChild(this.currentcardstage[index]);
-        this.resize();
       }
     }
     // initialize fontcard and load
