@@ -45250,10 +45250,12 @@ ${e2}`);
   var backCardTexture = async () => {
     return await loadTexture("cardBack", `assets/BackCard/BACK.png`);
   };
-  var WinTemple = async () => {
-    return await loadTexture(`win`, `assets/background/You win.png`);
+  var WinTexture = async () => {
+    console.log("Loading Win Texture...");
+    return await loadTexture(`win`, `assets/Win/You win.png`);
   };
   var loadTexture = async (textureName, textureURL) => {
+    console.log(textureURL);
     if (!assetsMap[`${textureName}`]) {
       assetsMap[`${textureName}`] = await Assets.load(textureURL);
     }
@@ -45265,9 +45267,13 @@ ${e2}`);
     backgroundLoad;
     async initbackground() {
       this.backgroundLoad = new Sprite(await backgroundAsset());
-      this.backgroundLoad.width = innerWidth;
-      this.backgroundLoad.height = innerHeight;
       getStage().addChildAt(this.backgroundLoad, 0);
+    }
+    backgroundResize() {
+      const windoWidth = innerWidth;
+      const windowHeight = innerHeight;
+      this.backgroundLoad.width = windoWidth;
+      this.backgroundLoad.height = windowHeight;
     }
   };
 
@@ -48462,6 +48468,9 @@ ${e2}`);
     label2;
     MatchCard = 0;
     cardBackTexture = null;
+    win;
+    winScale;
+    winheight;
     // it is function thal help to card flip animation
     flip(backcard, scaleTo, duration, callback = void 0) {
       gsap.to(backcard.scale, {
@@ -48482,6 +48491,8 @@ ${e2}`);
       addEventListener("resize", this.resize.bind(this));
       addEventListener(`winimageresize`, this.initwinAssetload.bind(this));
       this.resize();
+      window.addEventListener("resize", this.updateLayout.bind(this));
+      this.updateLayout();
     }
     //initailixe backcard  and load
     async initcard() {
@@ -48567,6 +48578,7 @@ ${e2}`);
             console.log(this.MatchCard);
             if (this.MatchCard == 6) {
               SoundManager.play(SoundManager.win);
+              console.log("WIN");
               this.initwinAssetload();
               for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
                 this.currentcardstage[disenablenum].eventMode = "none";
@@ -48612,29 +48624,70 @@ ${e2}`);
     resize() {
       const availableWidth = innerWidth;
       const currentContainerWidth = this.cardContainer.width;
-      this.cardContainer.x = (availableWidth - currentContainerWidth) / 2;
+      const availableheight = innerHeight;
+      const currrencontainerheight = this.cardContainer.height;
+      this.cardContainer.x = (availableWidth - currentContainerWidth) / 2 - 6;
+      this.cardContainer.y = (availableheight - currrencontainerheight) / 2;
     }
     // win  Asset set the whenever event call
     async initwinAssetload() {
-      const winTexture = await WinTemple();
-      const win = new Sprite(winTexture);
-      win.anchor.set(0.5);
-      win.scale = 0;
-      win.x = 610;
-      win.y = 450;
+      const winTexture = await WinTexture();
+      this.win = new Sprite(winTexture);
+      this.win.anchor.set(0.5);
+      this.win.scale = 0;
+      this.win.x = 610;
+      this.win.y = 450;
       const winwidth = innerWidth;
-      const wincurrentwidth = win.width;
-      win.x = (winwidth - wincurrentwidth) / 2;
-      win.height = 600;
-      this.flip(win, 0.5, 0.5);
-      getStage().addChild(win);
+      const wincurrentwidth = this.win.width;
+      const winheight = innerHeight;
+      const wincurrentheight = this.win.height;
+      this.win.x = (winwidth - wincurrentwidth) / 2 + 20;
+      this.win.y = (winheight - wincurrentheight) / 2;
+      this.win.height = this.winheight;
+      this.flip(this.win, this.winScale, 0.5);
+      getStage().addChild(this.win);
+    }
+    updateLayout() {
+      const isMobile3 = window.innerWidth;
+      switch (true) {
+        case isMobile3 <= 375:
+          this.winheight = 400;
+          this.winScale = 0.3;
+          this.cardContainer.scale.x = 0.3;
+          this.cardContainer.scale.y = 0.4;
+          break;
+        case isMobile3 <= 425:
+          this.winheight = 300;
+          this.winScale = 0.2;
+          this.cardContainer.scale.x = 0.3;
+          this.cardContainer.scale.y = 0.4;
+          break;
+        case isMobile3 <= 768:
+          this.winheight = 400;
+          this.winScale = 0.3;
+          this.cardContainer.scale.x = 0.5;
+          this.cardContainer.scale.y = 0.6;
+          break;
+        case isMobile3 <= 1024:
+          this.winheight = 400;
+          this.winScale = 0.4;
+          this.cardContainer.scale.x = 0.7;
+          this.cardContainer.scale.y = 0.8;
+          break;
+        default:
+          this.winScale = 0.5;
+          console.log("Invalid Day");
+      }
     }
   };
 
   // src/ts/manage_game.ts
   var viewinit = async () => {
     const bg = new background();
+    addEventListener("initbackground", bg.initbackground.bind(bg));
     await bg.initbackground();
+    addEventListener("backgroundResize", bg.backgroundResize.bind(bg));
+    bg.backgroundResize();
     const card = new cardStructure();
     await card.initcard();
     await card.initfontcardload();

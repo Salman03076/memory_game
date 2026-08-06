@@ -9,11 +9,21 @@ export class background {
 
     private backgroundLoad!: Sprite;
 
-    async initbackground(): Promise<void> {
+
+    public async initbackground(): Promise<void> {
         this.backgroundLoad = new Sprite(await backgroundAsset())
-        this.backgroundLoad.width = innerWidth;
-        this.backgroundLoad.height = innerHeight;
         getStage().addChildAt(this.backgroundLoad, 0);
     }
+
+
+    public backgroundResize(): void {
+        const windoWidth = innerWidth;
+        const windowHeight = innerHeight;
+        this.backgroundLoad.width = windoWidth;
+        this.backgroundLoad.height = windowHeight;
+        // this.backgroundLoad.rotation=90;
+
+    }
+
 }
 

@@ -33,11 +33,17 @@ export const backCardTexture = async (): Promise<Texture> => {
     return await loadTexture('cardBack', `assets/BackCard/BACK.png`);
 }
 
-export const WinTemple = async (): Promise<Texture> => {
-    return await loadTexture(`win`, `assets/background/You win.png`)
+export const WinTexture = async (): Promise<Texture> => {
+    console.log("Loading Win Texture...");
+    return await loadTexture(`win`, `assets/Win/You win.png`)
+}
+
+export const restarTexture = async (): Promise<Texture> => {
+    return await loadTexture(`restart`, `assets/0gameIcone/restart.png`);
 }
 
 const loadTexture = async (textureName: string, textureURL: string) => {
+    console.log(textureURL);
     if (!assetsMap[`${textureName}`]) {
         assetsMap[`${textureName}`] = await Assets.load(textureURL);
     }

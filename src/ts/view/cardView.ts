@@ -1,9 +1,15 @@
 console.log("Cardstructure file loaded ");
 import { Assets, Container, Sprite, Texture, } from "pixi.js"
 import { gsap } from "gsap/gsap-core";
-import { backCardTexture, fontAsset, WinTemple } from './utily'
+import { backCardTexture, fontAsset, WinTexture } from './utily'
 import { getStage } from "..";
 import { SoundManager } from "./Audio";
+
+
+
+
+
+// const restart =document.getElementById("play") as HTMLButtonElement;
 
 
 
@@ -28,6 +34,10 @@ export class cardStructure {
     private label2: string;
     private MatchCard: number = 0;
     private cardBackTexture: Texture | null = null;
+    private win: Sprite;
+    private winScale;
+    private winheight;
+    private win_x;
 
 
     // it is function thal help to card flip animation
@@ -62,6 +72,8 @@ export class cardStructure {
         addEventListener('resize', this.resize.bind(this));
         addEventListener(`winimageresize`, this.initwinAssetload.bind(this));
         this.resize();
+        window.addEventListener("resize", this.updateLayout.bind(this));
+        this.updateLayout();
 
     };
 
@@ -167,7 +179,8 @@ export class cardStructure {
                     ++this.MatchCard
                     console.log(this.MatchCard)
                     if (this.MatchCard == 6) {
-                      SoundManager.play(SoundManager.win)
+                        SoundManager.play(SoundManager.win)
+                        console.log("WIN");
                         this.initwinAssetload();
                         for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
                             this.currentcardstage[disenablenum].eventMode = "none"
@@ -219,7 +232,10 @@ export class cardStructure {
     private resize(): void {
         const availableWidth = innerWidth;
         const currentContainerWidth = this.cardContainer.width;
-        this.cardContainer.x = (availableWidth - currentContainerWidth) / 2;
+        const availableheight = innerHeight;
+        const currrencontainerheight = this.cardContainer.height;
+        this.cardContainer.x = (availableWidth - currentContainerWidth) / 2 - 6;
+        this.cardContainer.y = (availableheight - currrencontainerheight) / 2;
     }
 
 
@@ -227,20 +243,74 @@ export class cardStructure {
 
     // win  Asset set the whenever event call
     private async initwinAssetload(): Promise<void> {
-        const winTexture = await WinTemple();
-        const win = new Sprite(winTexture);
-        win.anchor.set(0.5);
-        win.scale = 0;
-        win.x = 610;
-        win.y = 450;
+        const winTexture = await WinTexture();
+        this.win = new Sprite(winTexture);
+        this.win.anchor.set(0.5);
+        this.win.scale = 0;
+        this.win.x = 610;
+        this.win.y = 450;
         const winwidth = innerWidth;
-        const wincurrentwidth = win.width;
-        win.x = (winwidth - wincurrentwidth) / 2;
-        win.height = 600;
-        this.flip(win, 0.5, 0.5)
-        getStage().addChild(win);
+        const wincurrentwidth = this.win.width;
+        const winheight = innerHeight;
+        const wincurrentheight = this.win.height
+        this.win.x = (winwidth - wincurrentwidth) / 2 + this.win_x;
+        this.win.y = (winheight - wincurrentheight) / 2;
+
+        this.win.height = this.winheight;
+        this.flip(this.win, this.winScale, 0.5)
+        getStage().addChild(this.win);
     }
+
+
+    private updateLayout(): void {
+        const isMobile = window.innerWidth;
+
+
+        switch (true) {
+            case isMobile <= 375:
+                this.winheight = 250;
+                this.winScale = 0.3;
+                this.cardContainer.scale.x = 0.3;
+                this.cardContainer.scale.y = 0.4;
+                break;
+
+            case isMobile <= 425:
+                this.win_x = -13;
+                this.winheight = 250;
+                this.winScale = 0.2;
+                this.cardContainer.scale.x = 0.3;
+                this.cardContainer.scale.y = 0.4;
+                break;
+
+            case isMobile <= 768:
+                this.winheight = 400;
+                this.winScale = 0.3;
+                this.cardContainer.scale.x = 0.5;
+                this.cardContainer.scale.y = 0.6;
+                break;
+
+            case isMobile <= 1024:
+                this.winheight = 400;
+                this.winScale = 0.4;
+                this.cardContainer.scale.x = 0.7;
+                this.cardContainer.scale.y = 0.8;
+                break;
+
+            default:
+                this.win_x = 20;
+                this.winScale = 0.5
+                console.log("Invalid Day");
+        }
+
+
+    }
+
+
+
+
 }
+
+
 
 
 
