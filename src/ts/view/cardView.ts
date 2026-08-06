@@ -275,11 +275,11 @@ export class cardStructure {
                 break;
 
             case isMobile <= 425:
-                this.win_x = -13;
+                // this.win_x += 19;
                 this.winheight = 250;
                 this.winScale = 0.2;
                 this.cardContainer.scale.x = 0.3;
-                this.cardContainer.scale.y = 0.4;
+                this.cardContainer.scale.y = 0.5;
                 break;
 
             case isMobile <= 768:
@@ -297,8 +297,8 @@ export class cardStructure {
                 break;
 
             default:
-                this.win_x = 20;
-                this.winScale = 0.5
+                // this.win_x += 20;
+                this.winScale = 0.5;
                 console.log("Invalid Day");
         }
 
