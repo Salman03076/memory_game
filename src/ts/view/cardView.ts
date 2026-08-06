@@ -93,7 +93,7 @@ export class cardStructure {
             this.currentcardstage.push(this.cardB[index]);
             this.currentcardstage[index].label = `card${index}`;
             this.cardContainer.addChild(this.currentcardstage[index]);
-            this.resize();
+            // this.resize();
         }
 
     }
@@ -127,12 +127,13 @@ export class cardStructure {
         // Asign click event
         for (let count = 0; count < this.cardnum; count++) {
             let currentStage = this.currentcardstage[count];
-            const card_font = await this.cardF[count].texture;
-            const card_back = await this.cardB[count].texture;
+            const card_font = this.cardF[count].texture;
+            const card_back = this.cardB[count].texture;
             this.cardBackTexture = card_back;
             currentStage.eventMode = `static`;
             currentStage.cursor = "pointer";
             currentStage.on("pointerdown", () => {
+                currentStage.eventMode = `none`;
                 // SoundManager.play(SoundManager.click);
                 SoundManager.play(SoundManager.flip);
                 console.log(currentStage.label)
@@ -162,7 +163,6 @@ export class cardStructure {
 
         }
 
-        console.log(this.cardContainer.x)
     }
 
 
@@ -179,9 +179,9 @@ export class cardStructure {
                     ++this.MatchCard
                     console.log(this.MatchCard)
                     if (this.MatchCard == 6) {
+                        await this.initwinAssetload();
                         SoundManager.play(SoundManager.win)
                         console.log("WIN");
-                        this.initwinAssetload();
                         for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
                             this.currentcardstage[disenablenum].eventMode = "none"
                         }
@@ -276,6 +276,7 @@ export class cardStructure {
 
             case isMobile <= 425:
                 // this.win_x += 19;
+                this.win_x = -13;
                 this.winheight = 250;
                 this.winScale = 0.2;
                 this.cardContainer.scale.x = 0.3;
@@ -298,7 +299,8 @@ export class cardStructure {
 
             default:
                 // this.win_x += 20;
-                this.winScale = 0.5;
+                this.win_x = 20;
+                this.winScale = 0.5
                 console.log("Invalid Day");
         }
 

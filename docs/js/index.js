@@ -48471,6 +48471,7 @@ ${e2}`);
     win;
     winScale;
     winheight;
+    win_x;
     // it is function thal help to card flip animation
     flip(backcard, scaleTo, duration, callback = void 0) {
       gsap.to(backcard.scale, {
@@ -48532,12 +48533,13 @@ ${e2}`);
     async initClickEvent() {
       for (let count2 = 0; count2 < this.cardnum; count2++) {
         let currentStage = this.currentcardstage[count2];
-        const card_font = await this.cardF[count2].texture;
-        const card_back = await this.cardB[count2].texture;
+        const card_font = this.cardF[count2].texture;
+        const card_back = this.cardB[count2].texture;
         this.cardBackTexture = card_back;
         currentStage.eventMode = `static`;
         currentStage.cursor = "pointer";
         currentStage.on("pointerdown", () => {
+          currentStage.eventMode = `none`;
           SoundManager.play(SoundManager.flip);
           console.log(currentStage.label);
           this.flip(currentStage, 0, 0.3, () => {
@@ -48564,7 +48566,6 @@ ${e2}`);
           });
         });
       }
-      console.log(this.cardContainer.x);
     }
     // check the match card
     async checkMatchacrd() {
@@ -48577,9 +48578,9 @@ ${e2}`);
             ++this.MatchCard;
             console.log(this.MatchCard);
             if (this.MatchCard == 6) {
+              await this.initwinAssetload();
               SoundManager.play(SoundManager.win);
               console.log("WIN");
-              this.initwinAssetload();
               for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
                 this.currentcardstage[disenablenum].eventMode = "none";
               }
@@ -48641,7 +48642,7 @@ ${e2}`);
       const wincurrentwidth = this.win.width;
       const winheight = innerHeight;
       const wincurrentheight = this.win.height;
-      this.win.x = (winwidth - wincurrentwidth) / 2 + 20;
+      this.win.x = (winwidth - wincurrentwidth) / 2 + this.win_x;
       this.win.y = (winheight - wincurrentheight) / 2;
       this.win.height = this.winheight;
       this.flip(this.win, this.winScale, 0.5);
@@ -48651,16 +48652,17 @@ ${e2}`);
       const isMobile3 = window.innerWidth;
       switch (true) {
         case isMobile3 <= 375:
-          this.winheight = 400;
+          this.winheight = 250;
           this.winScale = 0.3;
           this.cardContainer.scale.x = 0.3;
           this.cardContainer.scale.y = 0.4;
           break;
         case isMobile3 <= 425:
-          this.winheight = 300;
+          this.win_x = -13;
+          this.winheight = 250;
           this.winScale = 0.2;
           this.cardContainer.scale.x = 0.3;
-          this.cardContainer.scale.y = 0.4;
+          this.cardContainer.scale.y = 0.5;
           break;
         case isMobile3 <= 768:
           this.winheight = 400;
@@ -48675,6 +48677,7 @@ ${e2}`);
           this.cardContainer.scale.y = 0.8;
           break;
         default:
+          this.win_x = 20;
           this.winScale = 0.5;
           console.log("Invalid Day");
       }
