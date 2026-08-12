@@ -45228,7 +45228,7 @@ ${e2}`);
     return app.stage;
   };
 
-  // src/ts/view/utily.ts
+  // src/ts/mode/utily.ts
   var assetsMap = {};
   var fontAsset = [
     "assets/fontCard/image (55).png",
@@ -45245,7 +45245,7 @@ ${e2}`);
     "assets/fontCard/image (66).png"
   ];
   var backgroundAsset = async () => {
-    return await loadTexture("background", `assets/background/bg1.png`);
+    return await loadTexture("background", `assets/background/bg2.png`);
   };
   var backCardTexture = async () => {
     return await loadTexture("cardBack", `assets/BackCard/BACK.png`);
@@ -45255,7 +45255,6 @@ ${e2}`);
     return await loadTexture(`win`, `assets/Win/You win.png`);
   };
   var loadTexture = async (textureName, textureURL) => {
-    console.log(textureURL);
     if (!assetsMap[`${textureName}`]) {
       assetsMap[`${textureName}`] = await Assets.load(textureURL);
     }
@@ -48432,7 +48431,7 @@ ${e2}`);
   var Expo = _easeMap.Expo;
   var Circ = _easeMap.Circ;
 
-  // src/ts/view/Audio.ts
+  // src/ts/mode/Audio.ts
   var SoundManager = class {
     static click = new Audio("assets/gameAudio/click-Sound.mp3");
     static flip = new Audio("assets/gameAudio/flip-Sound.wav");
@@ -48447,9 +48446,40 @@ ${e2}`);
     }
   };
 
+  // src/ts/view/Win.ts
+  var wining = class _wining {
+    static win;
+    static winScale;
+    static winheight;
+    static win_x;
+    // win  Asset set the whenever event call
+    async initwinAssetload() {
+      const winTexture = await WinTexture();
+      _wining.win = new Sprite(winTexture);
+      _wining.win.anchor.set(0.5);
+      _wining.win.scale = 0;
+      _wining.win.x = 610;
+      _wining.win.y = 450;
+      const winwidth = innerWidth;
+      const wincurrentwidth = _wining.win.width;
+      ``;
+      const winheight = innerHeight;
+      const wincurrentheight = _wining.win.height;
+      _wining.win.x = (winwidth - wincurrentwidth) / 2 + _wining.win_x;
+      _wining.win.y = (winheight - wincurrentheight) / 2;
+      _wining.win.height = _wining.winheight;
+      cardStructure.flip(_wining.win, _wining.winScale, 0.5);
+      getStage().addChild(_wining.win);
+    }
+    // Call this method to initialize the win asset, e.g. await instance.initwin();
+    async initwin() {
+      return this.initwinAssetload();
+    }
+  };
+
   // src/ts/view/cardView.ts
   console.log("Cardstructure file loaded ");
-  var cardStructure = class {
+  var cardStructure = class _cardStructure {
     backcard;
     fontcard;
     cardF = [];
@@ -48466,14 +48496,11 @@ ${e2}`);
     ismatch;
     label1;
     label2;
-    MatchCard = 0;
     cardBackTexture = null;
-    win;
-    winScale;
-    winheight;
-    win_x;
+    MatchCard = 0;
+    loadwin = new wining();
     // it is function thal help to card flip animation
-    flip(backcard, scaleTo, duration, callback = void 0) {
+    static flip(backcard, scaleTo, duration, callback = void 0) {
       gsap.to(backcard.scale, {
         x: scaleTo,
         duration,
@@ -48486,11 +48513,13 @@ ${e2}`);
     constructor() {
       this.cardContainer = new Container();
       this.cardContainer.label = "CardContaienrs";
-      this.cardContainer.x = 570;
-      this.cardContainer.y = 70;
+      this.cardContainer.scale.x = 1.3;
+      this.cardContainer.scale.y = 1.3;
       getStage().addChild(this.cardContainer);
       addEventListener("resize", this.resize.bind(this));
-      addEventListener(`winimageresize`, this.initwinAssetload.bind(this));
+      addEventListener(`winimageresize`, () => {
+        this.loadwin.initwin;
+      });
       this.resize();
       window.addEventListener("resize", this.updateLayout.bind(this));
       this.updateLayout();
@@ -48510,6 +48539,7 @@ ${e2}`);
         this.currentcardstage.push(this.cardB[index]);
         this.currentcardstage[index].label = `card${index}`;
         this.cardContainer.addChild(this.currentcardstage[index]);
+        this.resize();
       }
     }
     // initialize fontcard and load
@@ -48531,96 +48561,30 @@ ${e2}`);
     //  set the click event
     async initClickEvent() {
       for (let count2 = 0; count2 < this.cardnum; count2++) {
-        let currentStage = this.currentcardstage[count2];
+        const currentStage = this.currentcardstage[count2];
         const card_font = this.cardF[count2].texture;
         const card_back = this.cardB[count2].texture;
         this.cardBackTexture = card_back;
         currentStage.eventMode = `static`;
         currentStage.cursor = "pointer";
         currentStage.on("pointerdown", () => {
-          currentStage.eventMode = `none`;
+          currentStage.eventMode = "none";
           SoundManager.play(SoundManager.flip);
           console.log(currentStage.label);
-          this.flip(currentStage, 0, 0.3, () => {
+          _cardStructure.flip(currentStage, 0, 0.3, () => {
             this.isflip = currentStage.texture === card_back;
             if (this.isflip) {
               currentStage.texture = card_font;
-              console.log(this.isflip);
-              if (!this.firstStage) {
-                this.firstStage = currentStage;
-                this.firstCard = card_font.label;
-                this.label1 = currentStage.label;
-                console.log("firstStage 1");
-              } else if (!this.secondStage) {
-                this.secondStage = currentStage;
-                this.secondCard = card_font.label;
-                this.label2 = currentStage.label;
-                console.log("secondStage 2");
-                void this.checkMatchacrd();
-              }
+              this.cardfirstSeccondstageStore(currentStage, card_font);
             } else {
               currentStage.texture = card_back;
             }
-            this.flip(currentStage, 0.3, 0.3);
+            _cardStructure.flip(currentStage, 0.3, 0.3);
           });
         });
       }
     }
-    // check the match card
-    async checkMatchacrd() {
-      if (this.firstStage && this.secondStage) {
-        if (this.label1 !== this.label2) {
-          this.firstStage.eventMode = "none";
-          if (this.firstCard === this.secondCard) {
-            this.firstStage.alpha = 0.8;
-            this.secondStage.alpha = 0.8;
-            ++this.MatchCard;
-            console.log(this.MatchCard);
-            if (this.MatchCard == 6) {
-              await this.initwinAssetload();
-              SoundManager.play(SoundManager.win);
-              console.log("WIN");
-              for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
-                this.currentcardstage[disenablenum].eventMode = "none";
-              }
-            }
-            this.firstStage.eventMode = "none";
-            this.secondStage.eventMode = "none";
-            this.ismatch = true;
-            this.firstStage = null;
-            this.secondStage = null;
-          } else {
-            console.log("it is not match card");
-            this.firstStage.eventMode = "none";
-            this.secondStage.eventMode = "none";
-            for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
-              this.currentcardstage[disenablenum].eventMode = "none";
-            }
-            setTimeout(() => {
-              this.flip(this.firstStage, 0, 0.3);
-              this.flip(this.secondStage, 0, 0.3);
-              this.ismatch = false;
-            }, 1e3);
-            setTimeout(() => {
-              SoundManager.play(SoundManager.flip);
-              this.flip(this.firstStage, 0.3, 0.3);
-              this.flip(this.secondStage, 0.3, 0.3);
-              for (let enablenum = 0; enablenum < this.cardnum; enablenum++) {
-                this.currentcardstage[enablenum].eventMode = "static";
-              }
-              if (!this.ismatch) {
-                this.firstStage.texture = this.cardBackTexture;
-                this.secondStage.texture = this.cardBackTexture;
-              }
-              this.firstStage.eventMode = "static";
-              this.secondStage.eventMode = "static";
-              this.firstStage = null;
-              this.secondStage = null;
-            }, 1300);
-          }
-        }
-      }
-    }
+    // control the cardContainer position
     resize() {
       const availableWidth = innerWidth;
       const currentContainerWidth = this.cardContainer.width;
@@ -48629,57 +48593,138 @@ ${e2}`);
       this.cardContainer.x = (availableWidth - currentContainerWidth) / 2 - 6;
       this.cardContainer.y = (availableheight - currrencontainerheight) / 2;
     }
-    // win  Asset set the whenever event call
-    async initwinAssetload() {
-      const winTexture = await WinTexture();
-      this.win = new Sprite(winTexture);
-      this.win.anchor.set(0.5);
-      this.win.scale = 0;
-      this.win.x = 610;
-      this.win.y = 450;
-      const winwidth = innerWidth;
-      const wincurrentwidth = this.win.width;
-      const winheight = innerHeight;
-      const wincurrentheight = this.win.height;
-      this.win.x = (winwidth - wincurrentwidth) / 2 + this.win_x;
-      this.win.y = (winheight - wincurrentheight) / 2;
-      this.win.height = this.winheight;
-      this.flip(this.win, this.winScale, 0.5);
-      getStage().addChild(this.win);
-    }
+    //manage screen size
     updateLayout() {
       const isMobile3 = window.innerWidth;
       switch (true) {
+        case isMobile3 <= 320:
+          this.cardContainer.scale.x = 0.4;
+          this.cardContainer.scale.y = 0.4;
+          break;
         case isMobile3 <= 375:
-          this.winheight = 250;
-          this.winScale = 0.3;
-          this.cardContainer.scale.x = 0.3;
+          wining.winheight = 250;
+          wining.winScale = 0.3;
+          this.cardContainer.scale.x = 0.4;
           this.cardContainer.scale.y = 0.4;
           break;
         case isMobile3 <= 425:
-          this.win_x = -13;
-          this.winheight = 250;
-          this.winScale = 0.2;
-          this.cardContainer.scale.x = 0.3;
+          wining.win_x = -13;
+          wining.winheight = 250;
+          wining.winScale = 0.2;
+          this.cardContainer.scale.x = 0.4;
           this.cardContainer.scale.y = 0.5;
           break;
         case isMobile3 <= 768:
-          this.winheight = 400;
-          this.winScale = 0.3;
+          wining.winheight = 400;
+          wining.winScale = 0.3;
           this.cardContainer.scale.x = 0.5;
           this.cardContainer.scale.y = 0.6;
           break;
         case isMobile3 <= 1024:
-          this.winheight = 400;
-          this.winScale = 0.4;
+          wining.winheight = 400;
+          wining.winScale = 0.4;
+          this.cardContainer.scale.x = 0.7;
+          this.cardContainer.scale.y = 0.8;
+          break;
+        case isMobile3 <= 1440:
           this.cardContainer.scale.x = 0.7;
           this.cardContainer.scale.y = 0.8;
           break;
         default:
-          this.win_x = 20;
-          this.winScale = 0.5;
+          this.cardContainer.scale.x = 1;
+          this.cardContainer.scale.y = 0.9;
+          wining.winScale = 0.5;
           console.log("Invalid Day");
       }
+    }
+    // control  the clickEvent enable and disable
+    clickEventControl(str) {
+      if (str) {
+        for (let enablenum = 0; enablenum < this.cardnum; enablenum++) {
+          this.currentcardstage[enablenum].eventMode = "static";
+        }
+      } else {
+        for (let disenablenum = 0; disenablenum < this.cardnum; disenablenum++) {
+          this.currentcardstage[disenablenum].eventMode = "none";
+        }
+      }
+    }
+    setClickEventsEnabled(enabled) {
+      this.clickEventControl(enabled);
+    }
+    // if  two card not Match start this animation
+    NotMatchCard() {
+      this.clickEventControl(false);
+      setTimeout(() => {
+        _cardStructure.flip(this.firstStage, 0, 0.3);
+        _cardStructure.flip(this.secondStage, 0, 0.3);
+        this.ismatch = false;
+      }, 1e3);
+      setTimeout(() => {
+        this.clickEventControl(true);
+        SoundManager.play(SoundManager.flip);
+        _cardStructure.flip(this.firstStage, 0.3, 0.3);
+        _cardStructure.flip(this.secondStage, 0.3, 0.3);
+        if (!this.ismatch) {
+          this.firstStage.texture = this.cardBackTexture;
+          this.secondStage.texture = this.cardBackTexture;
+          this.firstStage.eventMode = "none";
+          this.secondStage.eventMode = "none";
+        }
+        this.firstStage.eventMode = "static";
+        this.secondStage.eventMode = "static";
+        this.firstStage = null;
+        this.secondStage = null;
+      }, 1300);
+    }
+    cardfirstSeccondstageStore(currentStage, card_font) {
+      console.log(this.isflip);
+      if (!this.firstStage) {
+        currentStage.eventMode = `none`;
+        this.firstStage = currentStage;
+        this.firstCard = card_font.label;
+        this.label1 = currentStage.label;
+        console.log(this.label1);
+        console.log("firstStage 1");
+      } else if (!this.secondStage) {
+        currentStage.eventMode = `none`;
+        this.secondStage = currentStage;
+        this.secondCard = card_font.label;
+        this.label2 = currentStage.label;
+        console.log(this.label2);
+        console.log("secondStage 2");
+        void this.checkMatchacrd();
+      }
+    }
+    // check the match card
+    async checkMatchacrd() {
+      if (this.firstStage && this.secondStage) {
+        if (this.label1 !== this.label2) {
+          this.firstStage.eventMode = `none`;
+          if (this.firstCard === this.secondCard) {
+            this.firstStage.eventMode = "none";
+            this.secondStage.eventMode = "none";
+            this.firstStage.alpha = 0.8;
+            this.secondStage.alpha = 0.8;
+            ++this.MatchCard;
+            this.checkwin();
+            this.ismatch = true;
+            this.firstStage = null;
+            this.secondStage = null;
+          } else {
+            console.log("it is not match card");
+            this.firstStage.eventMode = "none";
+            this.secondStage.eventMode = "none";
+            this.NotMatchCard();
+          }
+        }
+      }
+    }
+    async checkwin() {
+      if (this.MatchCard === 6)
+        SoundManager.play(SoundManager.win);
+      await this.loadwin.initwin();
+      console.log("WIN");
     }
   };
 
@@ -48695,6 +48740,7 @@ ${e2}`);
     await card.initfontcardload();
     await card.initArrayshuble();
     await card.initClickEvent();
+    new wining();
   };
 
   // src/ts/index.ts

@@ -1,5 +1,5 @@
 import { Sprite } from "pixi.js";
-import { backgroundAsset } from "./utily";
+import { backgroundAsset } from "../mode/utily";
 import { getStage } from "..";
 
 
@@ -8,6 +8,7 @@ import { getStage } from "..";
 export class background {
 
     private backgroundLoad!: Sprite;
+
 
 
     public async initbackground(): Promise<void> {
@@ -21,8 +22,6 @@ export class background {
         const windowHeight = innerHeight;
         this.backgroundLoad.width = windoWidth;
         this.backgroundLoad.height = windowHeight;
-        // this.backgroundLoad.rotation=90;
-
     }
 
 }
