@@ -48447,39 +48447,107 @@ ${e2}`);
   };
 
   // src/ts/view/Win.ts
-  var wining = class _wining {
-    static win;
-    static winScale;
-    static winheight;
-    static win_x;
+  var wining = class {
+    cardElement;
+    win;
+    winScale;
+    winheight;
+    win_x;
+    winwidth;
+    constructor() {
+      this.initwinAssetload();
+    }
     // win  Asset set the whenever event call
     async initwinAssetload() {
+      this.cardElement = new cardStructure();
+      const cardEle = this.cardElement.cardVariable();
       const winTexture = await WinTexture();
-      _wining.win = new Sprite(winTexture);
-      _wining.win.anchor.set(0.5);
-      _wining.win.scale = 0;
-      _wining.win.x = 610;
-      _wining.win.y = 450;
-      const winwidth = innerWidth;
-      const wincurrentwidth = _wining.win.width;
+      this.win = new Sprite(winTexture);
+      this.win.anchor.set(0.5);
+      this.win.scale = 0;
+      this.win.x = 610;
+      this.win.y = 450;
+      this.winwidth = innerWidth;
+      const wincurrentwidth = this.win.width;
       ``;
-      const winheight = innerHeight;
-      const wincurrentheight = _wining.win.height;
-      _wining.win.x = (winwidth - wincurrentwidth) / 2 + _wining.win_x;
-      _wining.win.y = (winheight - wincurrentheight) / 2;
-      _wining.win.height = _wining.winheight;
-      cardStructure.flip(_wining.win, _wining.winScale, 0.5);
-      getStage().addChild(_wining.win);
+      this.winheight = innerHeight;
+      const wincurrentheight = this.win.height;
+      this.win.x = (this.winwidth - wincurrentwidth) / 2 + this.win_x;
+      this.win.y = (this.winheight - wincurrentheight) / 2;
+      this.win.height = this.winheight;
+      cardEle.Flip(this.win, this.winScale, 0.5);
+      getStage().addChild(this.win);
     }
-    // Call this method to initialize the win asset, e.g. await instance.initwin();
-    async initwin() {
-      return this.initwinAssetload();
+    getwin() {
+      return {
+        win: this.win,
+        winScale: this.winScale,
+        winheight: this.winheight,
+        win_x: this.win_x,
+        initwinAssetload: this.initwinAssetload()
+      };
     }
   };
 
-  // src/ts/view/cardView.ts
+  // src/ts/view/ScreenSize.ts
+  var screenSize = class {
+    cardContainer;
+    winElement;
+    constructor(container) {
+      this.winElement = new wining();
+      this.updateLayout(container);
+    }
+    //manage screen size
+    updateLayout(container) {
+      this.cardContainer = container;
+      const winVariable = this.winElement.getwin();
+      const isMobile3 = window.innerWidth;
+      switch (true) {
+        case isMobile3 <= 320:
+          this.cardContainer.scale.x = 0.4;
+          this.cardContainer.scale.y = 0.4;
+          break;
+        case isMobile3 <= 375:
+          winVariable.winheight = 250;
+          winVariable.winScale = 0.3;
+          this.cardContainer.scale.x = 0.4;
+          this.cardContainer.scale.y = 0.4;
+          break;
+        case isMobile3 <= 425:
+          winVariable.win_x = -13;
+          winVariable.winheight = 250;
+          winVariable.winScale = 0.2;
+          this.cardContainer.scale.x = 0.4;
+          this.cardContainer.scale.y = 0.5;
+          break;
+        case isMobile3 <= 768:
+          winVariable.winheight = 400;
+          winVariable.winScale = 0.3;
+          this.cardContainer.scale.x = 0.5;
+          this.cardContainer.scale.y = 0.6;
+          break;
+        case isMobile3 <= 1024:
+          winVariable.winheight = 400;
+          winVariable.winScale = 0.4;
+          this.cardContainer.scale.x = 0.7;
+          this.cardContainer.scale.y = 0.8;
+          break;
+        case isMobile3 <= 1440:
+          this.cardContainer.scale.x = 0.7;
+          this.cardContainer.scale.y = 0.8;
+          break;
+        default:
+          this.cardContainer.scale.x = 1;
+          this.cardContainer.scale.y = 0.9;
+          winVariable.winScale = 0.5;
+          console.log("Invalid Day");
+      }
+    }
+  };
+
+  // src/ts/view/cardCreate.ts
   console.log("Cardstructure file loaded ");
-  var cardStructure = class _cardStructure {
+  var cardStructure = class {
     backcard;
     fontcard;
     cardF = [];
@@ -48498,9 +48566,9 @@ ${e2}`);
     label2;
     cardBackTexture = null;
     MatchCard = 0;
-    loadwin = new wining();
+    // private loadwin = new wining();
     // it is function thal help to card flip animation
-    static flip(backcard, scaleTo, duration, callback = void 0) {
+    flip(backcard, scaleTo, duration, callback = void 0) {
       gsap.to(backcard.scale, {
         x: scaleTo,
         duration,
@@ -48517,15 +48585,11 @@ ${e2}`);
       this.cardContainer.scale.y = 1.3;
       getStage().addChild(this.cardContainer);
       addEventListener("resize", this.resize.bind(this));
-      addEventListener(`winimageresize`, () => {
-        this.loadwin.initwin;
-      });
       this.resize();
-      window.addEventListener("resize", this.updateLayout.bind(this));
-      this.updateLayout();
     }
     //initailixe backcard  and load
     async initcard() {
+      new screenSize(this.cardContainer);
       for (let index = 0; index < this.cardnum; index++) {
         const row = Math.floor(index / this.cols);
         const col = index % this.cols;
@@ -48571,7 +48635,7 @@ ${e2}`);
           currentStage.eventMode = "none";
           SoundManager.play(SoundManager.flip);
           console.log(currentStage.label);
-          _cardStructure.flip(currentStage, 0, 0.3, () => {
+          this.flip(currentStage, 0, 0.3, () => {
             this.isflip = currentStage.texture === card_back;
             if (this.isflip) {
               currentStage.texture = card_font;
@@ -48579,7 +48643,7 @@ ${e2}`);
             } else {
               currentStage.texture = card_back;
             }
-            _cardStructure.flip(currentStage, 0.3, 0.3);
+            this.flip(currentStage, 0.3, 0.3);
           });
         });
       }
@@ -48592,50 +48656,6 @@ ${e2}`);
       const currrencontainerheight = this.cardContainer.height;
       this.cardContainer.x = (availableWidth - currentContainerWidth) / 2 - 6;
       this.cardContainer.y = (availableheight - currrencontainerheight) / 2;
-    }
-    //manage screen size
-    updateLayout() {
-      const isMobile3 = window.innerWidth;
-      switch (true) {
-        case isMobile3 <= 320:
-          this.cardContainer.scale.x = 0.4;
-          this.cardContainer.scale.y = 0.4;
-          break;
-        case isMobile3 <= 375:
-          wining.winheight = 250;
-          wining.winScale = 0.3;
-          this.cardContainer.scale.x = 0.4;
-          this.cardContainer.scale.y = 0.4;
-          break;
-        case isMobile3 <= 425:
-          wining.win_x = -13;
-          wining.winheight = 250;
-          wining.winScale = 0.2;
-          this.cardContainer.scale.x = 0.4;
-          this.cardContainer.scale.y = 0.5;
-          break;
-        case isMobile3 <= 768:
-          wining.winheight = 400;
-          wining.winScale = 0.3;
-          this.cardContainer.scale.x = 0.5;
-          this.cardContainer.scale.y = 0.6;
-          break;
-        case isMobile3 <= 1024:
-          wining.winheight = 400;
-          wining.winScale = 0.4;
-          this.cardContainer.scale.x = 0.7;
-          this.cardContainer.scale.y = 0.8;
-          break;
-        case isMobile3 <= 1440:
-          this.cardContainer.scale.x = 0.7;
-          this.cardContainer.scale.y = 0.8;
-          break;
-        default:
-          this.cardContainer.scale.x = 1;
-          this.cardContainer.scale.y = 0.9;
-          wining.winScale = 0.5;
-          console.log("Invalid Day");
-      }
     }
     // control  the clickEvent enable and disable
     clickEventControl(str) {
@@ -48656,15 +48676,15 @@ ${e2}`);
     NotMatchCard() {
       this.clickEventControl(false);
       setTimeout(() => {
-        _cardStructure.flip(this.firstStage, 0, 0.3);
-        _cardStructure.flip(this.secondStage, 0, 0.3);
+        this.flip(this.firstStage, 0, 0.3);
+        this.flip(this.secondStage, 0, 0.3);
         this.ismatch = false;
       }, 1e3);
       setTimeout(() => {
         this.clickEventControl(true);
         SoundManager.play(SoundManager.flip);
-        _cardStructure.flip(this.firstStage, 0.3, 0.3);
-        _cardStructure.flip(this.secondStage, 0.3, 0.3);
+        this.flip(this.firstStage, 0.3, 0.3);
+        this.flip(this.secondStage, 0.3, 0.3);
         if (!this.ismatch) {
           this.firstStage.texture = this.cardBackTexture;
           this.secondStage.texture = this.cardBackTexture;
@@ -48721,10 +48741,24 @@ ${e2}`);
       }
     }
     async checkwin() {
-      if (this.MatchCard === 6)
+      if (this.MatchCard === 6) {
         SoundManager.play(SoundManager.win);
-      await this.loadwin.initwin();
-      console.log("WIN");
+        this.clickEventControl(false);
+        console.log("WIN");
+      }
+    }
+    cardVariable() {
+      return {
+        cardnum: this.cardnum,
+        currentcardstage: this.cardBackTexture,
+        cardF: this.cardF,
+        cardB: this.cardB,
+        Flip: this.flip,
+        isflip: this.isflip,
+        cardBackTexture: this.cardBackTexture,
+        cardfirstSeccondstageStore: this.cardfirstSeccondstageStore,
+        clickEventControl: this.clickEventControl()
+      };
     }
   };
 

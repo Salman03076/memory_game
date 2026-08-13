@@ -4,7 +4,7 @@ import { gsap } from "gsap/gsap-core";
 import { backCardTexture, fontAsset } from '../mode/utily'
 import { getStage } from "..";
 import { SoundManager } from "../mode/Audio";
-import { wining } from "./Win";
+import { screenSize } from "./ScreenSize";
 
 
 
@@ -21,7 +21,7 @@ export class cardStructure {
     private backcard: Sprite;
     private fontcard: Sprite;
     private cardF: Sprite[] = [];
-    private cardB: Sprite[] = [];
+    public cardB: Sprite[] = [];
     private currentcardstage: Sprite[] = [];
     private cols: number = 4;
     private cardnum: number = 12;
@@ -36,11 +36,11 @@ export class cardStructure {
     private label2: string;
     private cardBackTexture: Texture | null = null;
     private MatchCard: number = 0;
-    private loadwin = new wining();
+    // private loadwin = new wining();
 
 
     // it is function thal help to card flip animation
-    static flip(
+    private flip(
         backcard: Sprite,
         scaleTo: number,
         duration?: number,
@@ -51,12 +51,10 @@ export class cardStructure {
             duration: duration,
             onComplete: () => {
                 callback?.();
-
             },
         });
 
     }
-
 
 
 
@@ -69,16 +67,16 @@ export class cardStructure {
         this.cardContainer.scale.y = 1.3;
         getStage().addChild(this.cardContainer);
         addEventListener('resize', this.resize.bind(this));
-        addEventListener(`winimageresize`, () => { this.loadwin.initwin; });
+        // addEventListener(`winimageresize`,);
         this.resize();
-        window.addEventListener("resize", this.updateLayout.bind(this));
-        this.updateLayout();
-
+        
+        
     };
-
-
+    
+    
     //initailixe backcard  and load
     async initcard(): Promise<void> {
+        new screenSize(this.cardContainer)
         for (let index = 0; index < this.cardnum; index++) {
             const row = Math.floor(index / this.cols);
             const col = index % this.cols;
@@ -134,7 +132,7 @@ export class cardStructure {
                 currentStage.eventMode = "none"
                 SoundManager.play(SoundManager.flip);
                 console.log(currentStage.label)
-                cardStructure.flip(currentStage, 0, 0.3, () => {
+                this.flip(currentStage, 0, 0.3, () => {
                     this.isflip = currentStage.texture === card_back;
                     if (this.isflip) {
                         currentStage.texture = card_font
@@ -142,7 +140,7 @@ export class cardStructure {
                     } else {
                         currentStage.texture = card_back
                     }
-                    cardStructure.flip(currentStage, 0.3, 0.3);
+                    this.flip(currentStage, 0.3, 0.3);
                 });
             });
 
@@ -165,60 +163,10 @@ export class cardStructure {
 
 
 
-    //manage screen size
-    private updateLayout(): void {
-        const isMobile = window.innerWidth;
-        switch (true) {
 
-            case isMobile <= 320:
-                this.cardContainer.scale.x = 0.4;
-                this.cardContainer.scale.y = 0.4;
-                break;
-
-            case isMobile <= 375:
-                wining.winheight = 250;
-                wining.winScale = 0.3;
-                this.cardContainer.scale.x = 0.4;
-                this.cardContainer.scale.y = 0.4;
-                break;
-
-            case isMobile <= 425:
-                wining.win_x = -13;
-                wining.winheight = 250;
-                wining.winScale = 0.2;
-                this.cardContainer.scale.x = 0.4;
-                this.cardContainer.scale.y = 0.5;
-                break;
-
-            case isMobile <= 768:
-                wining.winheight = 400;
-                wining.winScale = 0.3;
-                this.cardContainer.scale.x = 0.5;
-                this.cardContainer.scale.y = 0.6;
-                break;
-
-            case isMobile <= 1024:
-                wining.winheight = 400;
-                wining.winScale = 0.4;
-                this.cardContainer.scale.x = 0.7;
-                this.cardContainer.scale.y = 0.8;
-                break;
-
-            case isMobile <= 1440:
-                this.cardContainer.scale.x = 0.7;
-                this.cardContainer.scale.y = 0.8;
-                break;
-
-            default:
-                this.cardContainer.scale.x = 1;
-                this.cardContainer.scale.y = 0.9;
-                wining.winScale = 0.5
-                console.log("Invalid Day");
-        }
-    };
 
     // control  the clickEvent enable and disable
-    private clickEventControl(str: boolean): void {
+    public clickEventControl(str?: boolean): void {
         if (str) {
             for (let enablenum = 0; enablenum < this.cardnum; enablenum++) {
                 this.currentcardstage[enablenum].eventMode = "static";
@@ -229,26 +177,25 @@ export class cardStructure {
             }
         }
     }
-
+    
     public setClickEventsEnabled(enabled: boolean): void {
         this.clickEventControl(enabled);
-    }
-
+}
 
 
     // if  two card not Match start this animation
     private NotMatchCard(): void {
         this.clickEventControl(false);
         setTimeout(() => {
-            cardStructure.flip(this.firstStage, 0, 0.3);
-            cardStructure.flip(this.secondStage, 0, 0.3)
+            this.flip(this.firstStage, 0, 0.3);
+            this.flip(this.secondStage, 0, 0.3)
             this.ismatch = false;
         }, 1000);
         setTimeout(() => {
             this.clickEventControl(true)
             SoundManager.play(SoundManager.flip);
-            cardStructure.flip(this.firstStage, 0.3, 0.3);
-            cardStructure.flip(this.secondStage, 0.3, 0.3)
+            this.flip(this.firstStage, 0.3, 0.3);
+            this.flip(this.secondStage, 0.3, 0.3)
             if (!this.ismatch) {
                 this.firstStage.texture = this.cardBackTexture;
                 this.secondStage.texture = this.cardBackTexture;
@@ -262,6 +209,7 @@ export class cardStructure {
         }, 1300);
 
     }
+
 
     private cardfirstSeccondstageStore(currentStage: Sprite, card_font: Texture) {
         console.log(this.isflip);
@@ -285,7 +233,7 @@ export class cardStructure {
 
 
     // check the match card
-    async checkMatchacrd(): Promise<void> {
+    private async checkMatchacrd(): Promise<void> {
         if (this.firstStage && this.secondStage) {
             if (this.label1 !== this.label2) {
                 this.firstStage.eventMode = `none`;
@@ -311,13 +259,34 @@ export class cardStructure {
     }
 
     private async checkwin() {
-        if (this.MatchCard === 6)
+        if (this.MatchCard === 6){
             SoundManager.play(SoundManager.win);
-        await this.loadwin.initwin()
-        console.log("WIN");
+            this.clickEventControl(false);
+            // await this.loadwin.initwin()
+            console.log("WIN");
+        }
     }
-}
 
+
+
+    public cardVariable() {
+        return {
+            cardnum: this.cardnum,
+            currentcardstage: this.cardBackTexture,
+            cardF: this.cardF,
+            cardB: this.cardB,
+            Flip: this.flip,
+            isflip: this.isflip,
+            cardBackTexture: this.cardBackTexture,
+            cardfirstSeccondstageStore: this.cardfirstSeccondstageStore,
+            clickEventControl: this.clickEventControl()
+        }
+    }
+
+
+
+
+}
 
 
 
