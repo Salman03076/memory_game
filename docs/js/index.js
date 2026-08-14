@@ -304,7 +304,7 @@
 
   // node_modules/eventemitter3/index.js
   var require_eventemitter3 = __commonJS({
-    "node_modules/eventemitter3/index.js"(exports, module2) {
+    "node_modules/eventemitter3/index.js"(exports, module) {
       "use strict";
       var has = Object.prototype.hasOwnProperty;
       var prefix = "~";
@@ -458,8 +458,8 @@
       EventEmitter2.prototype.addListener = EventEmitter2.prototype.on;
       EventEmitter2.prefixed = prefix;
       EventEmitter2.EventEmitter = EventEmitter2;
-      if ("undefined" !== typeof module2) {
-        module2.exports = EventEmitter2;
+      if ("undefined" !== typeof module) {
+        module.exports = EventEmitter2;
       }
     }
   });
@@ -45228,7 +45228,7 @@ ${e2}`);
     return app.stage;
   };
 
-  // src/ts/mode/utily.ts
+  // src/ts/utily.ts
   var assetsMap = {};
   var fontAsset = [
     "assets/fontCard/image (55).png",
@@ -45250,6 +45250,10 @@ ${e2}`);
   var backCardTexture = async () => {
     return await loadTexture("cardBack", `assets/BackCard/BACK.png`);
   };
+  var WinTexture = async () => {
+    console.log("Loading Win Texture...");
+    return await loadTexture(`win`, `assets/Win/You win.png`);
+  };
   var loadTexture = async (textureName, textureURL) => {
     if (!assetsMap[`${textureName}`]) {
       assetsMap[`${textureName}`] = await Assets.load(textureURL);
@@ -45260,6 +45264,9 @@ ${e2}`);
   // src/ts/view/background.ts
   var background = class {
     backgroundLoad;
+    constructor() {
+      this.initbackground();
+    }
     async initbackground() {
       this.backgroundLoad = new Sprite(await backgroundAsset());
       getStage().addChildAt(this.backgroundLoad, 0);
@@ -48427,7 +48434,7 @@ ${e2}`);
   var Expo = _easeMap.Expo;
   var Circ = _easeMap.Circ;
 
-  // src/ts/mode/Audio.ts
+  // src/ts/Audio.ts
   var SoundManager = class {
     static click = new Audio("assets/gameAudio/click-Sound.mp3");
     static flip = new Audio("assets/gameAudio/flip-Sound.wav");
@@ -48439,112 +48446,6 @@ ${e2}`);
     }
     static stop(sound) {
       sound.pause();
-    }
-  };
-
-  // src/ts/control/ClickEvent.ts
-  var clickevent = class {
-    card;
-    constructor(getcard) {
-      this.card = getcard;
-      this.initClickEvent();
-    }
-    // set the click event
-    async initClickEvent() {
-      const variables = this.card();
-      for (let count2 = 0; count2 < variables.cardnum; count2++) {
-        const currentStage = variables.currentcardstage[count2];
-        const card_font = variables.cardF[count2].texture;
-        const card_back = variables.cardB[count2].texture;
-        variables.cardBackTexture = card_back;
-        currentStage.eventMode = `static`;
-        currentStage.cursor = "pointer";
-        currentStage.on("pointerdown", () => {
-          currentStage.eventMode = "none";
-          SoundManager.play(SoundManager.flip);
-          console.log(currentStage.label);
-          variables.Flip(currentStage, 0, 0.3, () => {
-            variables.isflip = currentStage.texture === card_back;
-            if (variables.isflip) {
-              currentStage.texture = card_font;
-              variables.cardfirstSeccondstageStore(currentStage, card_font);
-            } else {
-              currentStage.texture = card_back;
-            }
-            variables.Flip(currentStage, 0.3, 0.3);
-          });
-        });
-      }
-    }
-  };
-
-  // src/ts/view/ScreenSize.ts
-  var screenSize = class {
-    constructor(getcard) {
-      this.updateLayout(getcard);
-    }
-    //manage screen size
-    updateLayout(getcard) {
-      const winVariable = getcard();
-      const isMobile3 = window.innerWidth;
-      switch (true) {
-        case isMobile3 <= 320:
-          winVariable.cardContainer.scale.x = 0.4;
-          winVariable.cardContainer.scale.y = 0.4;
-          break;
-        case isMobile3 <= 375:
-          winVariable.winheight = 250;
-          winVariable.winScale = 0.3;
-          winVariable.cardContainer.scale.x = 0.4;
-          winVariable.cardContainer.scale.y = 0.4;
-          break;
-        case isMobile3 <= 425:
-          winVariable.win_x = -13;
-          winVariable.winheight = 250;
-          winVariable.winScale = 0.2;
-          winVariable.cardContainer.scale.x = 0.4;
-          winVariable.cardContainer.scale.y = 0.5;
-          break;
-        case isMobile3 <= 768:
-          winVariable.winheight = 400;
-          winVariable.winScale = 0.3;
-          winVariable.cardContainer.scale.x = 0.5;
-          winVariable.cardContainer.scale.y = 0.6;
-          break;
-        case isMobile3 <= 1024:
-          winVariable.winheight = 400;
-          winVariable.winScale = 0.4;
-          winVariable.cardContainer.scale.x = 0.7;
-          winVariable.cardContainer.scale.y = 0.8;
-          break;
-        case isMobile3 <= 1440:
-          winVariable.cardContainer.scale.x = 0.7;
-          winVariable.cardContainer.scale.y = 0.8;
-          break;
-        default:
-          winVariable.cardContainer.scale.x = 1;
-          winVariable.cardContainer.scale.y = 0.9;
-          winVariable.winScale = 0.5;
-          console.log("Invalid ");
-      }
-    }
-  };
-
-  // src/ts/view/module.ts
-  var module = class {
-    cardVariable;
-    winVariable;
-    constructor(getVariable) {
-      if (getVariable.name === "getCard") {
-        this.cardVariable = getVariable();
-        new clickevent(this.cardVariable);
-        new screenSize(this.cardVariable);
-      } else if (getVariable.name === "getwin") {
-        this.winVariable = getVariable();
-        new screenSize(this.winVariable);
-      } else {
-        console.log(" module fuction not get the getcard and getwin function");
-      }
     }
   };
 
@@ -48569,6 +48470,11 @@ ${e2}`);
     label2;
     cardBackTexture = null;
     MatchCard = 0;
+    win;
+    winScale;
+    winheight;
+    win_x;
+    winwidth;
     // private loadwin = new wining();
     // it is function thal help to card flip animation
     flip(backcard, scaleTo, duration, callback = void 0) {
@@ -48588,8 +48494,9 @@ ${e2}`);
       this.cardContainer.scale.y = 1.3;
       getStage().addChild(this.cardContainer);
       addEventListener("resize", this.resize.bind(this));
+      addEventListener(`resize`, this.updateLayout.bind(this));
       this.resize();
-      new module(this.getCard.bind(this));
+      this.updateLayout();
     }
     //initailixe backcard  and load
     async initcard() {
@@ -48747,31 +48654,80 @@ ${e2}`);
       if (this.MatchCard === 6) {
         SoundManager.play(SoundManager.win);
         this.clickEventControl(false);
+        this.initwinAssetload();
         console.log("WIN");
       }
     }
-    getCard() {
-      return {
-        cardnum: this.cardnum,
-        currentcardstage: this.cardBackTexture,
-        cardF: this.cardF,
-        cardB: this.cardB,
-        Flip: this.flip,
-        isflip: this.isflip,
-        cardBackTexture: this.cardBackTexture,
-        cardfirstSeccondstageStore: this.cardfirstSeccondstageStore,
-        cardContainer: this.cardContainer
-      };
+    //manage screen size
+    updateLayout() {
+      const isMobile3 = window.innerWidth;
+      switch (true) {
+        case isMobile3 <= 320:
+          this.cardContainer.scale.x = 0.4;
+          this.cardContainer.scale.y = 0.4;
+          break;
+        case isMobile3 <= 375:
+          this.winheight = 250;
+          this.winScale = 0.3;
+          this.cardContainer.scale.x = 0.4;
+          this.cardContainer.scale.y = 0.4;
+          break;
+        case isMobile3 <= 425:
+          this.win_x = -13;
+          this.winheight = 250;
+          this.winScale = 0.2;
+          this.cardContainer.scale.x = 0.4;
+          this.cardContainer.scale.y = 0.5;
+          break;
+        case isMobile3 <= 768:
+          this.winheight = 400;
+          this.winScale = 0.3;
+          this.cardContainer.scale.x = 0.5;
+          this.cardContainer.scale.y = 0.6;
+          break;
+        case isMobile3 <= 1024:
+          this.winheight = 400;
+          this.winScale = 0.4;
+          this.cardContainer.scale.x = 0.7;
+          this.cardContainer.scale.y = 0.8;
+          break;
+        case isMobile3 <= 1440:
+          this.cardContainer.scale.x = 0.7;
+          this.cardContainer.scale.y = 0.8;
+          break;
+        default:
+          this.cardContainer.scale.x = 1;
+          this.cardContainer.scale.y = 0.9;
+          this.winScale = 0.5;
+          console.log("Invalid ");
+      }
+    }
+    // win  Asset set the whenever event call
+    async initwinAssetload() {
+      const winTexture = await WinTexture();
+      this.win = new Sprite(winTexture);
+      this.win.anchor.set(0.5);
+      this.win.scale = 0;
+      this.win.x = 610;
+      this.win.y = 450;
+      this.winwidth = innerWidth;
+      const wincurrentwidth = this.win.width;
+      ``;
+      this.winheight = innerHeight;
+      const wincurrentheight = this.win.height;
+      this.win.x = (this.winwidth - wincurrentwidth) / 2 + this.win_x;
+      this.win.y = (this.winheight - wincurrentheight) / 2;
+      this.win.height = this.winheight;
+      this.flip(this.win, this.winScale, 0.5);
+      getStage().addChild(this.win);
     }
   };
 
-  // src/ts/manage_game.ts
+  // src/ts/managegame.ts
   var viewinit = async () => {
     const bg = new background();
     addEventListener("initbackground", bg.initbackground.bind(bg));
-    await bg.initbackground();
-    addEventListener("backgroundResize", bg.backgroundResize.bind(bg));
-    bg.backgroundResize();
+    addEventListener("resize", bg.backgroundResize.bind(bg));
     const card = new cardStructure();
     await card.initcard();
     await card.initfontcardload();

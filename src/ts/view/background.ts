@@ -1,5 +1,5 @@
 import { Sprite } from "pixi.js";
-import { backgroundAsset } from "../mode/utily";
+import { backgroundAsset } from "../utily";
 import { getStage } from "..";
 
 
@@ -9,7 +9,9 @@ export class background {
 
     private backgroundLoad!: Sprite;
 
-
+    constructor() {
+        this.initbackground()
+    }
 
     public async initbackground(): Promise<void> {
         this.backgroundLoad = new Sprite(await backgroundAsset())

@@ -44,6 +44,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "include": ["src/ts/**/*.ts", "src/ts/mode/Audio.ts"],
+  "include": ["src/ts/**/*.ts", "src/ts/Audio.ts"],
   "exclude": ["docs", "node_modules"]
 }

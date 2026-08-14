@@ -1,10 +1,11 @@
 console.log("Cardstructure file loaded ");
 import { Assets, Container, Sprite, Texture, } from "pixi.js"
 import { gsap } from "gsap/gsap-core";
-import { backCardTexture, fontAsset } from '../mode/utily'
+import { backCardTexture, fontAsset } from '../utily'
 import { getStage } from "..";
-import { SoundManager } from "../mode/Audio";
-import { module } from "./module";
+import { SoundManager } from "../Audio";
+import { WinTexture } from "../utily";
+
 
 
 
@@ -36,7 +37,13 @@ export class cardStructure {
     private label2: string;
     private cardBackTexture: Texture | null = null;
     private MatchCard: number = 0;
-    // private loadwin = new wining();
+    private win: Sprite;
+    private winScale: number;
+    private winheight: number;
+    private win_x: number;
+    private winwidth: number;
+
+
 
 
     // it is function thal help to card flip animation
@@ -67,8 +74,9 @@ export class cardStructure {
         this.cardContainer.scale.y = 1.3;
         getStage().addChild(this.cardContainer);
         addEventListener('resize', this.resize.bind(this));
+        addEventListener(`resize`, this.updateLayout.bind(this));
         this.resize();
-        new module(this.getCard.bind(this))
+        this.updateLayout()
 
     };
 
@@ -260,29 +268,87 @@ export class cardStructure {
         if (this.MatchCard === 6) {
             SoundManager.play(SoundManager.win);
             this.clickEventControl(false);
-            // await this.loadwin.initwin()
+            this.initwinAssetload()
             console.log("WIN");
         }
     }
 
 
 
-    public getCard() {
-        return {
-            cardnum: this.cardnum,
-            currentcardstage: this.cardBackTexture,
-            cardF: this.cardF,
-            cardB: this.cardB,
-            Flip: this.flip,
-            isflip: this.isflip,
-            cardBackTexture: this.cardBackTexture,
-            cardfirstSeccondstageStore: this.cardfirstSeccondstageStore,
-            cardContainer: this.cardContainer,
-        };
+
+
+    //manage screen size
+    private updateLayout(): void {
+        const isMobile = window.innerWidth;
+        switch (true) {
+
+            case isMobile <= 320:
+                this.cardContainer.scale.x = 0.4;
+                this.cardContainer.scale.y = 0.4;
+                break;
+
+            case isMobile <= 375:
+                this.winheight = 250;
+                this.winScale = 0.3;
+                this.cardContainer.scale.x = 0.4;
+                this.cardContainer.scale.y = 0.4;
+                break;
+
+            case isMobile <= 425:
+                this.win_x = -13;
+                this.winheight = 250;
+                this.winScale = 0.2;
+                this.cardContainer.scale.x = 0.4;
+                this.cardContainer.scale.y = 0.5;
+                break;
+
+            case isMobile <= 768:
+                this.winheight = 400;
+                this.winScale = 0.3;
+                this.cardContainer.scale.x = 0.5;
+                this.cardContainer.scale.y = 0.6;
+                break;
+
+            case isMobile <= 1024:
+                this.winheight = 400;
+                this.winScale = 0.4;
+                this.cardContainer.scale.x = 0.7;
+                this.cardContainer.scale.y = 0.8;
+                break;
+
+            case isMobile <= 1440:
+                this.cardContainer.scale.x = 0.7;
+                this.cardContainer.scale.y = 0.8;
+                break;
+
+            default:
+                this.cardContainer.scale.x = 1;
+                this.cardContainer.scale.y = 0.9;
+                this.winScale = 0.5
+                console.log("Invalid ");
+        }
     };
 
 
 
+    // win  Asset set the whenever event call
+    private async initwinAssetload(): Promise<void> {
+        const winTexture = await WinTexture();
+        this.win = new Sprite(winTexture);
+        this.win.anchor.set(0.5);
+        this.win.scale = 0;
+        this.win.x = 610;
+        this.win.y = 450;
+        this.winwidth = innerWidth;
+        const wincurrentwidth = this.win.width; ``
+        this.winheight = innerHeight;
+        const wincurrentheight = this.win.height
+        this.win.x = (this.winwidth - wincurrentwidth) / 2 + this.win_x;
+        this.win.y = (this.winheight - wincurrentheight) / 2;
+        this.win.height = this.winheight;
+        this.flip(this.win, this.winScale, 0.5)
+        getStage().addChild(this.win);
+    }
 
 }
 
