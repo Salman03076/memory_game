@@ -2,7 +2,7 @@
 
 import { background } from "./view/background";
 import { cardStructure } from "./view/cardCreate";
-import { wining } from "./view/Win";
+
 
 
 //each file initialize
@@ -17,7 +17,6 @@ export const viewinit = async (): Promise<void> => {
     await card.initfontcardload();
     await card.initArrayshuble();
     await card.initClickEvent();
-    new wining();
 };
 
 

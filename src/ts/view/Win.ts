@@ -2,6 +2,7 @@ import { Sprite } from "pixi.js";
 import { WinTexture } from "../mode/utily";
 import { getStage } from "..";
 import { cardStructure } from "./cardCreate";
+import { module } from "./module";
 
 
 export class wining {
@@ -14,7 +15,7 @@ export class wining {
     private winwidth: number;
 
     constructor() {
-        this.initwinAssetload()
+        new module(this.getwin.bind(this))
     }
 
 
@@ -22,7 +23,7 @@ export class wining {
     // win  Asset set the whenever event call
     private async initwinAssetload(): Promise<void> {
         this.cardElement = new cardStructure()
-        const cardEle = this.cardElement.cardVariable()
+        const cardEle = this.cardElement.getCard()
         const winTexture = await WinTexture();
         this.win = new Sprite(winTexture);
         this.win.anchor.set(0.5);
@@ -43,13 +44,11 @@ export class wining {
 
     public getwin() {
         return {
-            win: this.win,
             winScale: this.winScale,
             winheight: this.winheight,
             win_x: this.win_x,
             initwinAssetload: this.initwinAssetload(),
         }
     }
-    
 }
 

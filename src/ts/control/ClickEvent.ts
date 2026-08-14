@@ -1,20 +1,19 @@
 import { SoundManager } from "../mode/Audio";
-import { cardStructure } from "../view/cardCreate";
 
 
 export class clickevent {
 
-    private card: cardStructure;
+    private card: Function;
 
-    constructor() {
-        this.card = new cardStructure();
+    constructor(getcard: Function) {
+        this.card = getcard;
         this.initClickEvent()
     }
 
 
     // set the click event
     private async initClickEvent(): Promise<void> {
-        const variables = this.card.cardVariable();
+        const variables = this.card();
         for (let count = 0; count < variables.cardnum; count++) {
             const currentStage = variables.currentcardstage[count];
             const card_font = variables.cardF[count].texture;

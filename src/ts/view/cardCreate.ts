@@ -4,7 +4,7 @@ import { gsap } from "gsap/gsap-core";
 import { backCardTexture, fontAsset } from '../mode/utily'
 import { getStage } from "..";
 import { SoundManager } from "../mode/Audio";
-import { screenSize } from "./ScreenSize";
+import { module } from "./module";
 
 
 
@@ -67,16 +67,14 @@ export class cardStructure {
         this.cardContainer.scale.y = 1.3;
         getStage().addChild(this.cardContainer);
         addEventListener('resize', this.resize.bind(this));
-        // addEventListener(`winimageresize`,);
         this.resize();
-        
-        
+        new module(this.getCard.bind(this))
+
     };
-    
-    
+
+
     //initailixe backcard  and load
     async initcard(): Promise<void> {
-        new screenSize(this.cardContainer)
         for (let index = 0; index < this.cardnum; index++) {
             const row = Math.floor(index / this.cols);
             const col = index % this.cols;
@@ -166,7 +164,7 @@ export class cardStructure {
 
 
     // control  the clickEvent enable and disable
-    public clickEventControl(str?: boolean): void {
+    public clickEventControl(str: boolean): void {
         if (str) {
             for (let enablenum = 0; enablenum < this.cardnum; enablenum++) {
                 this.currentcardstage[enablenum].eventMode = "static";
@@ -177,10 +175,10 @@ export class cardStructure {
             }
         }
     }
-    
+
     public setClickEventsEnabled(enabled: boolean): void {
         this.clickEventControl(enabled);
-}
+    }
 
 
     // if  two card not Match start this animation
@@ -259,7 +257,7 @@ export class cardStructure {
     }
 
     private async checkwin() {
-        if (this.MatchCard === 6){
+        if (this.MatchCard === 6) {
             SoundManager.play(SoundManager.win);
             this.clickEventControl(false);
             // await this.loadwin.initwin()
@@ -269,7 +267,7 @@ export class cardStructure {
 
 
 
-    public cardVariable() {
+    public getCard() {
         return {
             cardnum: this.cardnum,
             currentcardstage: this.cardBackTexture,
@@ -279,9 +277,9 @@ export class cardStructure {
             isflip: this.isflip,
             cardBackTexture: this.cardBackTexture,
             cardfirstSeccondstageStore: this.cardfirstSeccondstageStore,
-            clickEventControl: this.clickEventControl()
-        }
-    }
+            cardContainer: this.cardContainer,
+        };
+    };
 
 
 

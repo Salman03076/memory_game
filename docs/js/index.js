@@ -304,7 +304,7 @@
 
   // node_modules/eventemitter3/index.js
   var require_eventemitter3 = __commonJS({
-    "node_modules/eventemitter3/index.js"(exports, module) {
+    "node_modules/eventemitter3/index.js"(exports, module2) {
       "use strict";
       var has = Object.prototype.hasOwnProperty;
       var prefix = "~";
@@ -458,8 +458,8 @@
       EventEmitter2.prototype.addListener = EventEmitter2.prototype.on;
       EventEmitter2.prefixed = prefix;
       EventEmitter2.EventEmitter = EventEmitter2;
-      if ("undefined" !== typeof module) {
-        module.exports = EventEmitter2;
+      if ("undefined" !== typeof module2) {
+        module2.exports = EventEmitter2;
       }
     }
   });
@@ -45250,10 +45250,6 @@ ${e2}`);
   var backCardTexture = async () => {
     return await loadTexture("cardBack", `assets/BackCard/BACK.png`);
   };
-  var WinTexture = async () => {
-    console.log("Loading Win Texture...");
-    return await loadTexture(`win`, `assets/Win/You win.png`);
-  };
   var loadTexture = async (textureName, textureURL) => {
     if (!assetsMap[`${textureName}`]) {
       assetsMap[`${textureName}`] = await Assets.load(textureURL);
@@ -48446,101 +48442,108 @@ ${e2}`);
     }
   };
 
-  // src/ts/view/Win.ts
-  var wining = class {
-    cardElement;
-    win;
-    winScale;
-    winheight;
-    win_x;
-    winwidth;
-    constructor() {
-      this.initwinAssetload();
+  // src/ts/control/ClickEvent.ts
+  var clickevent = class {
+    card;
+    constructor(getcard) {
+      this.card = getcard;
+      this.initClickEvent();
     }
-    // win  Asset set the whenever event call
-    async initwinAssetload() {
-      this.cardElement = new cardStructure();
-      const cardEle = this.cardElement.cardVariable();
-      const winTexture = await WinTexture();
-      this.win = new Sprite(winTexture);
-      this.win.anchor.set(0.5);
-      this.win.scale = 0;
-      this.win.x = 610;
-      this.win.y = 450;
-      this.winwidth = innerWidth;
-      const wincurrentwidth = this.win.width;
-      ``;
-      this.winheight = innerHeight;
-      const wincurrentheight = this.win.height;
-      this.win.x = (this.winwidth - wincurrentwidth) / 2 + this.win_x;
-      this.win.y = (this.winheight - wincurrentheight) / 2;
-      this.win.height = this.winheight;
-      cardEle.Flip(this.win, this.winScale, 0.5);
-      getStage().addChild(this.win);
-    }
-    getwin() {
-      return {
-        win: this.win,
-        winScale: this.winScale,
-        winheight: this.winheight,
-        win_x: this.win_x,
-        initwinAssetload: this.initwinAssetload()
-      };
+    // set the click event
+    async initClickEvent() {
+      const variables = this.card();
+      for (let count2 = 0; count2 < variables.cardnum; count2++) {
+        const currentStage = variables.currentcardstage[count2];
+        const card_font = variables.cardF[count2].texture;
+        const card_back = variables.cardB[count2].texture;
+        variables.cardBackTexture = card_back;
+        currentStage.eventMode = `static`;
+        currentStage.cursor = "pointer";
+        currentStage.on("pointerdown", () => {
+          currentStage.eventMode = "none";
+          SoundManager.play(SoundManager.flip);
+          console.log(currentStage.label);
+          variables.Flip(currentStage, 0, 0.3, () => {
+            variables.isflip = currentStage.texture === card_back;
+            if (variables.isflip) {
+              currentStage.texture = card_font;
+              variables.cardfirstSeccondstageStore(currentStage, card_font);
+            } else {
+              currentStage.texture = card_back;
+            }
+            variables.Flip(currentStage, 0.3, 0.3);
+          });
+        });
+      }
     }
   };
 
   // src/ts/view/ScreenSize.ts
   var screenSize = class {
-    cardContainer;
-    winElement;
-    constructor(container) {
-      this.winElement = new wining();
-      this.updateLayout(container);
+    constructor(getcard) {
+      this.updateLayout(getcard);
     }
     //manage screen size
-    updateLayout(container) {
-      this.cardContainer = container;
-      const winVariable = this.winElement.getwin();
+    updateLayout(getcard) {
+      const winVariable = getcard();
       const isMobile3 = window.innerWidth;
       switch (true) {
         case isMobile3 <= 320:
-          this.cardContainer.scale.x = 0.4;
-          this.cardContainer.scale.y = 0.4;
+          winVariable.cardContainer.scale.x = 0.4;
+          winVariable.cardContainer.scale.y = 0.4;
           break;
         case isMobile3 <= 375:
           winVariable.winheight = 250;
           winVariable.winScale = 0.3;
-          this.cardContainer.scale.x = 0.4;
-          this.cardContainer.scale.y = 0.4;
+          winVariable.cardContainer.scale.x = 0.4;
+          winVariable.cardContainer.scale.y = 0.4;
           break;
         case isMobile3 <= 425:
           winVariable.win_x = -13;
           winVariable.winheight = 250;
           winVariable.winScale = 0.2;
-          this.cardContainer.scale.x = 0.4;
-          this.cardContainer.scale.y = 0.5;
+          winVariable.cardContainer.scale.x = 0.4;
+          winVariable.cardContainer.scale.y = 0.5;
           break;
         case isMobile3 <= 768:
           winVariable.winheight = 400;
           winVariable.winScale = 0.3;
-          this.cardContainer.scale.x = 0.5;
-          this.cardContainer.scale.y = 0.6;
+          winVariable.cardContainer.scale.x = 0.5;
+          winVariable.cardContainer.scale.y = 0.6;
           break;
         case isMobile3 <= 1024:
           winVariable.winheight = 400;
           winVariable.winScale = 0.4;
-          this.cardContainer.scale.x = 0.7;
-          this.cardContainer.scale.y = 0.8;
+          winVariable.cardContainer.scale.x = 0.7;
+          winVariable.cardContainer.scale.y = 0.8;
           break;
         case isMobile3 <= 1440:
-          this.cardContainer.scale.x = 0.7;
-          this.cardContainer.scale.y = 0.8;
+          winVariable.cardContainer.scale.x = 0.7;
+          winVariable.cardContainer.scale.y = 0.8;
           break;
         default:
-          this.cardContainer.scale.x = 1;
-          this.cardContainer.scale.y = 0.9;
+          winVariable.cardContainer.scale.x = 1;
+          winVariable.cardContainer.scale.y = 0.9;
           winVariable.winScale = 0.5;
-          console.log("Invalid Day");
+          console.log("Invalid ");
+      }
+    }
+  };
+
+  // src/ts/view/module.ts
+  var module = class {
+    cardVariable;
+    winVariable;
+    constructor(getVariable) {
+      if (getVariable.name === "getCard") {
+        this.cardVariable = getVariable();
+        new clickevent(this.cardVariable);
+        new screenSize(this.cardVariable);
+      } else if (getVariable.name === "getwin") {
+        this.winVariable = getVariable();
+        new screenSize(this.winVariable);
+      } else {
+        console.log(" module fuction not get the getcard and getwin function");
       }
     }
   };
@@ -48586,10 +48589,10 @@ ${e2}`);
       getStage().addChild(this.cardContainer);
       addEventListener("resize", this.resize.bind(this));
       this.resize();
+      new module(this.getCard.bind(this));
     }
     //initailixe backcard  and load
     async initcard() {
-      new screenSize(this.cardContainer);
       for (let index = 0; index < this.cardnum; index++) {
         const row = Math.floor(index / this.cols);
         const col = index % this.cols;
@@ -48747,7 +48750,7 @@ ${e2}`);
         console.log("WIN");
       }
     }
-    cardVariable() {
+    getCard() {
       return {
         cardnum: this.cardnum,
         currentcardstage: this.cardBackTexture,
@@ -48757,7 +48760,7 @@ ${e2}`);
         isflip: this.isflip,
         cardBackTexture: this.cardBackTexture,
         cardfirstSeccondstageStore: this.cardfirstSeccondstageStore,
-        clickEventControl: this.clickEventControl()
+        cardContainer: this.cardContainer
       };
     }
   };
@@ -48774,7 +48777,6 @@ ${e2}`);
     await card.initfontcardload();
     await card.initArrayshuble();
     await card.initClickEvent();
-    new wining();
   };
 
   // src/ts/index.ts
