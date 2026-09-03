@@ -3,10 +3,8 @@ import { Assets, Container, Sprite, Texture, } from "pixi.js"
 import { gsap } from "gsap/gsap-core";
 import { backCardTexture, fontAsset } from '../utily'
 import { getStage } from "..";
-import { SoundManager } from "../Audio";
+import { SoundManager } from "../audio";
 import { WinTexture } from "../utily";
-
-
 
 
 

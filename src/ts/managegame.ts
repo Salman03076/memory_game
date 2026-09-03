@@ -9,7 +9,7 @@ import { cardStructure } from "./view/cardCreate";
 export const viewinit = async (): Promise<void> => {
     const bg = new background();
     addEventListener("initbackground", bg.initbackground.bind(bg) as EventListener);
-    addEventListener("resize", bg.backgroundResize.bind(bg) as EventListener);
+    // addEventListener("resize", bg.backgroundResize.bind(bg) as EventListener);
     // bg.backgroundResize();
     const card = new cardStructure();
     await card.initcard();

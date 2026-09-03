@@ -11,10 +11,14 @@ export class background {
 
     constructor() {
         this.initbackground()
+        addEventListener("resize", this.backgroundResize.bind(this) as EventListener);
+
     }
 
     public async initbackground(): Promise<void> {
         this.backgroundLoad = new Sprite(await backgroundAsset())
+        this.backgroundLoad.height=innerHeight;
+        this.backgroundLoad.width = innerWidth;
         getStage().addChildAt(this.backgroundLoad, 0);
     }
 

@@ -1,4 +1,4 @@
-import { SoundManager } from "../Audio";
+import { SoundManager } from "../audio";
 
 
 export class clickevent {

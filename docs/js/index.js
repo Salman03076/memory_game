@@ -45266,9 +45266,12 @@ ${e2}`);
     backgroundLoad;
     constructor() {
       this.initbackground();
+      addEventListener("resize", this.backgroundResize.bind(this));
     }
     async initbackground() {
       this.backgroundLoad = new Sprite(await backgroundAsset());
+      this.backgroundLoad.height = innerHeight;
+      this.backgroundLoad.width = innerWidth;
       getStage().addChildAt(this.backgroundLoad, 0);
     }
     backgroundResize() {
@@ -48434,7 +48437,7 @@ ${e2}`);
   var Expo = _easeMap.Expo;
   var Circ = _easeMap.Circ;
 
-  // src/ts/Audio.ts
+  // src/ts/audio.ts
   var SoundManager = class {
     static click = new Audio("assets/gameAudio/click-Sound.mp3");
     static flip = new Audio("assets/gameAudio/flip-Sound.wav");
@@ -48475,7 +48478,6 @@ ${e2}`);
     winheight;
     win_x;
     winwidth;
-    // private loadwin = new wining();
     // it is function thal help to card flip animation
     flip(backcard, scaleTo, duration, callback = void 0) {
       gsap.to(backcard.scale, {
@@ -48727,7 +48729,6 @@ ${e2}`);
   var viewinit = async () => {
     const bg = new background();
     addEventListener("initbackground", bg.initbackground.bind(bg));
-    addEventListener("resize", bg.backgroundResize.bind(bg));
     const card = new cardStructure();
     await card.initcard();
     await card.initfontcardload();
